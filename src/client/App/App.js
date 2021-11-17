@@ -1,11 +1,16 @@
 import Sidebar from '../Sidebar/Sidebar';
-import './style.css';
+import './app.css';
 
 const App = () => {
 
     return( 
-        <div>
+        <div class="container">
             <Sidebar/>
+            <div class="container__board__menu">
+
+            </div>
+            <div class="container__board">
+            </div>
         </div>
     );
 };

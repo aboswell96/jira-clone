@@ -1,0 +1,14 @@
+.container__board__menu {
+    background-color: rgb(244 245 247);
+    width: 230px;
+    margin-left: 64px;
+}
+
+.container__board {
+    width: 100vw;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}

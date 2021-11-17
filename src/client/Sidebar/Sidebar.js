@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import './style.css';
+import './sidebar.css';
 
 const Sidebar = () => {
 
@@ -15,7 +15,7 @@ const Sidebar = () => {
 
     return(
         <div
-            class="container"
+            class="container__sidebar"
             style={{width:sidebarWidth}}
             onMouseEnter={mouseEnter}
             onMouseLeave={mouseLeave}
