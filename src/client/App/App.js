@@ -1,9 +1,10 @@
 import Sidebar from '../Sidebar/Sidebar';
 import './app.css';
-import { BrowserRouter, Routes, Route, Outlet, Link } from 'react-router-dom';
+import {Outlet, Link } from 'react-router-dom';
 
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
+import { useState } from 'react';
 
 const options = [
     {
@@ -20,12 +21,21 @@ const options = [
 
 const App = () => {
 
+    const OnClickBoardMenuOption = (newMenuOptionClicked) => {
+        console.log(newMenuOptionClicked);
+        setCurrentHighlightedMenuOption(newMenuOptionClicked);
+    }
+
+    const [currentHighlightedMenuOption, setCurrentHighlightedMenuOption] = useState(options[0].title);
+
     const tabs = options.map((option,i) => {
         return(
             <BoardMenuOption
                 title={option.title}
                 icon={option.icon}
                 url={option.url}
+                isActive={currentHighlightedMenuOption === option.title}
+                onClick={OnClickBoardMenuOption}
             />);
     });
 
@@ -38,7 +48,7 @@ const App = () => {
                 </div>
             </div>
             <div class="container__board">
-            <Outlet/>
+                <Outlet/>
             </div>
         </div>
     );
@@ -46,25 +56,28 @@ const App = () => {
 
 const BoardMenuOption = (props) => {
     return(
-        <Link to={props.url} style={{ textDecoration: 'none', color:'inherit' }}>
-        <div class="container__board__option">
-        <div class="container__board__option__icon">
-            {renderIcon(props.icon)}
-        </div>
-        {props.title}
-        </div>
-    </Link>
+        <Link to={props.url} style={{ textDecoration: 'none', color:'inherit' }} onClick={()=>props.onClick(props.title)}>
+            <div class={props.isActive ? "container__board__option__active" : "container__board__option__inactive"}>
+                <div class="container__board__option__icon">
+                    {renderIcon(props.icon, props.isActive)}
+                </div>
+                <div class={props.isActive ? "container__board__menu__title__active" : "container__board__menu__title__inactive"}>
+                {props.title}
+                </div>
+            </div>
+        </Link>
     );
 }
 
-const renderIcon = (param) => {
-    switch(param) {
+const renderIcon = (title, status) => {
+    const color = status ? 'primary' : 'active';
+    switch(title) {
         case 'board':
-            return <TableChartOutlinedIcon color="action" />;
+            return <TableChartOutlinedIcon color={color} />;
         case 'settings':
-            return <SettingsOutlinedIcon color="action" />;
+            return <SettingsOutlinedIcon color={color} />;
         default:
-            return <SettingsOutlinedIcon color="action" />;
+            return <SettingsOutlinedIcon color={color} />;
     }
 }
 
