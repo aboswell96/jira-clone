@@ -1,10 +1,12 @@
 import Sidebar from '../Sidebar/Sidebar';
 import './app.css';
-import {Outlet, Link } from 'react-router-dom';
+import {Outlet} from 'react-router-dom';
 
-import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
-import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
 import { useState } from 'react';
+import SideMenu from '../SideMenu/SideMenu';
+
+const projectName = "Test Name";
+const projectType = "Software project";
 
 const options = [
     {
@@ -22,31 +24,21 @@ const options = [
 const App = () => {
 
     const OnClickBoardMenuOption = (newMenuOptionClicked) => {
-        console.log(newMenuOptionClicked);
-        setCurrentHighlightedMenuOption(newMenuOptionClicked);
+        setSelectedMenuOption(newMenuOptionClicked);
     }
 
-    const [currentHighlightedMenuOption, setCurrentHighlightedMenuOption] = useState(options[0].title);
-
-    const tabs = options.map((option,i) => {
-        return(
-            <BoardMenuOption
-                title={option.title}
-                icon={option.icon}
-                url={option.url}
-                isActive={currentHighlightedMenuOption === option.title}
-                onClick={OnClickBoardMenuOption}
-            />);
-    });
+    const [selectedMenuOption, setSelectedMenuOption] = useState(options[0].title);
 
     return( 
         <div class="container">
             <Sidebar/>
-            <div class="container__board__menu">
-                <div class="container__board__options">
-                {tabs}
-                </div>
-            </div>
+            <SideMenu 
+                current={selectedMenuOption}
+                onClick={OnClickBoardMenuOption}
+                tabs={options}
+                projectName={projectName}
+                projectType={projectType}
+            />
             <div class="container__board">
                 <Outlet/>
             </div>
@@ -54,31 +46,5 @@ const App = () => {
     );
 };
 
-const BoardMenuOption = (props) => {
-    return(
-        <Link to={props.url} style={{ textDecoration: 'none', color:'inherit' }} onClick={()=>props.onClick(props.title)}>
-            <div class={props.isActive ? "container__board__option__active" : "container__board__option__inactive"}>
-                <div class="container__board__option__icon">
-                    {renderIcon(props.icon, props.isActive)}
-                </div>
-                <div class={props.isActive ? "container__board__menu__title__active" : "container__board__menu__title__inactive"}>
-                {props.title}
-                </div>
-            </div>
-        </Link>
-    );
-}
-
-const renderIcon = (title, status) => {
-    const color = status ? 'primary' : 'active';
-    switch(title) {
-        case 'board':
-            return <TableChartOutlinedIcon color={color} />;
-        case 'settings':
-            return <SettingsOutlinedIcon color={color} />;
-        default:
-            return <SettingsOutlinedIcon color={color} />;
-    }
-}
 
 export default App;
