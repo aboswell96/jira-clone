@@ -39,7 +39,7 @@
     border-radius: 3px;
     overflow: hidden;
     font-family: CircularStdBook;
-    border: 1px solid rgb(235, 236, 240);
+    font-weight: normal;
     background-color: rgb(235, 236, 240);
 }
 
@@ -56,7 +56,6 @@
 }
 
 .container__board__option__inactive:hover {
-    border: 1px solid rgb(235, 236, 240);
     background-color: rgb(235, 236, 240);
 }
 
