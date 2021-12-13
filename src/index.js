@@ -1,11 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import App from './client/App/App';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import GlobalStyle from './client/global-styles';
 
 ReactDOM.render(
   <React.StrictMode>
+    <GlobalStyle/>
     <BrowserRouter>
     <Routes>
       <Route path="/" element={<App/>}>

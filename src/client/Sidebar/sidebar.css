@@ -1,7 +1,0 @@
-.container__sidebar {
-    height: 100vh;
-    background-color: #0747a6;
-    transition: width 0.1s;
-    margin: 0;
-    position: absolute;
-}

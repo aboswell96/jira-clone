@@ -1,8 +1,8 @@
-import Sidebar from '../Sidebar/Sidebar';
-import './app.css';
 import {Outlet} from 'react-router-dom';
-
 import { useState } from 'react';
+import styled from 'styled-components';
+
+import Sidebar from '../Sidebar/Sidebar';
 import SideMenu from '../SideMenu/SideMenu';
 
 const projectName = "Test Name";
@@ -29,8 +29,20 @@ const App = () => {
 
     const [selectedMenuOption, setSelectedMenuOption] = useState(options[0].title);
 
+    const Container = styled.div`
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        height: 100vh;
+        gap: 0;
+    `
+
+    const Board = styled.div`
+        width: 50px;
+    `
+
     return( 
-        <div class="container">
+        <Container>
             <Sidebar/>
             <SideMenu 
                 current={selectedMenuOption}
@@ -39,10 +51,10 @@ const App = () => {
                 projectName={projectName}
                 projectType={projectType}
             />
-            <div class="container__board">
+            <Board>
                 <Outlet/>
-            </div>
-        </div>
+            </Board>
+        </Container>
     );
 };
 
