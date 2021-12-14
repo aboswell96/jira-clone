@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import Sidebar from '../Sidebar/Sidebar';
 import SideMenu from '../SideMenu/SideMenu';
 
-const projectName = "Test Name";
 const projectType = "Software project";
 
 const options = [
@@ -33,7 +32,7 @@ const Board = styled.div`
     width: 50px;
 `
 
-const App = () => {
+const Project = (props) => {
 
     const OnClickBoardMenuOption = (newMenuOptionClicked) => {
         setSelectedMenuOption(newMenuOptionClicked);
@@ -48,7 +47,7 @@ const App = () => {
                 current={selectedMenuOption}
                 onClick={OnClickBoardMenuOption}
                 tabs={options}
-                projectName={projectName}
+                projectName={props.projectName}
                 projectType={projectType}
             />
             <Board>
@@ -59,4 +58,4 @@ const App = () => {
 };
 
 
-export default App;
+export default Project;

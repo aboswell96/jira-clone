@@ -14,10 +14,12 @@ const Title = styled.div`
     font-family: CircularStdMedium;
 `
 
-const Board = () => {
+const Board = (props) => {
     return(
         <Container>
-            <ProjectURL/>
+            <ProjectURL
+                projectName={props.projectName}
+            />
             <Title>
                 Kanban Board
             </Title>

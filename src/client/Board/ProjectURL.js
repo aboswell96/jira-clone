@@ -1,9 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 
-
-const name = "test name";
-
 const Directory = styled.div`
     display: flex;
     flex-direction: row;
@@ -13,7 +10,7 @@ const Directory = styled.div`
     color: rgb(94, 108, 132);
 `
 
-const ProjectURL = () => {
+const ProjectURL = (props) => {
     return(
         <Directory>
             <div>
@@ -23,7 +20,7 @@ const ProjectURL = () => {
                 /
             </div>
             <div>
-                {name}
+                {props.projectName}
             </div>
             <div>
                 /
