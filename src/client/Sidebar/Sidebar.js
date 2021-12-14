@@ -1,6 +1,14 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 
+const SidebarComponent = styled.div`
+    height: 100vh;
+    background-color: #0747a6;
+    transition: width 0.1s;
+    margin: 0;
+    position: absolute;
+`
+
 const Sidebar = () => {
 
     const [sidebarWidth, SetSideBarWidth] = useState("64px");
@@ -13,22 +21,14 @@ const Sidebar = () => {
         SetSideBarWidth("64px");
     };
 
-    const Sidebar = styled.div`
-        height: 100vh;
-        background-color: #0747a6;
-        transition: width 0.1s;
-        margin: 0;
-        position: absolute;
-    `
-
     return(
-        <Sidebar
+        <SidebarComponent
             class="container__sidebar"
             style={{width:sidebarWidth}}
             onMouseEnter={mouseEnter}
             onMouseLeave={mouseLeave}
             >
-        </Sidebar>
+        </SidebarComponent>
     );
 }
 

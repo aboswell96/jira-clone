@@ -5,6 +5,71 @@ import {Link } from 'react-router-dom';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
 
+const BoardMenu = styled.div`
+    background-color: rgb(244 245 247);
+    width: 230px;
+    margin-left: 64px;
+    border-right: 1px solid rgb(223, 225, 230);
+`
+
+const BoardAvatar = styled.div`
+    display: flex;
+    margin-left: 20px;
+    margin-top: 25px;
+    font-family: CircularStdMedium;
+    font-size: 15px;
+`
+
+const BoardTextPanel = styled.div`
+    margin:auto;
+    margin-left: 10px;
+`
+
+const BoardOptions = styled.div`
+    width: 200px;
+    margin: auto;
+    justify-content: center;
+    padding-top: 15px;
+`
+
+const ProjectType = styled.div`
+    color: rgb(94, 108, 132);
+    font-size: 14px;
+`
+
+const Tab = styled.div`
+    width: 100%;
+    height: 40px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 15px;
+    border-radius: 3px;
+    overflow: hidden;
+    font-family: CircularStdBook;
+    background-color: rgb(244 245 247);
+
+    ${({ active }) => active && `
+        color: rgb(23, 43, 77);
+        background-color: rgb(235, 236, 240);
+    `}
+
+    &:hover {
+        background-color: rgb(235, 236, 240);
+    }
+`
+const Title = styled.div`
+    color: black;
+
+    ${({ active }) => active && `
+        color: #0052cc;
+    `}
+`
+
+const ProjectIcon = styled.div`
+padding-left: 10px;
+`
+
 const SideMenu = (props) => {
     const tabs = props.tabs.map((option,i) => {
         return(
@@ -16,38 +81,6 @@ const SideMenu = (props) => {
                 onClick={props.onClick}
             />);
     });
-
-    const BoardMenu = styled.div`
-        background-color: rgb(244 245 247);
-        width: 230px;
-        margin-left: 64px;
-        border-right: 1px solid rgb(223, 225, 230);
-    `
-
-    const BoardAvatar = styled.div`
-        display: flex;
-        margin-left: 20px;
-        margin-top: 25px;
-        font-family: CircularStdMedium;
-        font-size: 15px;
-    `
-
-    const BoardTextPanel = styled.div`
-        margin:auto;
-        margin-left: 10px;
-    `
-
-    const BoardOptions = styled.div`
-        width: 200px;
-        margin: auto;
-        justify-content: center;
-        padding-top: 15px;
-    `
-
-    const ProjectType = styled.div`
-        color: rgb(94, 108, 132);
-        font-size: 14px;
-    `
 
     return(
         <BoardMenu>
@@ -68,39 +101,6 @@ const SideMenu = (props) => {
 }
 
 const BoardMenuOption = (props) => {
-
-    const Tab = styled.div`
-        width: 100%;
-        height: 40px;
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        gap: 15px;
-        border-radius: 3px;
-        overflow: hidden;
-        font-family: CircularStdBook;
-        background-color: rgb(244 245 247);
-
-        ${({ active }) => active && `
-            color: rgb(23, 43, 77);
-            background-color: rgb(235, 236, 240);
-        `}
-
-        &:hover {
-            background-color: rgb(235, 236, 240);
-        }
-    `
-    const Title = styled.div`
-        color: black;
-
-        ${({ active }) => active && `
-            color: #0052cc;
-        `}
-    `
-
-    const ProjectIcon = styled.div`
-        padding-left: 10px;
-    `
 
     return(
         <Link to={props.url} style={{ textDecoration: 'none', color:'inherit' }} onClick={()=>props.onClick(props.title)}>

@@ -1,5 +1,5 @@
 import {Outlet} from 'react-router-dom';
-import { useState } from 'react';
+import {useState} from 'react';
 import styled from 'styled-components';
 
 import Sidebar from '../Sidebar/Sidebar';
@@ -21,6 +21,18 @@ const options = [
     }
 ];
 
+const Container = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    height: 100vh;
+    gap: 0;
+`
+
+const Board = styled.div`
+    width: 50px;
+`
+
 const App = () => {
 
     const OnClickBoardMenuOption = (newMenuOptionClicked) => {
@@ -29,19 +41,7 @@ const App = () => {
 
     const [selectedMenuOption, setSelectedMenuOption] = useState(options[0].title);
 
-    const Container = styled.div`
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-start;
-        height: 100vh;
-        gap: 0;
-    `
-
-    const Board = styled.div`
-        width: 50px;
-    `
-
-    return( 
+    return(
         <Container>
             <Sidebar/>
             <SideMenu 
