@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import ProjectURL from '../ProjectURL';
+import TextSearchBox from '../utils/TextSearchBox';
 
 const Container = styled.div`
     margin-left: 40px;
@@ -23,6 +24,7 @@ const Board = (props) => {
             <Title>
                 Kanban Board
             </Title>
+            <TextSearchBox/>
         </Container>
     );
 }
