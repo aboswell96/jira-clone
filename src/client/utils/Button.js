@@ -11,7 +11,15 @@ const ButtonWrapper = styled.button`
     font-family: CircularStdBook;
     font-size: 14.5px;
     margin-top: ${props => props.marginTop};
-    
+
+    &:hover {
+        background-color: #005eeb;
+        cursor: pointer;
+    }
+
+    &:active {
+        background-color: #004ab8;
+    }
 `
 
 const Button = (props) => {
