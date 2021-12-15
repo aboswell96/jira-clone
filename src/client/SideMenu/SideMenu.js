@@ -74,6 +74,7 @@ const SideMenu = (props) => {
     const tabs = props.tabs.map((option,i) => {
         return(
             <BoardMenuOption
+                key={i}
                 title={option.title}
                 icon={option.icon}
                 url={option.url}

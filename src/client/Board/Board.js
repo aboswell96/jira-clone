@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import ProjectURL from './ProjectURL';
+import ProjectURL from '../ProjectURL';
 
 const Container = styled.div`
     margin-left: 40px;

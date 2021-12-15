@@ -23,6 +23,7 @@ const GlobalStyle = createGlobalStyle`
         font-family: CircularStdFont;
         src: url(${CircularStdFont});
     }
+    
 `
 
 export default GlobalStyle;

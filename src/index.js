@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import Project from './client/Project/Project';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -7,9 +7,16 @@ import Board from './client/Board/Board';
 import Settings from './client/Settings/Settings';
 
 //Temporary Data
-const projectName = "Test Name";
+var tempName = "Test Name";
 
 const App = () => {
+
+  const [projectName,SetProjectName] = useState(tempName);
+
+  const OnUpdateSettingsSubmit = (newName) => {
+    SetProjectName(newName);
+  }
+
   return(
     <React.StrictMode>
     <GlobalStyle/>
@@ -23,6 +30,7 @@ const App = () => {
       />}/>
       <Route path="settings" element={<Settings
         projectName={projectName}
+        onClick={OnUpdateSettingsSubmit}
       />}/>
       </Route>
     </Routes>
