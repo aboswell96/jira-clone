@@ -10,6 +10,7 @@ const BoardMenu = styled.div`
     width: 230px;
     margin-left: 64px;
     border-right: 1px solid rgb(223, 225, 230);
+    flex-shrink: 0;
 `
 
 const BoardAvatar = styled.div`

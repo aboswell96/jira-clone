@@ -34,10 +34,6 @@ const ContainerRow = styled.div`
     position: relative;
 `
 
-const Row = styled.div`
-    position: absolute;
-`
-
 const TextSearchBox = (props) => {
     return(
         <ContainerRow>

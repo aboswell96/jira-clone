@@ -29,7 +29,7 @@ const Container = styled.div`
 `
 
 const Board = styled.div`
-    width: 50px;
+    width: 100%;
 `
 
 const Project = (props) => {
