@@ -49,6 +49,7 @@ const Tab = styled.div`
     overflow: hidden;
     font-family: CircularStdBook;
     background-color: rgb(244 245 247);
+    transition: background 0.1s ease 0s;
 
     ${({ active }) => active && `
         color: rgb(23, 43, 77);

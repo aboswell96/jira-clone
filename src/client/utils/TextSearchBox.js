@@ -20,7 +20,7 @@ const TextSearchBoxComponent = styled.input`
 
     &:focus {
         background-color: white;
-        border: 2px solid #4c9aff;
+        outline: 2px solid #4c9aff;
     }
 `
 
@@ -37,7 +37,10 @@ const ContainerRow = styled.div`
 const TextSearchBox = (props) => {
     return(
         <ContainerRow>
-            <TextSearchBoxComponent marginTop='35px'/>
+            <TextSearchBoxComponent marginTop='35px'
+                value={props.value}
+                onChange={props.onChange}
+            />
             <Icon>
                 <SearchOutlinedIcon color="disabled"/>
             </Icon>

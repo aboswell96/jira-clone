@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import ProjectURL from '../ProjectURL';
 import TextSearchBox from '../utils/TextSearchBox';
@@ -136,6 +136,12 @@ const TicketIcons = styled.div`
 `
 
 const Board = (props) => {
+
+    const [searchInput, SetSearchInput] = useState("");
+    const OnSearchInputChanged = (event) => {
+        SetSearchInput(event.target.value);
+    }
+
     return(
         <Container>
             <ProjectURL
@@ -144,16 +150,25 @@ const Board = (props) => {
             <Title>
                 Kanban Board
             </Title>
-            <TextSearchBox/>
-            <BoardView/>
+            <TextSearchBox
+                value={searchInput}
+                onChange={OnSearchInputChanged}
+            />
+            <BoardView
+                searchInput={searchInput.toLowerCase().replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1")}   //ignore regex characters so the search doesn't break
+            />
         </Container>
     );
 }
 
-const BoardView = () => {
+const BoardView = (props) => {
 
     const swimLanes = lanes.map((lane,i) => {
-        const tickets = lane.tickets.map((ticket,j) => {
+
+        //Filter tickets that match the current value in the text search
+        const filteredTickets = lane.tickets.filter(ticket => ticket.title.toLowerCase().search(props.searchInput) > -1);
+
+        const tickets = filteredTickets.map((ticket,j) => {
             return(
                 <TicketCard>
                     {ticket.title}
@@ -201,12 +216,6 @@ const RenderTicketTypeIcon = (type) => {
 const RenderTicketSeverityIcon = (priority) => {
 
     var color = "";
-
-    // 1 #cd1316
-    // 2 #e97f33
-    // 3 #57a55a
-    // 4 #2d8738
-
     switch(priority) {
 
         case "sev2":
