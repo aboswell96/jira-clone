@@ -23,7 +23,6 @@ const Sidebar = () => {
 
     return(
         <SidebarComponent
-            class="container__sidebar"
             style={{width:sidebarWidth}}
             onMouseEnter={mouseEnter}
             onMouseLeave={mouseLeave}

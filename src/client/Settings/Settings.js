@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import ProjectURL from '../ProjectURL';
 import TextInput from '../utils/TextInput';
 import Button from '../utils/Button';
+
+import {useTextInput} from '../utils/helpers';
 
 const Container = styled.div`
     margin-left: 40px;
@@ -29,11 +31,7 @@ const Text = styled.div`
 
 const Settings = (props) => {
 
-    const [name,SetName] = useState(props.projectName);
-
-    const handleNameChange = (event) => {
-        SetName(event.target.value);
-    }
+    const [name,onChange] = useTextInput(props.projectName);
 
     return(
         <Container>
@@ -48,7 +46,7 @@ const Settings = (props) => {
         <TextInputWrapper>
             <TextInput
                 value={name}
-                onChange={handleNameChange}
+                onChange={onChange}
             />
         </TextInputWrapper>
         <Button

@@ -5,7 +5,7 @@ import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 
 const TextSearchBoxComponent = styled.input`
     width: 160px;
-    height: 30px;
+    height: 28px;
     background-color: rgb(244 245 247);
     border: 1px solid rgb(223, 225, 230);
     border-radius: 4px;
@@ -26,7 +26,7 @@ const TextSearchBoxComponent = styled.input`
 
 const Icon = styled.div`
     position: absolute;
-    top: 40px;
+    top: 5px;
     left: 10px;
 `
 
@@ -37,7 +37,7 @@ const ContainerRow = styled.div`
 const TextSearchBox = (props) => {
     return(
         <ContainerRow>
-            <TextSearchBoxComponent marginTop='35px'
+            <TextSearchBoxComponent
                 value={props.value}
                 onChange={props.onChange}
             />

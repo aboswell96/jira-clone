@@ -7,7 +7,7 @@ import Board from './client/Board/Board';
 import Settings from './client/Settings/Settings';
 
 //Temporary Data
-var tempName = "Test Name";
+var tempName = "Central Park Project";
 
 const App = () => {
 

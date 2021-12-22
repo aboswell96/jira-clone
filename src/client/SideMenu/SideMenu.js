@@ -85,10 +85,12 @@ const SideMenu = (props) => {
             />);
     });
 
+    console.log("hh");
+
     return(
         <BoardMenu>
             <BoardAvatar>
-                <img src="https://i.ibb.co/S686zGM/rocket3.png" alt="Project Icon" style={{'height':'40px', 'width':'40px', 'border':'2px', 'border-radius': '3px'}}></img>
+                <img src="https://i.ibb.co/S686zGM/rocket3.png" alt="Project Icon" style={{'height':'40px', 'width':'40px', 'border':'2px', 'borderRadius': '3px'}}></img>
                 <BoardTextPanel>
                     {props.projectName}
                     <ProjectType>

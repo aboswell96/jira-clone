@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ProjectURL from '../ProjectURL';
 import TextSearchBox from '../utils/TextSearchBox';
@@ -8,6 +8,8 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import BugReportIcon from '@mui/icons-material/BugReport';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+
+import {useTextInput} from '../utils/helpers';
 
 const Container = styled.div`
     margin-left: 40px;
@@ -30,11 +32,13 @@ const lanes = [
                 'title':'Add Drag n Drop',
                 'type':'bug',
                 'priority':'sev2',
+                'assignee': -1,
             },
             {
                 'title':'Add backend',
                 'type':'story',
                 'priority':'sev1',
+                'assignee': -1,
             }
         ],
     },
@@ -45,16 +49,19 @@ const lanes = [
                 'title':'Add ticket search',
                 'type':'story',
                 'priority':'high',
+                'assignee': 100
             },
             {
                 'title':'Add ticket filters by status',
                 'type':'task',
                 'priority':'low',
+                'assignee': 200
             },
             {
                 'title':'Add description and project type to settings',
                 'type':'story',
                 'priority':'sev2',
+                'assignee': 300
             }
         ],
     },
@@ -65,6 +72,7 @@ const lanes = [
                 'title':'Add BoardView',
                 'type':'story',
                 'priority':'low',
+                'assignee': 100
             }
         ]
     },
@@ -75,10 +83,32 @@ const lanes = [
                 'title':'add routes',
                 'type':'story',
                 'priority':'sev1',
+                'assignee': 300
             }
         ]
     }
 ];
+
+const users = [
+    {
+        'firstName': 'Joey',
+        'lastName': 'Tribbiani',
+        'photo': 'https://i.ibb.co/vhJVFpQ/joey-tribbiani-3.jpg',
+        'id': 100,
+    },
+    {
+        'firstName': 'Monica',
+        'lastName': 'Geller',
+        'photo':'https://i.ibb.co/b636CY2/monica-geller-2.jpg',
+        'id': 200,
+    },
+    {
+        'firstName': 'Ross',
+        'lastName': 'Geller',
+        'photo': 'https://i.ibb.co/gts0j76/ross-geller-2.jpg',
+        'id': 300,
+    }
+]
 
 const Swimlane = styled.div`
     background-color: rgb(244 245 247);
@@ -132,15 +162,85 @@ const BoardViewContainer = styled.div`
 `
 
 const TicketIcons = styled.div`
+    display: flex;
+`
+
+const BoardFilters = styled.div`
+    display: flex;
+    flex-direction: row;
+    margin-top: 35px;
+    gap: 20px;
+`
+
+const UserAvatar = styled.div`
+    display: block;
+    background-image: url(${props => props.img});
+    background-position:50% 50%;
+    background-repeat:no-repeat;
+    background-size: cover;
+    background-color: rgb(235, 236, 240);
+    height: ${props => props.height};
+    width: ${props => props.height};
+    border-radius:100%;
+    margin-left: auto;
+
+    ${({ active }) => active && `
+        outline: 3px solid #4c9aff;
+    `}
+`
+
+const UserAvatars = styled.div`
+    display:flex;
+    padding-right: -10px;
 
 `
 
 const Board = (props) => {
 
-    const [searchInput, SetSearchInput] = useState("");
-    const OnSearchInputChanged = (event) => {
-        SetSearchInput(event.target.value);
+    const [searchInput,onChange] = useTextInput("");
+    const [usersSelected, SetUsersSelected] = useState([]);
+
+    console.log("render board");
+
+    useEffect(() => {
+        SetUsersSelected([
+            {
+                'id': 100,
+                'isSelected': false,
+            },
+            {
+                'id': 200,
+                'isSelected': false,
+            },
+            {
+                'id': 300,
+                'isSelected': false,
+            }
+        ]);
+    }, []);
+
+    const OnHeroClicked = (id) => {
+        const newUsers = usersSelected.slice();
+        let index = newUsers.findIndex(user => user.id === id);
+        newUsers[index].isSelected = !newUsers[index].isSelected;
+        SetUsersSelected(newUsers);
     }
+
+    const userAvatars = users.map((user,i) => {
+
+        const isActive = usersSelected.some(userr => userr.isSelected && userr.id === user.id);
+
+        return(
+            <UserAvatar
+                img={user.photo}
+                key={i}
+                onClick={()=>OnHeroClicked(user.id)}
+                height={'32px'}
+                width={'32px'}
+                active={isActive}
+            />
+        );
+    })
 
     return(
         <Container>
@@ -150,12 +250,18 @@ const Board = (props) => {
             <Title>
                 Kanban Board
             </Title>
-            <TextSearchBox
-                value={searchInput}
-                onChange={OnSearchInputChanged}
-            />
+            <BoardFilters>
+                <TextSearchBox
+                    value={searchInput}
+                    onChange={onChange}
+                />
+                <UserAvatars>
+                    {userAvatars}
+                </UserAvatars>
+            </BoardFilters>
             <BoardView
                 searchInput={searchInput.toLowerCase().replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1")}   //ignore regex characters so the search doesn't break
+                usersSelected={usersSelected}
             />
         </Container>
     );
@@ -165,28 +271,48 @@ const BoardView = (props) => {
 
     const swimLanes = lanes.map((lane,i) => {
 
-        //Filter tickets that match the current value in the text search
-        const filteredTickets = lane.tickets.filter(ticket => ticket.title.toLowerCase().search(props.searchInput) > -1);
+        let tickets = lane.tickets;
+        //if any filters are selected
+        if (props.usersSelected.some(user => user.isSelected))
+        {
+            const filteredUsers = props.usersSelected.filter(user => user.isSelected);
+            tickets = tickets.filter(ticket => filteredUsers.some(user => user.id === ticket.assignee));
+        }
 
-        const tickets = filteredTickets.map((ticket,j) => {
+        //filter using the TextSearchBox component
+        const filteredTicketsbySearch = tickets.filter(ticket => ticket.title.toLowerCase().search(props.searchInput) > -1);
+
+        const filteredTickets = filteredTicketsbySearch.map((ticket,j) => {
+
+            const assignee = users.filter(user => ticket.assignee === user.id);
             return(
-                <TicketCard>
+                <TicketCard
+                    key={j}
+                >
                     {ticket.title}
                     <TicketIcons>
                         {RenderTicketTypeIcon(ticket.type)}
                         {RenderTicketSeverityIcon(ticket.priority)}
+                        {assignee[0] &&
+                        <UserAvatar
+                            img={assignee[0].photo}
+                            height={'24px'}
+                            width={'24px'}
+                        />}
                     </TicketIcons>
                 </TicketCard>
             )
         });
 
         return(
-            <Swimlane>
+            <Swimlane
+                key={i}
+            >
                 <SwimlaneHeader>
-                    {lane.title.toUpperCase()}
+                    {lane.title.toUpperCase() + " " + tickets.length}
                 </SwimlaneHeader>
                 <SwimlaneBody>
-                    {tickets}
+                    {filteredTickets}
                 </SwimlaneBody>
             </Swimlane>
         );
