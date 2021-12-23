@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import '../global-styles.js';
 import {Link } from 'react-router-dom';
 
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
