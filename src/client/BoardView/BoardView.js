@@ -1,28 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import ProjectURL from '../ProjectURL';
+
 import TextSearchBox from '../utils/TextSearchBox';
+import {useTextInput} from '../utils/helpers';
 
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import BugReportIcon from '@mui/icons-material/BugReport';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-
-import {useTextInput} from '../utils/helpers';
-
-const Container = styled.div`
-    margin-left: 40px;
-    margin-top: 30px;
-    width: 100%;
-`
-
-const Title = styled.div`
-    white-space: nowrap;
-    margin-top: 15px;
-    font-size: 24px;
-    font-family: CircularStdMedium;
-`
 
 const lanes = [
     {
@@ -110,97 +96,10 @@ const users = [
     }
 ]
 
-const Swimlane = styled.div`
-    background-color: rgb(244 245 247);
-    width: 380px;
-    border: 1px solid rgb(244 245 247);
-    border-radius: 2px;
-`
-
-const SwimlaneHeader = styled.div`
-    white-space: nowrap;
-    margin-top: 15px;
-    margin-left: 10px;
-    font-family: CircularStdBook;
-    color: #5e6c84;
-    font-size:12.5px;
-`
-
-const SwimlaneBody = styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    margin: 20px 10px 10px 10px;
-    font-size: 15px;
-    justify-content: flex-start;
-`
-
-const TicketCard = styled.div`
-    font-family: CircularStdBook;
-    background-color: white;
-    box-shadow: rgb(9 30 66 / 25%) 0px 1px 2px 0px;
-    transition: background 0.1s ease 0s;
-    border-radius: 3px;
-    cursor: pointer;
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 11px;
-    color: #172B4D;
-
-    &:hover {
-        background-color: rgb(235, 236, 240);
-}
-`
-
-const BoardViewContainer = styled.div`
-    margin-top: 30px;
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-    justify-content: flex-start;
-`
-
-const TicketIcons = styled.div`
-    display: flex;
-`
-
-const BoardFilters = styled.div`
-    display: flex;
-    flex-direction: row;
-    margin-top: 35px;
-    gap: 20px;
-`
-
-const UserAvatar = styled.div`
-    display: block;
-    background-image: url(${props => props.img});
-    background-position:50% 50%;
-    background-repeat:no-repeat;
-    background-size: cover;
-    background-color: rgb(235, 236, 240);
-    height: ${props => props.height};
-    width: ${props => props.height};
-    border-radius:100%;
-    margin-left: auto;
-
-    ${({ active }) => active && `
-        outline: 3px solid #4c9aff;
-    `}
-`
-
-const UserAvatars = styled.div`
-    display:flex;
-    padding-right: -10px;
-
-`
-
-const Board = (props) => {
+const BoardView = () => {
 
     const [searchInput,onChange] = useTextInput("");
     const [usersSelected, SetUsersSelected] = useState([]);
-
-    console.log("render board");
 
     useEffect(() => {
         SetUsersSelected([
@@ -243,13 +142,7 @@ const Board = (props) => {
     })
 
     return(
-        <Container>
-            <ProjectURL
-                projectName={props.projectName}
-            />
-            <Title>
-                Kanban Board
-            </Title>
+        <div>
             <BoardFilters>
                 <TextSearchBox
                     value={searchInput}
@@ -259,15 +152,15 @@ const Board = (props) => {
                     {userAvatars}
                 </UserAvatars>
             </BoardFilters>
-            <BoardView
+            <Swimlanes
                 searchInput={searchInput.toLowerCase().replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1")}   //ignore regex characters so the search doesn't break
                 usersSelected={usersSelected}
             />
-        </Container>
+        </div>
     );
 }
 
-const BoardView = (props) => {
+const Swimlanes = (props) => {
 
     const swimLanes = lanes.map((lane,i) => {
 
@@ -323,7 +216,7 @@ const BoardView = (props) => {
             {swimLanes}
         </BoardViewContainer>
     );
-}
+};
 
 const RenderTicketTypeIcon = (type) => {
     switch(type) {
@@ -368,4 +261,90 @@ const RenderTicketSeverityIcon = (priority) => {
     }
 } 
 
-export default Board;
+const BoardViewContainer = styled.div`
+    margin-top: 30px;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: flex-start;
+`
+
+const BoardFilters = styled.div`
+    display: flex;
+    flex-direction: row;
+    margin-top: 35px;
+    gap: 20px;
+`
+
+const Swimlane = styled.div`
+    background-color: rgb(244 245 247);
+    width: 380px;
+    border: 1px solid rgb(244 245 247);
+    border-radius: 2px;
+`
+
+const SwimlaneBody = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin: 20px 10px 10px 10px;
+    font-size: 15px;
+    justify-content: flex-start;
+`
+
+const SwimlaneHeader = styled.div`
+    white-space: nowrap;
+    margin-top: 15px;
+    margin-left: 10px;
+    font-family: CircularStdBook;
+    color: #5e6c84;
+    font-size:12.5px;
+`
+
+const TicketCard = styled.div`
+    font-family: CircularStdBook;
+    background-color: white;
+    box-shadow: rgb(9 30 66 / 25%) 0px 1px 2px 0px;
+    transition: background 0.1s ease 0s;
+    border-radius: 3px;
+    cursor: pointer;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+    color: #172B4D;
+
+    &:hover {
+        background-color: rgb(235, 236, 240);
+}
+`
+
+const TicketIcons = styled.div`
+    display: flex;
+`
+
+const UserAvatar = styled.div`
+    display: block;
+    background-image: url(${props => props.img});
+    background-position:50% 50%;
+    background-repeat:no-repeat;
+    background-size: cover;
+    background-color: rgb(235, 236, 240);
+    height: ${props => props.height};
+    width: ${props => props.height};
+    border-radius:100%;
+    margin-left: auto;
+
+    ${({ active }) => active && `
+        outline: 3px solid #4c9aff;
+    `}
+`
+
+const UserAvatars = styled.div`
+    display:flex;
+    padding-right: -10px;
+
+`
+
+
+export default BoardView;

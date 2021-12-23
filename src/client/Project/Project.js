@@ -1,6 +1,7 @@
 import {Outlet} from 'react-router-dom';
 import {useState} from 'react';
 import styled from 'styled-components';
+import '../style.css';
 
 import Sidebar from '../Sidebar/Sidebar';
 import SideMenu from '../SideMenu/SideMenu';

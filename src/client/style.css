@@ -1,0 +1,18 @@
+body {
+    margin: 0;
+}
+
+@font-face {
+    font-family: CircularStdBook;
+    src: url(./res/fonts/CircularStd-Book.otf);
+}
+
+@font-face {
+    font-family: CircularStdMedium;
+    src: url(./res/fonts/CircularStd-Medium.otf);
+}
+
+@font-face {
+    font-family: CircularStdFont;
+    src: url(./res/fonts/CircularStd-Font.otf);
+}
