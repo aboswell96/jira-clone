@@ -9,6 +9,7 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import BugReportIcon from '@mui/icons-material/BugReport';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import Tooltip from '@mui/material/Tooltip';
 
 const lanes = [
     {
@@ -130,14 +131,16 @@ const BoardView = () => {
         const isActive = usersSelected.some(userr => userr.isSelected && userr.id === user.id);
 
         return(
-            <UserAvatar
-                img={user.photo}
-                key={i}
-                onClick={()=>OnHeroClicked(user.id)}
-                height={'32px'}
-                width={'32px'}
-                active={isActive}
-            />
+            <Tooltip title={user.firstName + " " + user.lastName} placement="top">
+                <UserAvatar
+                    img={user.photo}
+                    key={i}
+                    onClick={()=>OnHeroClicked(user.id)}
+                    height={'32px'}
+                    width={'32px'}
+                    active={isActive}
+                />
+            </Tooltip>
         );
     })
 
@@ -187,11 +190,13 @@ const Swimlanes = (props) => {
                         {RenderTicketTypeIcon(ticket.type)}
                         {RenderTicketSeverityIcon(ticket.priority)}
                         {assignee[0] &&
-                        <UserAvatar
-                            img={assignee[0].photo}
-                            height={'24px'}
-                            width={'24px'}
-                        />}
+                        <Tooltip title={assignee[0].firstName + " " + assignee[0].lastName} placement="top">
+                            <UserAvatar
+                                img={assignee[0].photo}
+                                height={'24px'}
+                                width={'24px'}
+                            />
+                        </Tooltip>}
                     </TicketIcons>
                 </TicketCard>
             )
