@@ -119,6 +119,8 @@ const BoardView = () => {
 
     const [searchInput,onChange] = useTextInput("");
     const [usersSelected, SetUsersSelected] = useState([]);
+    const [myIssuesSelected, SetMyIssuesSelected] = useState(false);
+    const [recentlyUpdatedSelected, SetRecentlyUpdatedSelected] = useState(false);
 
     useEffect(() => {
         SetUsersSelected(_.cloneDeep(initialUsersSelected));
@@ -134,9 +136,19 @@ const BoardView = () => {
     const OnClearFiltersClicked = () => {
         SetUsersSelected(_.cloneDeep(initialUsersSelected));
         onChange({target:{value:""}});
+        SetMyIssuesSelected(false);
+        SetRecentlyUpdatedSelected(false);
     }
 
-    const bIsFiltered = (searchInput.length || usersSelected.some(user => user.isSelected));
+    const OnMyIssuesClicked = (filter) => {
+        SetMyIssuesSelected(!myIssuesSelected);
+    }
+
+    const OnRecentlyUpdatedClicked = (filter) => {
+        SetRecentlyUpdatedSelected(!recentlyUpdatedSelected);
+    }
+
+    const bIsFiltered = (searchInput.length || usersSelected.some(user => user.isSelected) || myIssuesSelected || recentlyUpdatedSelected);
 
     const userAvatars = users.map((user,i) => {
 
@@ -165,21 +177,35 @@ const BoardView = () => {
                 <UserAvatars>
                     {userAvatars}
                 </UserAvatars>
+                <BoardFilter
+                    onClick={OnMyIssuesClicked}
+                    active={myIssuesSelected}
+                >
+                    My Issues
+                </BoardFilter>
+                <BoardFilter
+                    onClick={OnRecentlyUpdatedClicked}
+                    active={recentlyUpdatedSelected}
+                >
+                    Recently Updated
+                </BoardFilter>
                 {   bIsFiltered &&
                     <Divider orientation="vertical" flexItem />
                 }
                 {   bIsFiltered &&
-                    <Filter
+                    <ClearFilter
                         onClick={OnClearFiltersClicked}
                     >
                         Clear All
-                    </Filter>
+                    </ClearFilter>
                 }
             </BoardFilters>
             <Swimlanes
                 searchInput={searchInput.toLowerCase().replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1")}   //ignore regex characters so the search doesn't break
                 usersSelected={usersSelected}
                 isFiltered={bIsFiltered}
+                myIssuesSelected={myIssuesSelected}
+                recentlyUpdated={recentlyUpdatedSelected}
             />
         </div>
     );
@@ -191,11 +217,22 @@ const Swimlanes = (props) => {
 
         let tickets = lane.tickets;
         const totalTicketsInLane = tickets.length;
-        //if any filters are selected
-        if (props.usersSelected.some(user => user.isSelected))
-        {
-            const filteredUsers = props.usersSelected.filter(user => user.isSelected);
-            tickets = tickets.filter(ticket => filteredUsers.some(user => user.id === ticket.assignee));
+
+        if(props.myIssuesSelected){
+            //Joey is the current user
+            tickets = tickets.filter(ticket => ticket.assignee === 100);
+        }
+        else if (props.recentlyUpdated) {
+            //Recently Updated selected => for now just show empty board
+            tickets=[];
+        }
+        else {
+            //if any avatars are selected
+            if (props.usersSelected.some(user => user.isSelected))
+            {
+                const filteredUsers = props.usersSelected.filter(user => user.isSelected);
+                tickets = tickets.filter(ticket => filteredUsers.some(user => user.id === ticket.assignee));
+            }
         }
 
         //filter using the TextSearchBox component
@@ -304,15 +341,43 @@ const BoardFilters = styled.div`
     gap: 20px;
 `
 
-const Filter = styled.button`
+const ClearFilter = styled.button`
     background-color: white;
     border: none;
     color: rgb(66, 82, 110);
+    font-family: CircularStdBook;
+    border-radius: 3px;
 
     &:hover {
         color: rgb(94, 108, 132);
         cursor: pointer;
     }
+
+    ${({ active }) => active && `
+        background: rgb(210, 229, 254) !important;
+        color: rgb(0, 82, 204);
+    `}
+    
+`
+
+const BoardFilter = styled.button`
+    background-color: white;
+    border: none;
+    color: rgb(66, 82, 110);
+    font-family: CircularStdBook;
+    border-radius: 3px;
+
+    &:hover {
+        ${'' /* color: rgb(94, 108, 132); */}
+        cursor: pointer;
+        background-color: rgb(244 245 247);
+    }
+
+    ${({ active }) => active && `
+        background: rgb(210, 229, 254) !important;
+        color: rgb(0, 82, 204);
+    `}
+    
 `
 
 const Swimlane = styled.div`
