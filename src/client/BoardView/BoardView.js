@@ -218,11 +218,7 @@ const Swimlanes = (props) => {
         let tickets = lane.tickets;
         const totalTicketsInLane = tickets.length;
 
-        if(props.myIssuesSelected){
-            //Joey is the current user
-            tickets = tickets.filter(ticket => ticket.assignee === 100);
-        }
-        else if (props.recentlyUpdated) {
+        if (props.recentlyUpdated) {
             //Recently Updated selected => for now just show empty board
             tickets=[];
         }
@@ -231,7 +227,7 @@ const Swimlanes = (props) => {
             if (props.usersSelected.some(user => user.isSelected))
             {
                 const filteredUsers = props.usersSelected.filter(user => user.isSelected);
-                tickets = tickets.filter(ticket => filteredUsers.some(user => user.id === ticket.assignee));
+                tickets = tickets.filter(ticket => filteredUsers.some(user => user.id === ticket.assignee || (props.myIssuesSelected && ticket.assignee === 100)));
             }
         }
 
