@@ -361,6 +361,7 @@ const BoardFilter = styled.button`
     color: rgb(66, 82, 110);
     font-family: CircularStdBook;
     border-radius: 3px;
+    font-size: 14.5px;
 
     &:hover {
         ${'' /* color: rgb(94, 108, 132); */}

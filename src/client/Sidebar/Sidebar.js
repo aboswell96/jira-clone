@@ -1,6 +1,20 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 
+import {Link } from 'react-router-dom';
+
+const Icon = styled.img`
+    height:32px;
+    width:32px;
+    margin: auto;
+    display:block;
+    padding-top: 35px;
+
+    ${({expanded}) => `
+        margin-left:15px;
+    `}
+`
+
 const SidebarComponent = styled.div`
     height: 100vh;
     background-color: #0747a6;
@@ -27,7 +41,13 @@ const Sidebar = () => {
             onMouseEnter={mouseEnter}
             onMouseLeave={mouseLeave}
             >
-
+            <Link to="board" style={{ textDecoration: 'none', color:'inherit' }}>
+                <Icon
+                    src="https://i.ibb.co/fGyrz6b/jira-icon.png" 
+                    alt="Icon"
+                    expanded={sidebarWidth}
+                />
+            </Link>
             </SidebarComponent>
     );
 }
