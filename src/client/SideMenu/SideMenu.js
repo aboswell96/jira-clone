@@ -83,9 +83,6 @@ const SideMenu = (props) => {
                 onClick={props.onClick}
             />);
     });
-
-    console.log("hh");
-
     return(
         <BoardMenu>
             <BoardAvatar>

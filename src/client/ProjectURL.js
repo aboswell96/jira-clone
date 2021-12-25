@@ -11,9 +11,6 @@ const Directory = styled.div`
 `
 
 const ProjectURL = (props) => {
-
-    console.log("render url")
-
     return(
         <Directory>
             <div>

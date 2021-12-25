@@ -6,10 +6,13 @@ import {useTextInput} from '../utils/helpers';
 
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import Divider from '@mui/material/Divider';
 import BugReportIcon from '@mui/icons-material/BugReport';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import Tooltip from '@mui/material/Tooltip';
+
+import _ from "lodash"
 
 const lanes = [
     {
@@ -97,26 +100,28 @@ const users = [
     }
 ]
 
+let initialUsersSelected = [
+    {
+        'id': 100,
+        'isSelected': false,
+    },
+    {
+        'id': 200,
+        'isSelected': false,
+    },
+    {
+        'id': 300,
+        'isSelected': false,
+    }
+];
+
 const BoardView = () => {
 
     const [searchInput,onChange] = useTextInput("");
     const [usersSelected, SetUsersSelected] = useState([]);
 
     useEffect(() => {
-        SetUsersSelected([
-            {
-                'id': 100,
-                'isSelected': false,
-            },
-            {
-                'id': 200,
-                'isSelected': false,
-            },
-            {
-                'id': 300,
-                'isSelected': false,
-            }
-        ]);
+        SetUsersSelected(_.cloneDeep(initialUsersSelected));
     }, []);
 
     const OnHeroClicked = (id) => {
@@ -126,15 +131,19 @@ const BoardView = () => {
         SetUsersSelected(newUsers);
     }
 
+    const OnClearFiltersClicked = () => {
+        SetUsersSelected(_.cloneDeep(initialUsersSelected));
+        onChange({target:{value:""}});
+    }
+
     const userAvatars = users.map((user,i) => {
 
         const isActive = usersSelected.some(userr => userr.isSelected && userr.id === user.id);
 
         return(
-            <Tooltip title={user.firstName + " " + user.lastName} placement="top">
+            <Tooltip title={user.firstName + " " + user.lastName} placement="top" key={i}>
                 <UserAvatar
                     img={user.photo}
-                    key={i}
                     onClick={()=>OnHeroClicked(user.id)}
                     height={'32px'}
                     width={'32px'}
@@ -154,6 +163,16 @@ const BoardView = () => {
                 <UserAvatars>
                     {userAvatars}
                 </UserAvatars>
+                {   (searchInput.length || usersSelected.some(user => user.isSelected)) &&
+                    <Divider orientation="vertical" flexItem />
+                }
+                {   (searchInput.length || usersSelected.some(user => user.isSelected)) &&
+                    <Filter
+                        onClick={OnClearFiltersClicked}
+                    >
+                        Clear All
+                    </Filter>
+                }
             </BoardFilters>
             <Swimlanes
                 searchInput={searchInput.toLowerCase().replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1")}   //ignore regex characters so the search doesn't break
@@ -279,6 +298,17 @@ const BoardFilters = styled.div`
     flex-direction: row;
     margin-top: 35px;
     gap: 20px;
+`
+
+const Filter = styled.button`
+    background-color: white;
+    border: none;
+    color: rgb(66, 82, 110);
+
+    &:hover {
+        color: rgb(94, 108, 132);
+        cursor: pointer;
+    }
 `
 
 const Swimlane = styled.div`
