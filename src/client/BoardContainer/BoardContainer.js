@@ -11,7 +11,7 @@ const Container = styled.div`
 
 const Title = styled.div`
     white-space: nowrap;
-    margin-top: 15px;
+    margin-top: 10px;
     font-size: 24px;
     font-family: CircularStdMedium;
 `

@@ -168,7 +168,7 @@ const BoardView = () => {
     })
 
     return(
-        <div>
+        <div style={{'margin-top':'30px'}}>
             <BoardFilters>
                 <TextSearchBox
                     value={searchInput}
@@ -333,7 +333,6 @@ const BoardViewContainer = styled.div`
 const BoardFilters = styled.div`
     display: flex;
     flex-direction: row;
-    margin-top: 35px;
     gap: 20px;
 `
 

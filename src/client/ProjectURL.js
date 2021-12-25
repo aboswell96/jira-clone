@@ -4,10 +4,11 @@ import styled from 'styled-components';
 const Directory = styled.div`
     display: flex;
     flex-direction: row;
-    gap: 15px;
+    gap: 10px;
     white-space: nowrap;
     font-family: CircularStdBook;
     color: rgb(94, 108, 132);
+    font-size: 15px;
 `
 
 const ProjectURL = (props) => {

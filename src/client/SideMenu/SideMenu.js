@@ -29,12 +29,13 @@ const BoardOptions = styled.div`
     width: 200px;
     margin: auto;
     justify-content: center;
-    padding-top: 15px;
+    padding-top: 30px;
 `
 
 const ProjectType = styled.div`
     color: rgb(94, 108, 132);
-    font-size: 14px;
+    font-size: 13px;
+    font-family: CircularStdBook;
 `
 
 const Tab = styled.div`
@@ -61,6 +62,7 @@ const Tab = styled.div`
 `
 const Title = styled.div`
     color: black;
+    font-size: 14.7px;
 
     ${({ active }) => active && `
         color: #0052cc;

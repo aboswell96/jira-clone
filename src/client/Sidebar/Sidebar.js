@@ -27,7 +27,8 @@ const Sidebar = () => {
             onMouseEnter={mouseEnter}
             onMouseLeave={mouseLeave}
             >
-        </SidebarComponent>
+
+            </SidebarComponent>
     );
 }
 
