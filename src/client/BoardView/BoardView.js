@@ -136,6 +136,8 @@ const BoardView = () => {
         onChange({target:{value:""}});
     }
 
+    const bIsFiltered = (searchInput.length || usersSelected.some(user => user.isSelected));
+
     const userAvatars = users.map((user,i) => {
 
         const isActive = usersSelected.some(userr => userr.isSelected && userr.id === user.id);
@@ -163,10 +165,10 @@ const BoardView = () => {
                 <UserAvatars>
                     {userAvatars}
                 </UserAvatars>
-                {   (searchInput.length || usersSelected.some(user => user.isSelected)) &&
+                {   bIsFiltered &&
                     <Divider orientation="vertical" flexItem />
                 }
-                {   (searchInput.length || usersSelected.some(user => user.isSelected)) &&
+                {   bIsFiltered &&
                     <Filter
                         onClick={OnClearFiltersClicked}
                     >
@@ -177,6 +179,7 @@ const BoardView = () => {
             <Swimlanes
                 searchInput={searchInput.toLowerCase().replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1")}   //ignore regex characters so the search doesn't break
                 usersSelected={usersSelected}
+                isFiltered={bIsFiltered}
             />
         </div>
     );
@@ -187,6 +190,7 @@ const Swimlanes = (props) => {
     const swimLanes = lanes.map((lane,i) => {
 
         let tickets = lane.tickets;
+        const totalTicketsInLane = tickets.length;
         //if any filters are selected
         if (props.usersSelected.some(user => user.isSelected))
         {
@@ -195,9 +199,9 @@ const Swimlanes = (props) => {
         }
 
         //filter using the TextSearchBox component
-        const filteredTicketsbySearch = tickets.filter(ticket => ticket.title.toLowerCase().search(props.searchInput) > -1);
+        tickets = tickets.filter(ticket => ticket.title.toLowerCase().search(props.searchInput) > -1);
 
-        const filteredTickets = filteredTicketsbySearch.map((ticket,j) => {
+        const TicketComponents = tickets.map((ticket,j) => {
 
             const assignee = users.filter(user => ticket.assignee === user.id);
             return(
@@ -226,10 +230,10 @@ const Swimlanes = (props) => {
                 key={i}
             >
                 <SwimlaneHeader>
-                    {lane.title.toUpperCase() + " " + tickets.length}
+                    {lane.title.toUpperCase() + " " + (props.isFiltered ? tickets.length + " of " + totalTicketsInLane : tickets.length)}
                 </SwimlaneHeader>
                 <SwimlaneBody>
-                    {filteredTickets}
+                    {TicketComponents}
                 </SwimlaneBody>
             </Swimlane>
         );
