@@ -177,7 +177,7 @@ const BoardView = () => {
     })
 
     return(
-        <div style={{'margin-top':'30px'}}>
+        <div style={{'marginTop':'30px'}}>
             <BoardFilters>
                 <TextSearchBox
                     value={searchInput}
@@ -223,11 +223,26 @@ const BoardView = () => {
 const Swimlanes = (props) => {
 
     const [lanes,setLanes] = useState(_.cloneDeep(initalLanes));
+    const [currentLaneHovered, setCurrentLaneHovered] = useState(-1);
+
+    //these fire on mount and update so it must have a condition to prevent infinite renders!
+    const OnDragEnter = (e, i) => {
+        if (i !== currentLaneHovered){
+            setCurrentLaneHovered(i);
+        }
+    }
+
+    const OnDragLeave = (e, i) => {
+        if(i !== -1){
+            setCurrentLaneHovered(-1);
+        }
+    }
 
     const onDrop = (e) => {
 
         //if user drops the ticket on the same lane it was originally in
         if(lanes.some(lane => lane.tickets.some(ticket => ((ticket.id === e.dragData.ticketId) && (lane.title === e.dropData.laneTitle))))) {
+            setCurrentLaneHovered(-1);
             return;
         }
 
@@ -250,10 +265,8 @@ const Swimlanes = (props) => {
                 break;
             }
         }
-    }
 
-    const test = (e) => {
-        console.log( e + " dropped2");
+        setCurrentLaneHovered(-1);
     }
 
     const swimLanes = lanes.map((lane,i) => {
@@ -281,7 +294,14 @@ const Swimlanes = (props) => {
 
             const assignee = users.filter(user => ticket.assignee === user.id);
 
-            let ticket_ = <TicketCard>
+            return(
+                <DragDropContainer
+                    targetKey="moveTicket"
+                    key={j}
+                    onDrop={onDrop}
+                    dragData={{ticketId:ticket.id}}
+                >
+                    <TicketCard>
                         {ticket.title}
                         <TicketIcons>
                             {RenderTicketTypeIcon(ticket.type)}
@@ -295,16 +315,7 @@ const Swimlanes = (props) => {
                                 />
                             </Tooltip>}
                         </TicketIcons>
-            </TicketCard>
-
-            return(
-                <DragDropContainer
-                    targetKey="foo"
-                    key={j}
-                    onDrop={onDrop}
-                    dragData={{ticketId:ticket.id}}
-                >
-                    {ticket_}
+                    </TicketCard>
                 </DragDropContainer>
             )
         });
@@ -312,11 +323,12 @@ const Swimlanes = (props) => {
         return(
             <DropTarget
                 key={i}
-                targetKey="foo"
+                targetKey="moveTicket"
                 dropData={{'laneTitle':lane.title}}
-                onHit={test}
+                onDragEnter={(e) => OnDragEnter(e, i)}
+                onDragLeave={(e) => OnDragLeave(e, i)}
             >
-                <Swimlane>
+                <Swimlane isHovered={currentLaneHovered === i}>
                     <SwimlaneHeader>
                         {lane.title.toUpperCase() + " " + (props.isFiltered ? tickets.length + " of " + totalTicketsInLane : tickets.length)}
                     </SwimlaneHeader>
@@ -326,16 +338,6 @@ const Swimlanes = (props) => {
                 </Swimlane>
             </DropTarget>
         );
-
-        // return(
-        // <Swimlane>
-        //     <SwimlaneHeader>
-        //         {lane.title.toUpperCase() + " " + (props.isFiltered ? tickets.length + " of " + totalTicketsInLane : tickets.length)}
-        //     </SwimlaneHeader>
-        //     <SwimlaneBody>
-        //         {TicketComponents}
-        //     </SwimlaneBody>
-        // </Swimlane>);
 
     });
 
@@ -347,22 +349,26 @@ const Swimlanes = (props) => {
 };
 
 const RenderTicketTypeIcon = (type) => {
+
+    const fontSize = 18;
+
     switch(type) {
 
         case "story":
-            return(<BookmarkIcon sx={{ color: "#65ba43" }}/>);
+            return(<BookmarkIcon sx={{ color: "#65ba43", 'fontSize':{fontSize}}}/>);
         case "task":
-            return(<CheckBoxIcon color="primary"/>);
+            return(<CheckBoxIcon color="primary" sx={{'fontSize':{fontSize}}}/>);
         case "bug":
-            return(<BugReportIcon color="action"/>);
+            return(<BugReportIcon color="action" sx={{'fontSize':{fontSize}}}/>);
         default:
-            return(<BookmarkIcon color="success"/>);
+            return(<BookmarkIcon color="success" sx={{'fontSize':{fontSize}}}/>);
     }
 }
 
 const RenderTicketSeverityIcon = (priority) => {
 
     var color = "";
+    const fontSize = 18;
     switch(priority) {
 
         case "sev2":
@@ -382,10 +388,10 @@ const RenderTicketSeverityIcon = (priority) => {
     }
 
     if(priority === "sev2" || priority === "sev1") {
-        return(<ArrowUpwardIcon sx={{ color:{color} }}/>);
+        return(<ArrowUpwardIcon sx={{ color:{color}, 'fontSize':{fontSize} }}/>);
     }
     else {
-        return(<ArrowDownwardIcon sx={{ color:{color} }}/>);
+        return(<ArrowDownwardIcon sx={{ color:{color},'fontSize':{fontSize} }}/>);
     }
 } 
 
@@ -409,6 +415,7 @@ const ClearFilter = styled.button`
     color: rgb(66, 82, 110);
     font-family: CircularStdBook;
     border-radius: 3px;
+    font-size: 14.5px;
 
     &:hover {
         color: rgb(94, 108, 132);
@@ -445,23 +452,31 @@ const BoardFilter = styled.button`
 
 const Swimlane = styled.div`
     background-color: rgb(244 245 247);
-    width: 380px;
-    border: 1px solid rgb(244 245 247);
+    width: 370px;
+    border: 5px solid rgb(244 245 247);
     border-radius: 2px;
+    outline: none;
+
+    ${({ isHovered }) => isHovered && `
+        border: 5px solid #4c9aff;
+        border-radius: 4px;
+    `}
 `
 
 const SwimlaneBody = styled.div`
     display: flex;
     flex-direction: column;
     gap: 5px;
-    margin: 20px 10px 10px 10px;
+    ${'' /* margin: 20px 10px 10px 10px; */}
+    margin-top: 20px;
     font-size: 15px;
     justify-content: flex-start;
+    width: 100%;
 `
 
 const SwimlaneHeader = styled.div`
     white-space: nowrap;
-    margin-top: 15px;
+    margin-top: 10px;
     margin-left: 10px;
     font-family: CircularStdBook;
     color: #5e6c84;
@@ -480,6 +495,7 @@ const TicketCard = styled.div`
     flex-direction: column;
     gap: 11px;
     color: #172B4D;
+    width: 350px;
 
     &:hover {
         background-color: rgb(235, 236, 240);
