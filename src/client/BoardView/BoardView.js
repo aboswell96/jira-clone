@@ -14,7 +14,9 @@ import Tooltip from '@mui/material/Tooltip';
 
 import _ from "lodash"
 
-const lanes = [
+import { DragDropContainer, DropTarget } from 'react-drag-drop-container';
+
+const initalLanes = [
     {
         'title':'Backlog',
         'tickets': [
@@ -23,12 +25,14 @@ const lanes = [
                 'type':'bug',
                 'priority':'sev2',
                 'assignee': -1,
+                'id': 13432,
             },
             {
                 'title':'Add backend',
                 'type':'story',
                 'priority':'sev1',
                 'assignee': -1,
+                'id': 53453,
             }
         ],
     },
@@ -39,19 +43,22 @@ const lanes = [
                 'title':'Add ticket search',
                 'type':'story',
                 'priority':'high',
-                'assignee': 100
+                'assignee': 100,
+                'id': 312321,
             },
             {
                 'title':'Add ticket filters by status',
                 'type':'task',
                 'priority':'low',
-                'assignee': 200
+                'assignee': 200,
+                'id': 6754456,
             },
             {
                 'title':'Add description and project type to settings',
                 'type':'story',
                 'priority':'sev2',
-                'assignee': 300
+                'assignee': 300,
+                'id': 43242,
             }
         ],
     },
@@ -62,7 +69,8 @@ const lanes = [
                 'title':'Add BoardView',
                 'type':'story',
                 'priority':'low',
-                'assignee': 100
+                'assignee': 100,
+                'id': 56343,
             }
         ]
     },
@@ -73,7 +81,8 @@ const lanes = [
                 'title':'add routes',
                 'type':'story',
                 'priority':'sev1',
-                'assignee': 300
+                'assignee': 300,
+                'id': 76866,
             }
         ]
     }
@@ -213,9 +222,43 @@ const BoardView = () => {
 
 const Swimlanes = (props) => {
 
+    const [lanes,setLanes] = useState(_.cloneDeep(initalLanes));
+
+    const onDrop = (e) => {
+
+        //if user drops the ticket on the same lane it was originally in
+        if(lanes.some(lane => lane.tickets.some(ticket => ((ticket.id === e.dragData.ticketId) && (lane.title === e.dropData.laneTitle))))) {
+            return;
+        }
+
+        let newLanes = _.cloneDeep(lanes);
+
+        //find ticket with id, remove and add to lane
+        for (var i=0; i<lanes.length;i++){
+            
+            const ticketIndex = lanes[i].tickets.findIndex(ticket => ticket.id === e.dragData.ticketId);
+
+            if(ticketIndex !== -1) {
+
+                let newTicket = _.cloneDeep(newLanes[i].tickets[ticketIndex]);
+                newLanes[i].tickets.splice(ticketIndex,1);
+
+                let laneToAddTicketTo = newLanes.filter(lane => lane.title === e.dropData.laneTitle)[0];
+                laneToAddTicketTo.tickets.push(newTicket);
+
+                setLanes(newLanes);
+                break;
+            }
+        }
+    }
+
+    const test = (e) => {
+        console.log( e + " dropped2");
+    }
+
     const swimLanes = lanes.map((lane,i) => {
 
-        let tickets = lane.tickets;
+        let tickets = _.cloneDeep(lane.tickets);
         const totalTicketsInLane = tickets.length;
 
         if (props.recentlyUpdated) {
@@ -237,39 +280,63 @@ const Swimlanes = (props) => {
         const TicketComponents = tickets.map((ticket,j) => {
 
             const assignee = users.filter(user => ticket.assignee === user.id);
+
+            let ticket_ = <TicketCard>
+                        {ticket.title}
+                        <TicketIcons>
+                            {RenderTicketTypeIcon(ticket.type)}
+                            {RenderTicketSeverityIcon(ticket.priority)}
+                            {assignee[0] &&
+                            <Tooltip title={assignee[0].firstName + " " + assignee[0].lastName} placement="top">
+                                <UserAvatar
+                                    img={assignee[0].photo}
+                                    height={'24px'}
+                                    width={'24px'}
+                                />
+                            </Tooltip>}
+                        </TicketIcons>
+            </TicketCard>
+
             return(
-                <TicketCard
+                <DragDropContainer
+                    targetKey="foo"
                     key={j}
+                    onDrop={onDrop}
+                    dragData={{ticketId:ticket.id}}
                 >
-                    {ticket.title}
-                    <TicketIcons>
-                        {RenderTicketTypeIcon(ticket.type)}
-                        {RenderTicketSeverityIcon(ticket.priority)}
-                        {assignee[0] &&
-                        <Tooltip title={assignee[0].firstName + " " + assignee[0].lastName} placement="top">
-                            <UserAvatar
-                                img={assignee[0].photo}
-                                height={'24px'}
-                                width={'24px'}
-                            />
-                        </Tooltip>}
-                    </TicketIcons>
-                </TicketCard>
+                    {ticket_}
+                </DragDropContainer>
             )
         });
 
         return(
-            <Swimlane
+            <DropTarget
                 key={i}
+                targetKey="foo"
+                dropData={{'laneTitle':lane.title}}
+                onHit={test}
             >
-                <SwimlaneHeader>
-                    {lane.title.toUpperCase() + " " + (props.isFiltered ? tickets.length + " of " + totalTicketsInLane : tickets.length)}
-                </SwimlaneHeader>
-                <SwimlaneBody>
-                    {TicketComponents}
-                </SwimlaneBody>
-            </Swimlane>
+                <Swimlane>
+                    <SwimlaneHeader>
+                        {lane.title.toUpperCase() + " " + (props.isFiltered ? tickets.length + " of " + totalTicketsInLane : tickets.length)}
+                    </SwimlaneHeader>
+                    <SwimlaneBody>
+                        {TicketComponents}
+                    </SwimlaneBody>
+                </Swimlane>
+            </DropTarget>
         );
+
+        // return(
+        // <Swimlane>
+        //     <SwimlaneHeader>
+        //         {lane.title.toUpperCase() + " " + (props.isFiltered ? tickets.length + " of " + totalTicketsInLane : tickets.length)}
+        //     </SwimlaneHeader>
+        //     <SwimlaneBody>
+        //         {TicketComponents}
+        //     </SwimlaneBody>
+        // </Swimlane>);
+
     });
 
     return(
