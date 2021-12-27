@@ -47,6 +47,7 @@ const Settings = (props) => {
             <TextInput
                 value={name}
                 onChange={onChange}
+                width="640px"
             />
         </TextInputWrapper>
         <Button

@@ -182,6 +182,7 @@ const BoardView = () => {
                 <TextSearchBox
                     value={searchInput}
                     onChange={onChange}
+                    width="160px"
                 />
                 <UserAvatars>
                     {userAvatars}
@@ -456,6 +457,7 @@ const Swimlane = styled.div`
     border: 5px solid rgb(244 245 247);
     border-radius: 2px;
     outline: none;
+    height:100%;
 
     ${({ isHovered }) => isHovered && `
         border: 5px solid #4c9aff;

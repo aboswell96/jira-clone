@@ -5,6 +5,7 @@ import {Link } from 'react-router-dom';
 
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
+import SearchIssuesModal from '../utils/SearchIssues';
 
 const Sidebar = () => {
 
@@ -21,6 +22,10 @@ const Sidebar = () => {
         setIsExpanded(false);
     };
 
+    const [open, setOpen] = useState(false);
+    const handleOpenSearch = () => setOpen(true);
+    const handleCloseSearch = () => setOpen(false);
+
     return(
         <SidebarComponent
             style={{width:sidebarWidth}}
@@ -35,7 +40,10 @@ const Sidebar = () => {
                 />
             </Link>
             <NavOptions>
-                <Tab expanded={isExpanded}>
+                <Tab   
+                    expanded={isExpanded}
+                    onClick={handleOpenSearch}
+                >
                     <ProjectIcon
                         expanded={isExpanded}
                     >
@@ -56,6 +64,10 @@ const Sidebar = () => {
                     </Title>
                 </Tab>
             </NavOptions>
+            <SearchIssuesModal
+                handleClose={handleCloseSearch}
+                open={open}
+            />
         </SidebarComponent>
     );
 }
@@ -94,9 +106,12 @@ const Tab = styled.div`
     overflow: hidden;
     font-family: CircularStdBook;
     transition: background 0.1s ease 0s;
+    cursor: pointer;
 
     ${({ expanded }) => expanded && `
         gap: 15px;
+        justify-content: flex-start;
+        padding-left:15px;
     `}
 
     &:hover {
