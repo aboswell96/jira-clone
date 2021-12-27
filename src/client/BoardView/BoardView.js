@@ -15,6 +15,7 @@ import Tooltip from '@mui/material/Tooltip';
 import _ from "lodash"
 
 import { DragDropContainer, DropTarget } from 'react-drag-drop-container';
+import TicketModal from '../utils/TicketModal';
 
 const initalLanes = [
     {
@@ -226,6 +227,10 @@ const Swimlanes = (props) => {
     const [lanes,setLanes] = useState(_.cloneDeep(initalLanes));
     const [currentLaneHovered, setCurrentLaneHovered] = useState(-1);
 
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+
     //these fire on mount and update so it must have a condition to prevent infinite renders!
     const OnDragEnter = (e, i) => {
         if (i !== currentLaneHovered){
@@ -302,7 +307,9 @@ const Swimlanes = (props) => {
                     onDrop={onDrop}
                     dragData={{ticketId:ticket.id}}
                 >
-                    <TicketCard>
+                    <TicketCard
+                        onClick={handleOpen}
+                    >
                         {ticket.title}
                         <TicketIcons>
                             {RenderTicketTypeIcon(ticket.type)}
@@ -345,6 +352,10 @@ const Swimlanes = (props) => {
     return(
         <BoardViewContainer>
             {swimLanes}
+            <TicketModal
+                open={open}
+                handleClose={handleClose}
+            />
         </BoardViewContainer>
     );
 };
