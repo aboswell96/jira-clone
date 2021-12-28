@@ -17,6 +17,8 @@ import _ from "lodash"
 import { DragDropContainer, DropTarget } from 'react-drag-drop-container';
 import TicketModal from '../utils/TicketModal';
 
+import { readFromDB } from '../../firebase/firebase';
+
 const initalLanes = [
     {
         'title':'Backlog',
