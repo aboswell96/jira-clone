@@ -38,84 +38,102 @@ export const writeToDB = (path,data) => {
 export const setupFirebaseInitialData = () => {
 
     const tickets = [
-    {
+      {
+      '26377':
+      {
         'title':'Add Drag n Drop',
         'type':'bug',
         'priority':'sev2',
         'assignee': -1,
-        'id': 26377,
         'lane': 'backlog',
-
+      }
     },
     {
+      '34891':
+      {
         'title':'Add backend',
         'type':'story',
         'priority':'sev1',
         'assignee': -1,
-        'id': 34891,
         'lane': 'backlog',
+      }
     },
     {
+      '31232':
+      {
         'title':'Add ticket search',
         'type':'story',
         'priority':'high',
         'assignee': 64980,
-        'id': 31232,
         'lane': 'inDevelopment',
+      }
     },
     {
+      '31236':
+      {
         'title':'Add ticket filters by status',
         'type':'task',
         'priority':'low',
         'assignee': 71653,
-        'id': 31236,
         'lane': 'inDevelopment',
+      }
     },
     {
+      '31239':
+      {
         'title':'Add description and project type to settings',
         'type':'story',
         'priority':'sev2',
         'assignee': 86862,
-        'id': 31239,
         'lane': 'inDevelopment',
+      }
     },
     {
+      '56343':
+      {
         'title':'Add BoardView',
         'type':'story',
         'priority':'low',
         'assignee': 64980,
-        'id': 56343,
         'lane': 'inProgress',
+      }
     },
     {
+      '76866':
+      {
         'title':'add routes',
         'type':'story',
         'priority':'sev1',
         'assignee': 64980,
-        'id': 76866,
         'lane': 'done',
+      }
     }];
 
     const users = [
     {
+      '64980':
+      {
         'firstName': 'Joey',
         'lastName': 'Tribbiani',
         'photo': 'https://i.ibb.co/vhJVFpQ/joey-tribbiani-3.jpg',
-        'id': 64980,
+      }
     },
     {
+      '86862':
+      {
         'firstName': 'Monica',
         'lastName': 'Geller',
         'photo':'https://i.ibb.co/b636CY2/monica-geller-2.jpg',
-        'id': 86862,
+      }
     },
     {
+      '71653': 
+      {
         'firstName': 'Ross',
         'lastName': 'Geller',
         'photo': 'https://i.ibb.co/gts0j76/ross-geller-2.jpg',
-        'id': 71653,
-    }
-]
+      }
+    }];
 
     writeToDB('tickets',tickets);
     writeToDB('users',users);
