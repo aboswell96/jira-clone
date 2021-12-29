@@ -197,17 +197,18 @@ const Swimlanes = (props) => {
         //if user drops the ticket on the same lane it was originally in
 
         // const ticketObj = dbTickets.filter(ticket => ticket.id === e.dragData.ticketId)[0];
-        const ticketObj = Object.entries(dbTickets).filter(ticket => ticket.id === e.dragData.ticketId)[0];
-        const ticketLane = tempLanes.filter(lane => lane.code === ticketObj.lane)[0];
+        const ticketObj = Object.entries(dbTickets).filter(ticket => ticket[0] === e.dragData.ticketId)[0];
+        const ticketLane = tempLanes.filter(lane => lane.code === ticketObj[1].lane)[0];
 
         if(ticketLane.code === e.dropData.laneTitle){
             setCurrentLaneHovered(-1);
             return;
         }
 
-        // var newTicket = _.cloneDeep(ticketObj);
-        // newTicket.lane = e.dropData.laneTitle;
-        // writeToDB('tickets/' + ticketObj.id,newTicket);
+        var newTicket = _.cloneDeep(ticketObj);
+        newTicket[1].lane = e.dropData.laneTitle;
+        writeToDB('tickets/' + newTicket[0],newTicket[1]);
+        console.log(ticketObj[0] + newTicket);
 
 
         // let newTickets = _.cloneDeep(dbTickets);
