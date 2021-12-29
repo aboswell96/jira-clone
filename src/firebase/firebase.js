@@ -18,7 +18,7 @@ export const readFromDB = (path,f) => {
     const dbRef = ref(getDatabase());
     return (get(child(dbRef, path)).then((snapshot) => {
       if (snapshot.exists()) {
-        console.log(JSON.stringify(snapshot.val()));
+        // console.log(JSON.stringify(snapshot.val()));
         f(snapshot.val());
         return(snapshot.val());
       } else {
@@ -38,7 +38,7 @@ export const writeToDB = (path,data) => {
 export const setupFirebaseInitialData = () => {
 
     const tickets = [
-      {
+    {
       '26377':
       {
         'title':'Add Drag n Drop',
@@ -135,9 +135,20 @@ export const setupFirebaseInitialData = () => {
       }
     }];
 
-    writeToDB('tickets',tickets);
-    writeToDB('users',users);
     writeToDB('title',"Central Perk Project");
+
+
+    tickets.forEach(ticket => {
+      console.log(Object.keys(ticket)[0] + " " + JSON.stringify(Object.values(ticket)));
+      writeToDB('tickets/' + Object.keys(ticket)[0], ...Object.values(ticket));
+    });
+
+    users.forEach(user => {
+      console.log(Object.keys(user)[0] + " " + JSON.stringify(Object.values(user)));
+      writeToDB('users/' + Object.keys(user)[0], ...Object.values(user));
+    });
+
+
     const dbRef = ref(getDatabase());
     get(child(dbRef, `/`)).then((snapshot) => {
       if (snapshot.exists()) {

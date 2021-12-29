@@ -62,8 +62,8 @@ const BoardView = () => {
     },[dbUsers]);
 
     const createFilterStates = (users) => {
-        return users.map((user,i) =>  {
-            return({'id':user.id,'isSelected': false,});
+        return Object.entries(users).map((user,i) =>  {
+            return({'id':user[0],'isSelected': false,});
         })
     };
 
@@ -93,7 +93,7 @@ const BoardView = () => {
 
     const bIsFiltered = (searchInput.length || usersSelected.some(user => user.isSelected) || myIssuesSelected || recentlyUpdatedSelected);
 
-    const userAvatars = dbUsers.map((user,i) => {
+    const userAvatars = Object.entries(dbUsers).map((user,i) => {
 
         if (loading) {
             return(
@@ -101,13 +101,13 @@ const BoardView = () => {
             );
         }
 
-        const isActive = usersSelected.some(userr => userr.isSelected && userr.id === user.id);
+        const isActive = usersSelected.some(userr => userr.isSelected && userr.id === user[0]);
 
         return(
-            <Tooltip title={user.firstName + " " + user.lastName} placement="top" key={i}>
+            <Tooltip title={user[1].firstName + " " + user[1].lastName} placement="top" key={i}>
                 <UserAvatar
-                    img={user.photo}
-                    onClick={()=>OnHeroClicked(user.id)}
+                    img={user[1].photo}
+                    onClick={()=>OnHeroClicked(user[0])}
                     height={'32px'}
                     width={'32px'}
                     active={isActive}
@@ -170,10 +170,15 @@ const Swimlanes = (props) => {
     const handleClose = () => setOpen(false);
 
     const [dbTickets, setDbTickets] = useState([]);
+    const [ticketsArray, setTicketsArray] = useState([]);
 
     useEffect(() => {
         readFromDB('tickets',setDbTickets);
     },[])
+
+    useEffect(() => {
+        console.log("loaded " + JSON.stringify(dbTickets));
+    },[dbTickets]);
 
     //these fire on mount and update so it must have a condition to prevent infinite renders!
     const OnDragEnter = (e, i) => {
@@ -191,7 +196,8 @@ const Swimlanes = (props) => {
     const onDrop = (e) => {
         //if user drops the ticket on the same lane it was originally in
 
-        const ticketObj = dbTickets.filter(ticket => ticket.id === e.dragData.ticketId)[0];
+        // const ticketObj = dbTickets.filter(ticket => ticket.id === e.dragData.ticketId)[0];
+        const ticketObj = Object.entries(dbTickets).filter(ticket => ticket.id === e.dragData.ticketId)[0];
         const ticketLane = tempLanes.filter(lane => lane.code === ticketObj.lane)[0];
 
         if(ticketLane.code === e.dropData.laneTitle){
@@ -199,9 +205,9 @@ const Swimlanes = (props) => {
             return;
         }
 
-        var newTicket = _.cloneDeep(ticketObj);
-        newTicket.lane = e.dropData.laneTitle;
-        writeToDB('tickets/' + ticketObj.id,newTicket);
+        // var newTicket = _.cloneDeep(ticketObj);
+        // newTicket.lane = e.dropData.laneTitle;
+        // writeToDB('tickets/' + ticketObj.id,newTicket);
 
 
         // let newTickets = _.cloneDeep(dbTickets);
@@ -213,7 +219,9 @@ const Swimlanes = (props) => {
 
     const swimLanes = tempLanes.map((lane,i) => {
 
-        let filteredTickets = dbTickets.filter(ticket => ticket.lane === lane.code);
+        // let filteredTickets = dbTickets.filter(ticket => ticket.lane === lane.code);
+        var filteredTickets = Object.entries(dbTickets).filter(ticket => ticket[1].lane === lane.code);
+
         const numMaxTickets = filteredTickets.length;
 
         if (props.recentlyUpdated) {
@@ -225,33 +233,33 @@ const Swimlanes = (props) => {
             if (props.usersSelected.some(user => user.isSelected))
             {
                 const filteredUsers = props.usersSelected.filter(user => user.isSelected);
-                filteredTickets = filteredTickets.filter(ticket => filteredUsers.some(user => user.id === ticket.assignee || (props.myIssuesSelected && ticket.assignee === 64980)));
+                filteredTickets = filteredTickets.filter(ticket => filteredUsers.some(user => (user.id == ticket[1].assignee) || (props.myIssuesSelected && ticket[1].assignee == 64980)));
             }
         }
 
         //filter using the TextSearchBox component
-        filteredTickets = filteredTickets.filter(ticket => ticket.title.toLowerCase().search(props.searchInput) > -1);
+        filteredTickets = filteredTickets.filter(ticket => ticket[1].title.toLowerCase().search(props.searchInput) > -1);
 
         const TicketComponents = filteredTickets.map((ticket,j) => {
-            const assignee = props.users.filter(user => ticket.assignee === user.id);
+            const assignee = Object.entries(props.users).filter(user => ticket[1].assignee == user[0]);
             return( 
                 <DragDropContainer
                     targetKey="moveTicket"
                     key={j}
                     onDrop={onDrop}
-                    dragData={{ticketId:ticket.id}}
+                    dragData={{ticketId:ticket[0]}}
                 >
                     <TicketCard
                         onClick={handleOpen}
                     >
-                        {ticket.title}
+                        {ticket[1].title}
                         <TicketIcons>
-                            {RenderTicketTypeIcon(ticket.type)}
-                            {RenderTicketSeverityIcon(ticket.priority)}
+                            {RenderTicketTypeIcon(ticket[1].type)}
+                            {RenderTicketSeverityIcon(ticket[1].priority)}
                             {assignee[0] &&
-                            <Tooltip title={assignee[0].firstName + " " + assignee[0].lastName} placement="top">
+                            <Tooltip title={assignee[0][1].firstName + " " + assignee[0][1].lastName} placement="top">
                                 <UserAvatar
-                                    img={assignee[0].photo}
+                                    img={assignee[0][1].photo}
                                     height={'24px'}
                                     width={'24px'}
                                 />

@@ -7,7 +7,7 @@ import Settings from './client/Settings/Settings';
 
 import {setupFirebaseInitialData, readFromDB} from '../src/firebase/firebase';
 
-const bSetupFirebaseData = false;
+const SETUP_INITIAL_FIREBASE_DATA = false;
 
 const App = () => {
 
@@ -22,7 +22,7 @@ const App = () => {
     readFromDB('title',SetProjectName);
   },[])
 
-  if (bSetupFirebaseData) {
+  if (SETUP_INITIAL_FIREBASE_DATA) {
     setupFirebaseInitialData();
   }
 
