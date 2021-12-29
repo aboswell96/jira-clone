@@ -29,9 +29,17 @@ export const readFromDB = (path,f) => {
     }));
 };
 
-export const writeToDB = (path,data) => {
+export const writeToDB = (path,data, cb) => {
     const db = getDatabase();
-    set(ref(db, path), data);
+
+    if(cb) {
+      set(ref(db, path), data)
+      .then(() => {
+        cb();
+      });
+    }else {
+      set(ref(db, path), data);
+    }
   
 }
 

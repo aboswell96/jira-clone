@@ -61,6 +61,8 @@ const BoardView = () => {
         SetUsersSelected(createFilterStates(dbUsers));
     },[dbUsers]);
 
+
+
     const createFilterStates = (users) => {
         return Object.entries(users).map((user,i) =>  {
             return({'id':user[0],'isSelected': false,});
@@ -170,7 +172,6 @@ const Swimlanes = (props) => {
     const handleClose = () => setOpen(false);
 
     const [dbTickets, setDbTickets] = useState([]);
-    const [ticketsArray, setTicketsArray] = useState([]);
 
     useEffect(() => {
         readFromDB('tickets',setDbTickets);
@@ -193,10 +194,11 @@ const Swimlanes = (props) => {
         }
     }
 
-    const onDrop = (e) => {
-        //if user drops the ticket on the same lane it was originally in
+    const OnDBChangeCommitted = () => {
+        readFromDB('tickets',setDbTickets);
+    }
 
-        // const ticketObj = dbTickets.filter(ticket => ticket.id === e.dragData.ticketId)[0];
+    const onDrop = (e) => {
         const ticketObj = Object.entries(dbTickets).filter(ticket => ticket[0] === e.dragData.ticketId)[0];
         const ticketLane = tempLanes.filter(lane => lane.code === ticketObj[1].lane)[0];
 
@@ -207,30 +209,20 @@ const Swimlanes = (props) => {
 
         var newTicket = _.cloneDeep(ticketObj);
         newTicket[1].lane = e.dropData.laneTitle;
-        writeToDB('tickets/' + newTicket[0],newTicket[1]);
-        console.log(ticketObj[0] + newTicket);
-
-
-        // let newTickets = _.cloneDeep(dbTickets);
-        // let ticketIndex = dbTickets.findIndex(ticket => ticket.id === ticketObj.id);
-        // newTickets[ticketIndex].lane = e.dropData.laneTitle;
-        // setDbTickets(newTickets);
+        writeToDB('tickets/' + newTicket[0],newTicket[1], OnDBChangeCommitted);
         setCurrentLaneHovered(-1);
     };
 
     const swimLanes = tempLanes.map((lane,i) => {
-
-        // let filteredTickets = dbTickets.filter(ticket => ticket.lane === lane.code);
         var filteredTickets = Object.entries(dbTickets).filter(ticket => ticket[1].lane === lane.code);
-
         const numMaxTickets = filteredTickets.length;
 
         if (props.recentlyUpdated) {
-            //Recently Updated selected => for now just show empty board
+            //Show empty board for now if recently updated filter is selected
             filteredTickets=[];
         }
         else {
-            //if any avatars are selected
+            //If any user filters are selected
             if (props.usersSelected.some(user => user.isSelected))
             {
                 const filteredUsers = props.usersSelected.filter(user => user.isSelected);
@@ -238,7 +230,7 @@ const Swimlanes = (props) => {
             }
         }
 
-        //filter using the TextSearchBox component
+        //Filter with the SearchBox
         filteredTickets = filteredTickets.filter(ticket => ticket[1].title.toLowerCase().search(props.searchInput) > -1);
 
         const TicketComponents = filteredTickets.map((ticket,j) => {
