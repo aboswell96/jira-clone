@@ -11,3 +11,7 @@ export const useTextInput = (initialValue) => {
 
     return [value,onChange];
 } 
+
+export function delay(time) {
+    return new Promise(resolve => setTimeout(resolve, time));
+  }
