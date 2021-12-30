@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import TextSearchBox from '../utils/TextSearchBox';
-import {useTextInput} from '../utils/helpers';
 
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
@@ -43,12 +42,15 @@ const tempLanes = [
 
 const BoardView = () => {
 
-    const [searchInput,setSearchInput] = useTextInput("");
+    const [searchInput,setSearchInput] = useState("");
     const [usersSelected, SetUsersSelected] = useState([]);
     const [myIssuesSelected, SetMyIssuesSelected] = useState(false);
     const [recentlyUpdatedSelected, SetRecentlyUpdatedSelected] = useState(false);
+    const [loading, setLoading] = useState(true);
 
-    let [loading, setLoading] = useState(true);
+    const onChange = (e) => {
+        setSearchInput(e.target.value);
+    }
 
     const [dbUsers, setDbUsers] = useState([{},{},{}]);
 
@@ -60,8 +62,6 @@ const BoardView = () => {
     useEffect(() => {
         SetUsersSelected(createFilterStates(dbUsers));
     },[dbUsers]);
-
-
 
     const createFilterStates = (users) => {
         return Object.entries(users).map((user,i) =>  {
@@ -80,7 +80,7 @@ const BoardView = () => {
 
     const OnClearFiltersClicked = () => {
         SetUsersSelected(createFilterStates(dbUsers));
-        setSearchInput({target:{value:""}});
+        setSearchInput("");
         SetMyIssuesSelected(false);
         SetRecentlyUpdatedSelected(false);
     }
@@ -123,7 +123,7 @@ const BoardView = () => {
             <BoardFilters>
                 <TextSearchBox
                     value={searchInput}
-                    onChange={setSearchInput}
+                    onChange={onChange}
                     width="160px"
                 />
                 <UserAvatars>

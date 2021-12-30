@@ -5,7 +5,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import BoardContainer from './client/BoardContainer/BoardContainer';
 import Settings from './client/Settings/Settings';
 
-import {setupFirebaseInitialData, readFromDB} from '../src/firebase/firebase';
+import {setupFirebaseInitialData, readFromDB,writeToDB} from '../src/firebase/firebase';
 
 const SETUP_INITIAL_FIREBASE_DATA = false;
 
@@ -14,7 +14,7 @@ const App = () => {
   const [projectName,SetProjectName] = useState("loading...");
 
   const OnUpdateSettingsSubmit = (newName) => {
-    SetProjectName(newName);
+    writeToDB('title', newName, () => {readFromDB('title',SetProjectName)});
   }
 
   //send network requests after mount

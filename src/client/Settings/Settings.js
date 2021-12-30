@@ -1,10 +1,8 @@
-import React from 'react';
+import React,{useState} from 'react';
 import styled from 'styled-components';
 import ProjectURL from '../ProjectURL';
 import TextInput from '../utils/TextInput';
 import Button from '../utils/Button';
-
-import {useTextInput} from '../utils/helpers';
 
 const Container = styled.div`
     margin-left: 40px;
@@ -31,7 +29,11 @@ const Text = styled.div`
 
 const Settings = (props) => {
 
-    const [name,onChange] = useTextInput(props.projectName);
+    const [name,setValue] = useState(props.projectName);
+
+    const onChange = (e) => {
+        setValue(e.target.value);
+    }
 
     return(
         <Container>

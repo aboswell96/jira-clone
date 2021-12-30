@@ -1,83 +1,22 @@
-import { useState } from 'react';
+import React, { useState,useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import TextSearchBox from './TextSearchBox';
+import DebouncedTextSearchBox from './DebouncedTextSearchBox';
+import Tooltip from '@mui/material/Tooltip';
 
-import {useTextInput} from '../utils/helpers';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import BugReportIcon from '@mui/icons-material/BugReport';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import SearchOffIcon from '@mui/icons-material/SearchOff';
 
-const initalLanes = [
-    {
-        'title':'Backlog',
-        'tickets': [
-            {
-                'title':'Add Drag n Drop',
-                'type':'bug',
-                'priority':'sev2',
-                'assignee': -1,
-                'id': 13432,
-            },
-            {
-                'title':'Add backend',
-                'type':'story',
-                'priority':'sev1',
-                'assignee': -1,
-                'id': 53453,
-            }
-        ],
-    },
-    {
-        'title':'Selected for Development',
-        'tickets': [
-            {
-                'title':'Add ticket search',
-                'type':'story',
-                'priority':'high',
-                'assignee': 100,
-                'id': 312321,
-            },
-            {
-                'title':'Add ticket filters by status',
-                'type':'task',
-                'priority':'low',
-                'assignee': 200,
-                'id': 6754456,
-            },
-            {
-                'title':'Add description and project type to settings',
-                'type':'story',
-                'priority':'sev2',
-                'assignee': 300,
-                'id': 43242,
-            }
-        ],
-    },
-    {
-        'title':'In Progress',
-        'tickets':[
-            {
-                'title':'Add BoardView',
-                'type':'story',
-                'priority':'low',
-                'assignee': 100,
-                'id': 56343,
-            }
-        ]
-    },
-    {
-        'title':'Done',
-        'tickets':[
-            {
-                'title':'add routes',
-                'type':'story',
-                'priority':'sev1',
-                'assignee': 300,
-                'id': 76866,
-            }
-        ]
-    }
-];
+import ClipLoader from "react-spinners/ClipLoader";
+
+import { readFromDB } from '../../firebase/firebase';
+
+import { debounce } from "lodash";
 
 const style = {
     position: 'absolute',
@@ -89,17 +28,84 @@ const style = {
     pl: 35/8,
     width: 530,
     height: '100%',
-    bgcolor: 'background.paper',
+    bgcolor: '#0747a6',
     boxShadow: 24,
     verticalAlign:'top',
   };
 
 const SearchIssuesModal = (props) => {
 
-    const [searchInput,onChange] = useTextInput("");
+    const [searchInput,setSearchInput] = useState("");
+    const [tickets, setTickets] = useState({});
+    const [dbUsers, setDbUsers] = useState({});
+    const [loading, setLoading] = useState(false);
+
+    const [isDataLoaded, setIsDataLoaded] = useState(false);
+
+    useEffect(() => {
+        readFromDB('users',setDbUsers);
+    },[])
+
+
+    const UpdateSearchResults = () => {
+        if(!isDataLoaded) {
+            readFromDB('tickets',setTickets);
+            setLoading(false);
+            setIsDataLoaded(true);
+        }
+    }
+
+    //without useCallback we would create a new handler on every rerender
+    //caused by setsearchinput which would fire the debounced eveny manyu times. 
+    //Usecallback returns a memorized version of the function that doesn't get recreated every render
+    const handler = useCallback(debounce(UpdateSearchResults, 1000),[]);
+
+    const onChangeDebounce = (e) => {
+        // perform any event related action here
+
+        setSearchInput(e.target.value);
+        if(!loading && !isDataLoaded){
+            setLoading(true);
+        }
+
+        handler();
+    };
+
+    const input = searchInput.toLowerCase().replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
+
+    let filteredTickets = Object.entries(tickets).filter(ticket => ticket[1].title.toLowerCase().search(input) > -1);
+
+    // if(!input) {
+    //     filteredTickets = [];
+    // }
+
+    const Tickets = filteredTickets.map((ticket,i) => {
+        const assignee = Object.entries(dbUsers).filter(user => ticket[1].assignee == user[0]);
+        return(
+            <TicketCard
+            // onClick={handleOpen}
+            key={i}
+            >
+                {ticket[1].title}
+                <TicketIcons>
+                    {RenderTicketTypeIcon(ticket[1].type)}
+                    {RenderTicketSeverityIcon(ticket[1].priority)}
+                    {assignee[0] &&
+                    <Tooltip title={assignee[0][1].firstName + " " + assignee[0][1].lastName} placement="top">
+                        <UserAvatar
+                            img={assignee[0][1].photo}
+                            height={'24px'}
+                            width={'24px'}
+                        />
+                    </Tooltip>}
+                </TicketIcons>
+            </TicketCard>
+        )
+        });
+
 
     return(
-        <div>
+        <Container>
             <Modal
                 open={props.open}
                 onClose={props.handleClose}
@@ -107,18 +113,145 @@ const SearchIssuesModal = (props) => {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                    <TextSearchBox
+                    <DebouncedTextSearchBox
                         value={searchInput}
-                        onChange={onChange}
+                        onChange={onChangeDebounce}
                         width="500px"
-                        placeholder="Search for issues by description or number..."
+                        placeholder="Search for issues by description or number..." 
                     />
-                    
+                    <Spinner>
+                        {loading && <ClipLoader color="white" loading={loading} size={100} />}
+                    </Spinner>
+                    <Results>
+                        {Tickets.length ? Tickets : (isDataLoaded ? <NoResults/> : "")}
+                    </Results>
                 </Box>
             </Modal>
-        </div>
+        </Container>
     );
 
 }
+
+const RenderTicketTypeIcon = (type) => {
+
+    const fontSize = 18;
+
+    switch(type) {
+
+        case "story":
+            return(<BookmarkIcon sx={{ color: "#65ba43", 'fontSize':{fontSize}}}/>);
+        case "task":
+            return(<CheckBoxIcon color="primary" sx={{'fontSize':{fontSize}}}/>);
+        case "bug":
+            return(<BugReportIcon color="action" sx={{'fontSize':{fontSize}}}/>);
+        default:
+            return(<BookmarkIcon color="success" sx={{'fontSize':{fontSize}}}/>);
+    }
+}
+
+const RenderTicketSeverityIcon = (priority) => {
+
+    var color = "";
+    const fontSize = 18;
+    switch(priority) {
+
+        case "sev2":
+            color = "#cd1316";
+            break;
+        case "sev1":
+            color = "#e97f33";
+            break;
+        case "high":
+            color = "#57a55a";
+            break;
+        case "low":
+            color = "#2d8738";
+            break;
+        default:
+            color = "#2d8738";
+    }
+
+    if(priority === "sev2" || priority === "sev1") {
+        return(<ArrowUpwardIcon sx={{ color:{color}, 'fontSize':{fontSize} }}/>);
+    }
+    else {
+        return(<ArrowDownwardIcon sx={{ color:{color},'fontSize':{fontSize} }}/>);
+    }
+}
+
+const Container = styled.div`
+    background-color: #0747a6;
+`
+
+const NoResults = () => {
+    return (
+        <div style={{'display':'flex', 'flex-direction':'column', 'width':'300px','margin':'auto', 'color':'white', 'font-size':'30px'}}>
+        <SearchOffIcon
+            sx={{'margin':'auto', 'fontSize':'30px'}}
+        />
+            <div style={{'margin':'auto'}}>
+                No Results
+            </div>
+        </div>
+    )
+}
+
+const TicketCard = styled.div`
+    font-family: CircularStdBook;
+    background-color: white;
+    box-shadow: rgb(9 30 66 / 25%) 0px 1px 2px 0px;
+    transition: background 0.1s ease 0s;
+    border-radius: 3px;
+    cursor: pointer;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+    color: #172B4D;
+    width: 350px;
+
+    &:hover {
+        background-color: rgb(235, 236, 240);
+}
+`
+
+const TicketIcons = styled.div`
+    display: flex;
+`
+
+const UserAvatar = styled.div`
+    display: block;
+    background-image: url(${props => props.img});
+    background-position:50% 50%;
+    background-repeat:no-repeat;
+    background-size: cover;
+    background-color: rgb(235, 236, 240);
+    height: ${props => props.height};
+    width: ${props => props.height};
+    border-radius:100%;
+    margin-left: auto;
+
+    ${({ active }) => active && `
+        outline: 3px solid #4c9aff;
+    `}
+`
+
+const Results = styled.div`
+    width: 350px;
+    margin: auto;
+    margin-top: 30px;
+    display:flex;
+    flex-direction: column;
+    gap: 5px;
+
+`
+
+const Spinner = styled.div`
+    width: 100px;
+    margin:auto;
+    margin-top: 35px;
+`
+
+
 
 export default SearchIssuesModal;

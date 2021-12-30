@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import TextSearchBox from './TextSearchBox';
-import {useTextInput} from '../utils/helpers';
 
 const style = {
     position: 'absolute',
@@ -23,7 +22,10 @@ const style = {
 
 const TicketModal = (props) => {
 
-    const [searchInput,onChange] = useTextInput("");
+    const [searchInput,setSearchInput] = useState("");
+    const onChange = (e) => {
+        setSearchInput(e.target.value);
+    }
 
     return(
         <div>
