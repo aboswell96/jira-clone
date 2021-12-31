@@ -11,7 +11,7 @@ const UserTile = (props) => {
         setIsExpanded(false)
     }
     console.log("props " + props.user)
-    console.log("value " + value)
+    console.log("value " + JSON.stringify(value))
 
     return(
         <div>
@@ -19,7 +19,7 @@ const UserTile = (props) => {
             onClick={()=>setIsExpanded(!isExpanded)}
             style={{'border': '1px solid #dfe1e6'}}
         >
-        {value.length > 1 && 
+        {value.length > 1 && value[1].photo.length > 0 &&
             <UserAvatar
                     img={value[1].photo}
                     height={'24px'}
@@ -39,6 +39,7 @@ const UserTile = (props) => {
                         onClick={() => {onClick(user)}}
                     >
                         {
+                            user[1].photo.length > 0 &&
                             <UserAvatar
                                     img={user[1].photo}
                                     height={'24px'}

@@ -43,6 +43,8 @@ const TicketModal = (props) => {
 
     const assignee = Object.entries(dbUsers).filter(user => user[0] == ticket.assignee);
 
+    const Unassigned = ["00000",{"firstName":'Unassigned','lastName':'','photo':''}];
+
     return(
             <Modal
                 open={props.open}
@@ -70,17 +72,15 @@ const TicketModal = (props) => {
                                 status={ticket.lane}
                             />
                             <span style={{'display':'block','paddingTop':'25px', 'color':'#5e6c84','fontSize':'12.5px', 'fontFamily':'CircularStdBold'}}>ASSIGNEES</span>
-                            {assignee.length > 0 &&
                                 <UserTile
-                                    user={assignee[0]}
-                                    users={Object.entries(dbUsers)}
+                                    user={assignee.length > 0 ? assignee[0] : Unassigned}
+                                    users={Object.entries(dbUsers).concat([Unassigned])}
                                 />
-                            }
                             <span style={{'display':'block','paddingTop':'25px', 'color':'#5e6c84','fontSize':'12.5px', 'fontFamily':'CircularStdBold'}}>REPORTER</span>
-                            {/* <UserTile
-                                user={[]}
-                                users={dbUsers}
-                            /> */}
+                            <UserTile
+                                    user={assignee.length > 0 ? assignee[0] : Unassigned}
+                                    users={Object.entries(dbUsers).concat([Unassigned])}
+                                />
                             <span style={{'display':'block','paddingTop':'25px', 'color':'#5e6c84','fontSize':'12.5px', 'fontFamily':'CircularStdBold'}}>PRIORITY</span>
                             <PriorityTile
                                 priority={ticket.priority}
