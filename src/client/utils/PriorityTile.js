@@ -6,20 +6,20 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
 const MAPPING = [
     {
-        'title': 'Lowest',
-        'code': 'low'
-    },
-    {
-        'title': 'Medium',
-        'code': 'high'
+        'title': 'Highest',
+        'code': 'sev2'
     },
     {
         'title': 'Higher',
         'code': 'sev1'
     },
     {
-        'title': 'Highest',
-        'code': 'sev2'
+        'title': 'Medium',
+        'code': 'high'
+    },
+    {
+        'title': 'Lowest',
+        'code': 'low'
     }];
 
 const PriorityTile = (props) => {
@@ -83,7 +83,7 @@ const RenderTicketSeverityIcon = (priority) => {
             color = "#2d8738";
     }
 
-    if(priority === "sev2" || priority === "sev1") {
+    if(priority === "Highest" || priority === "Higher") {
         return(<ArrowUpwardIcon sx={{ color:{color}, 'fontSize':{fontSize} }}/>);
     }
     else {

@@ -53,12 +53,12 @@ const TicketModal = (props) => {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                    <TicketType>
-                        {RenderTicketTypeIcon(ticket.type)}
-                        {ticket.type.toUpperCase() + "-" + ticketID}
-                    </TicketType>
                     <TicketPanels>
                         <TicketMainPanel>
+                            <TicketType>
+                                {RenderTicketTypeIcon(ticket.type)}
+                                {ticket.type.toUpperCase() + "-" + ticketID}
+                            </TicketType>
                             <span style={{'display':'block','paddingTop':'30px', 'color':'#172B4D','fontSize':'24px'}}>{ticket.title}</span>
                             <span style={{'display':'block','paddingTop':'25px', 'color':'#172B4D'}}>Description</span>
                             <Description>
