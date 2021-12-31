@@ -38,8 +38,10 @@ const PriorityTile = (props) => {
             onClick={()=>setIsExpanded(!isExpanded)}
             style={{'border': '1px solid #dfe1e6'}}
         >
-            {RenderTicketSeverityIcon(value)}
-            {value}
+            <UserInfo>
+                {RenderTicketSeverityIcon(value)}
+                {value}
+            </UserInfo>
         </Container>
         <div>
             {isExpanded && MAPPING.map((prio,i) => {
@@ -49,8 +51,10 @@ const PriorityTile = (props) => {
                     <Container
                         onClick={()=>onClick(prio.title)}
                     >
-                        {RenderTicketSeverityIcon(prio.title)}
-                        {prio.title}
+                        <UserInfo>
+                            {RenderTicketSeverityIcon(prio.title)}
+                            {prio.title}
+                        </UserInfo>
                     </Container>
                     );
                 }
@@ -93,13 +97,18 @@ const RenderTicketSeverityIcon = (priority) => {
 
 export default PriorityTile;
 
-const Container = styled.div`
-    background-color: rgb(244 245 247);
-    height: 32px;
+const UserInfo = styled.div`
     display: flex;
     align-items: center;
     gap: 5px;
-    justify-content: center;
+    justify-content: flex-start;
+    height: inherit;
+    margin-left: 45px;
+`
+
+const Container = styled.div`
+    background-color: rgb(244 245 247);
+    height: 32px;
     font-size: 12px;
     font-family: CircularStdBold;
     color: #172B4D;

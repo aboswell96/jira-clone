@@ -43,7 +43,7 @@ const TicketModal = (props) => {
 
     const assignee = Object.entries(dbUsers).filter(user => user[0] == ticket.assignee);
 
-    const Unassigned = ["00000",{"firstName":'Unassigned','lastName':'','photo':''}];
+    const Unassigned = ["00000",{"firstName":'Unassigned','lastName':'','photo':'https://ibb.co/M9PdhH9'}];
 
     return(
             <Modal
