@@ -168,8 +168,12 @@ const Swimlanes = (props) => {
     const [currentLaneHovered, setCurrentLaneHovered] = useState(-1);
 
     const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(true);
+    const handleOpen = (ticket) => {
+        setOpen(true);
+        setTicketSelected(ticket);
+    }
     const handleClose = () => setOpen(false);
+    const [ticketSelected, setTicketSelected] = useState({});
 
     const [dbTickets, setDbTickets] = useState([]);
 
@@ -178,7 +182,7 @@ const Swimlanes = (props) => {
     },[])
 
     useEffect(() => {
-        console.log("loaded " + JSON.stringify(dbTickets));
+        // console.log("loaded " + JSON.stringify(dbTickets));
     },[dbTickets]);
 
     //these fire on mount and update so it must have a condition to prevent infinite renders!
@@ -243,7 +247,7 @@ const Swimlanes = (props) => {
                     dragData={{ticketId:ticket[0]}}
                 >
                     <TicketCard
-                        onClick={handleOpen}
+                        onClick={() => handleOpen(ticket)}
                     >
                         {ticket[1].title}
                         <TicketIcons>
@@ -285,10 +289,11 @@ const Swimlanes = (props) => {
     return(
         <BoardViewContainer>
             {swimLanes}
-            <TicketModal
+            {ticketSelected.length > 0 ? <TicketModal
                 open={open}
                 handleClose={handleClose}
-            />
+                ticket={ticketSelected}
+            /> : ""}
         </BoardViewContainer>
     );
 };

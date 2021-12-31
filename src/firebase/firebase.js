@@ -18,7 +18,7 @@ export const readFromDB = (path,f) => {
     const dbRef = ref(getDatabase());
     return (get(child(dbRef, path)).then((snapshot) => {
       if (snapshot.exists()) {
-        console.log(JSON.stringify(snapshot.val()));
+        // console.log(JSON.stringify(snapshot.val()));
         f(snapshot.val());
         return(snapshot.val());
       } else {
