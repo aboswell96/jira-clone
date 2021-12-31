@@ -24,7 +24,11 @@ const Sidebar = () => {
 
     const [open, setOpen] = useState(false);
     const handleOpenSearch = () => setOpen(true);
-    const handleCloseSearch = () => setOpen(false);
+    const handleCloseSearch = () => {
+        setOpen(false);
+        SetSideBarWidth("64px");
+        setIsExpanded(false);
+    }
 
     return(
         <SidebarComponent
