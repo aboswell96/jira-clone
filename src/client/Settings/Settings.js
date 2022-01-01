@@ -50,6 +50,8 @@ const Settings = (props) => {
                 value={name}
                 onChange={onChange}
                 width="640px"
+                height="30px"
+                pt="1px"
             />
         </TextInputWrapper>
         <Button

@@ -15,6 +15,9 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import StatusTile from './StatusTile';
 import PriorityTile from './PriorityTile';
 
+import TextInput from './TextInput';
+import { SettingsVoiceSharp } from '@mui/icons-material';
+
 const style = {
     position: 'absolute',
     top: '50%',
@@ -59,7 +62,9 @@ const TicketModal = (props) => {
                                 {RenderTicketTypeIcon(ticket.type)}
                                 {ticket.type.toUpperCase() + "-" + ticketID}
                             </TicketType>
-                            <span style={{'display':'block','paddingTop':'30px', 'color':'#172B4D','fontSize':'24px'}}>{ticket.title}</span>
+                            <Title
+                                title={ticket.title}
+                            />
                             <span style={{'display':'block','paddingTop':'25px', 'color':'#172B4D'}}>Description</span>
                             <Description>
                                 Temp Description
@@ -91,7 +96,39 @@ const TicketModal = (props) => {
                 </Box>
             </Modal>
         );
+}
+
+const Title = (props) => {
+
+    const [isEditting, setIsEditting] = useState(false);
+    const [value, setValue] = useState(props.title);
+    const onChange = (e) => {
+        setValue(e.target.value);
     }
+
+    return(
+        <div>
+            {!isEditting &&
+                <TitleContainer
+                    onClick={()=>{setIsEditting(true)}}
+                >
+                    <span style={{'display':'block','paddingTop':'30px', 'color':'#172B4D','fontSize':'24px'}}>{value}</span>
+                </TitleContainer>
+            }
+            {isEditting &&
+                <TextInput
+                    value={value}
+                    onChange={onChange}
+                    height="35px"
+                    width="100%"
+                    fontSize="24px"
+                    mt="35px"
+                >
+                </TextInput>
+            }
+        </div>
+    );
+}
 
 const RenderTicketTypeIcon = (type) => {
 
@@ -112,6 +149,10 @@ const RenderTicketTypeIcon = (type) => {
 
 const Description = styled.div`
 
+`
+
+const TitleContainer = styled.div`
+    cursor: pointer;
 `
 
 const TicketPanels = styled.div`

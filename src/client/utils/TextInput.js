@@ -3,13 +3,15 @@ import styled from 'styled-components';
 
 const TextInputComponent = styled.input`
     width: ${props => props.width};
-    height: 30px;
+    height: ${props => props.height};
     background-color: rgb(244 245 247);
     border: 1px solid rgb(223, 225, 230);
     border-radius: 4px;
     outline: none;
     font-family: CircularStdBook;
+    font-size: ${props => props.fontSize};
     padding-top: 1px;
+    margin-top: ${props => props.mt};
 
     &:hover {
         background-color: #ebecf0;
@@ -33,7 +35,10 @@ const TextInput = (props) => {
             value={props.value} 
             onChange={props.onChange}
             width={props.width}
+            height={props.height}
             placeholder={props.placeholder}
+            fontSize={props.fontSize}
+            mt={props.mt}
             />
     );
 }

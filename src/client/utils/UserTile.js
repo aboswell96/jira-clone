@@ -1,22 +1,26 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
+import useComponentVisible from '../customHooks/useComponentVisible';
 
 const UserTile = (props) => {
 
     const [isExpanded,setIsExpanded] = useState(false);
     const [value,setValue] = useState(props.user);
 
+    const f = () => {
+        console.log("Dasdasdsa")
+        setIsExpanded(!isExpanded)
+    }
+
     const onClick = (newVal) => {
         setValue(newVal)
         setIsExpanded(false)
     }
-    console.log("props " + props.user)
-    console.log("value " + JSON.stringify(value))
 
     return(
         <div>
         <Container
-            onClick={()=>setIsExpanded(!isExpanded)}
+            onClick={f}
             style={{'border': '1px solid #dfe1e6'}}
         >
             <UserInfo>
@@ -32,37 +36,58 @@ const UserTile = (props) => {
             }
             </UserInfo>
         </Container>
-        <div>
-            {isExpanded && value.length > 1 && props.users.map((user,i) => {
-
-                if(value[0] !== user[0]) {
-                    return(
-                    <Container
-                        onClick={() => {onClick(user)}}
-                    >
-                    <UserInfo>
-                        {
-                            <UserAvatar
-                                    img={user[1].photo}
-                                    height={'24px'}
-                                    width={'24px'}
-                            />
-                        }
-                        {
-                            user[1].firstName + " " + user[1].lastName
-                        }
-                    </UserInfo> 
-                    </Container>
-                    );
-                }
-
-            })}
-        </div>
+        {isExpanded && value.length > 1 && 
+            <DropDown
+                users={props.users}
+                value={value}
+                onClick={onClick}
+            />
+        }
         </div>
     )
 }
 
+const DropDown = (props) => {
+
+    const { ref, isComponentVisible } = useComponentVisible(true);
+
+    return (
+        <Test ref={ref}>
+            {isComponentVisible && (props.users.map((user,i) => {
+
+                    if(props.value[0] !== user[0]) {
+                        return(
+                        <Container
+                            onClick={() => {props.onClick(user)}}
+                        >
+                        <UserInfo>
+                            {
+                                <UserAvatar
+                                        img={user[1].photo}
+                                        height={'24px'}
+                                        width={'24px'}
+                                />
+                            }
+                            {
+                                user[1].firstName + " " + user[1].lastName
+                            }
+                        </UserInfo> 
+                        </Container>
+                        );
+                    }
+            }))}
+        </Test>
+    );
+
+}
+
 export default UserTile;
+
+const Test = styled.div`
+    background-color: rgb(244 245 247);
+    position: absolute;
+    width: 169px;
+`
 
 const UserInfo = styled.div`
     display: flex;
@@ -71,6 +96,20 @@ const UserInfo = styled.div`
     justify-content: flex-start;
     height: inherit;
     margin-left: 30px;
+`
+
+const Container2 = styled.div`
+    background-color: rgb(244 245 247);
+    height: 32px;
+    font-size: 12px;
+    font-family: CircularStdBold;
+    color: #172B4D;
+    width: auto;
+    cursor: pointer;
+    position: relative;
+
+    &:hover {
+        background-color: rgb(235, 236, 240);
 `
 
 const Container = styled.div`
