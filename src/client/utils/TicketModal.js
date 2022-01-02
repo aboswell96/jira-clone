@@ -90,7 +90,6 @@ const TicketModal = (props) => {
                             <PriorityTile
                                 priority={ticket.priority}
                             />
-                            <span style={{'display':'block','paddingTop':'25px', 'color':'#5e6c84','fontSize':'12.5px', 'fontFamily':'CircularStdBold'}}>ORIGINAL ESIMATE(HOURS)</span>
                         </TicketSidePanel>
                     </TicketPanels>
                 </Box>
@@ -162,11 +161,12 @@ const TicketPanels = styled.div`
 `
 
 const TicketMainPanel = styled.div`
-    width: 637px;
+    width: 65%;
 `
 
 const TicketSidePanel = styled.div`
-    margin-left: 50px
+    margin-left: 50px;
+    width: 35%;
 `
 
 const TicketType = styled.div`

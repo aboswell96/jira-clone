@@ -36,7 +36,9 @@ const StatusTile = (props) => {
                 onClick={()=>setIsExpanded(!isExpanded)}
                 style={{'border': '1px solid #dfe1e6'}}
             >
-                {value.toUpperCase()}
+                <UserInfo>
+                        {value}
+                </UserInfo>
             </Container>
             {isExpanded && value.length > 1 && 
             <DropDown
@@ -63,7 +65,9 @@ const DropDown = (props) => {
                     <Container
                         onClick={()=>props.onClick(status.title)}
                     >
+                    <UserInfo>
                         {status.title}
+                    </UserInfo>
                     </Container>
                 );
             };
@@ -79,18 +83,22 @@ const DropDownComponent = styled.div`
     width: 169px;
 `
 
-const Container = styled.div`
-    background-color: rgb(244 245 247);
-    height: 32px;
+const UserInfo = styled.div`
     display: flex;
     align-items: center;
     gap: 5px;
     justify-content: center;
+    height: inherit;
+`
+
+const Container = styled.div`
+    background-color: rgb(244 245 247);
+    height: 32px;
     font-size: 12px;
     font-family: CircularStdBold;
     color: #172B4D;
-    width: auto;
     cursor: pointer;
+    width: 169px;
 
     &:hover {
         background-color: rgb(235, 236, 240);

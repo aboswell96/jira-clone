@@ -34,7 +34,7 @@ const PriorityTile = (props) => {
     }
 
     return(
-        <div>
+        <div style={{'width':'75%'}}>
         <Container
             onClick={()=>setIsExpanded(!isExpanded)}
             style={{'border': '1px solid #dfe1e6'}}
@@ -124,9 +124,8 @@ const UserInfo = styled.div`
     display: flex;
     align-items: center;
     gap: 5px;
-    justify-content: flex-start;
+    justify-content: center;
     height: inherit;
-    margin-left: 45px;
 `
 
 const Container = styled.div`
@@ -135,8 +134,8 @@ const Container = styled.div`
     font-size: 12px;
     font-family: CircularStdBold;
     color: #172B4D;
-    width: auto;
     cursor: pointer;
+    width: 169px;
 
     &:hover {
         background-color: rgb(235, 236, 240);

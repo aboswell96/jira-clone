@@ -104,8 +104,8 @@ const Container = styled.div`
     font-size: 12px;
     font-family: CircularStdBold;
     color: #172B4D;
-    width: auto;
     cursor: pointer;
+    width: 169px;
 
     &:hover {
         background-color: rgb(235, 236, 240);
