@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import useComponentVisible from '../customHooks/useComponentVisible';
 
 const MAPPING = [
     {
@@ -37,25 +38,46 @@ const StatusTile = (props) => {
             >
                 {value.toUpperCase()}
             </Container>
-            <div>
-                {isExpanded && MAPPING.map((status,i) => {
-
-                    if(status.title !== value) {
-                        return(
-                            <Container
-                                onClick={()=>onClick(status.title)}
-                            >
-                                {status.title}
-                            </Container>
-                        );
-                    };
-                })}
-            </div>
+            {isExpanded && value.length > 1 && 
+            <DropDown
+                value={value}
+                onClick={onClick}
+            />
+        }
         </div>
     );
 }
 
 export default StatusTile;
+
+const DropDown = (props) => {
+
+    const { ref, isComponentVisible } = useComponentVisible(true);
+
+    return (
+        <DropDownComponent ref={ref}>
+        {isComponentVisible && MAPPING.map((status,i) => {
+
+            if(status.title !== props.value) {
+                return(
+                    <Container
+                        onClick={()=>props.onClick(status.title)}
+                    >
+                        {status.title}
+                    </Container>
+                );
+            };
+            })}
+        </DropDownComponent>
+    );
+
+}
+
+const DropDownComponent = styled.div`
+    background-color: rgb(244 245 247);
+    position: absolute;
+    width: 169px;
+`
 
 const Container = styled.div`
     background-color: rgb(244 245 247);

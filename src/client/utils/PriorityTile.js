@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import styled from 'styled-components';
+import useComponentVisible from '../customHooks/useComponentVisible';
 
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
@@ -44,25 +45,41 @@ const PriorityTile = (props) => {
             </UserInfo>
         </Container>
         <div>
-            {isExpanded && MAPPING.map((prio,i) => {
+            {isExpanded &&          
+                <DropDown
+                    value={value}
+                    onClick={onClick}
+                />
+            }
+        </div>
+        </div>
+    );
+}
 
-                if(prio.title !== value) {
-                    return(
-                    <Container
-                        onClick={()=>onClick(prio.title)}
-                    >
+const DropDown = (props) => {
+
+    const { ref, isComponentVisible } = useComponentVisible(true);
+
+    return (
+        <DropDownComponent ref={ref}>
+            {isComponentVisible && (MAPPING.map((prio,i) => {
+
+                    if(prio.title !== props.value ) {
+                        return(
+                        <Container
+                            onClick={() => props.onClick(prio.title)}
+                        >
                         <UserInfo>
                             {RenderTicketSeverityIcon(prio.title)}
                             {prio.title}
                         </UserInfo>
-                    </Container>
-                    );
-                }
-
-            })}
-        </div>
-        </div>
+                        </Container>
+                        );
+                    }
+            }))}
+        </DropDownComponent>
     );
+
 }
 
 const RenderTicketSeverityIcon = (priority) => {
@@ -96,6 +113,12 @@ const RenderTicketSeverityIcon = (priority) => {
 } 
 
 export default PriorityTile;
+
+const DropDownComponent = styled.div`
+    background-color: rgb(244 245 247);
+    position: absolute;
+    width: 169px;
+`
 
 const UserInfo = styled.div`
     display: flex;
