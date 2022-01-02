@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components';
 import useComponentVisible from '../customHooks/useComponentVisible';
 
@@ -52,7 +52,7 @@ const DropDown = (props) => {
     const { ref, isComponentVisible } = useComponentVisible(true);
 
     return (
-        <Test ref={ref}>
+        <DropDownComponent ref={ref}>
             {isComponentVisible && (props.users.map((user,i) => {
 
                     if(props.value[0] !== user[0]) {
@@ -76,14 +76,14 @@ const DropDown = (props) => {
                         );
                     }
             }))}
-        </Test>
+        </DropDownComponent>
     );
 
 }
 
 export default UserTile;
 
-const Test = styled.div`
+const DropDownComponent = styled.div`
     background-color: rgb(244 245 247);
     position: absolute;
     width: 169px;
@@ -96,20 +96,6 @@ const UserInfo = styled.div`
     justify-content: flex-start;
     height: inherit;
     margin-left: 30px;
-`
-
-const Container2 = styled.div`
-    background-color: rgb(244 245 247);
-    height: 32px;
-    font-size: 12px;
-    font-family: CircularStdBold;
-    color: #172B4D;
-    width: auto;
-    cursor: pointer;
-    position: relative;
-
-    &:hover {
-        background-color: rgb(235, 236, 240);
 `
 
 const Container = styled.div`
