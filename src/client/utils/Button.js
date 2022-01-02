@@ -2,18 +2,18 @@ import React from 'react';
 import styled from 'styled-components';
 
 const ButtonWrapper = styled.button`
-    background-color: #0052cc;
+    background-color: ${props => props.bgColor};
     width: 115px;
     height: 30px;
     border-radius: 4px;
-    border: 1px solid #0052cc;
-    color: white;
+    border: 1px solid ${props => props.bgColor};
+    color: ${props => props.color};
     font-family: CircularStdBook;
     font-size: 14.5px;
     margin-top: ${props => props.marginTop};
 
     &:hover {
-        background-color: #005eeb;
+        background-color: ${props => props.hoverColor};
         cursor: pointer;
     }
 
@@ -27,6 +27,9 @@ const Button = (props) => {
         <ButtonWrapper 
             marginTop={props.marginTop}
             onClick={props.onClick}
+            bgColor={props.bgColor}
+            color={props.color}
+            hoverColor={props.hoverColor}
         >
         {props.text}
         </ButtonWrapper>

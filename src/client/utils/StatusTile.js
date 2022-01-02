@@ -64,6 +64,7 @@ const DropDown = (props) => {
                 return(
                     <Container
                         onClick={()=>props.onClick(status.title)}
+                        style={{'border': '1px solid #F4F5F7'}}
                     >
                     <UserInfo>
                         {status.title}

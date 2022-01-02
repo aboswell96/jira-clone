@@ -1,7 +1,7 @@
 import React, {useState,useEffect} from 'react';
 import styled from 'styled-components';
 
-import { readFromDB } from '../../firebase/firebase';
+import { readFromDB, queryDB } from '../../firebase/firebase';
 
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
@@ -10,13 +10,13 @@ import UserTile from './UserTile';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import BugReportIcon from '@mui/icons-material/BugReport';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import StatusTile from './StatusTile';
 import PriorityTile from './PriorityTile';
 
-import TextInput from './TextInput';
-import { SettingsVoiceSharp } from '@mui/icons-material';
+import TitleInput from './TitleInput';
+import Button from './Button';
+import moment from 'moment';
+import AddComment from './AddComment';
 
 const style = {
     position: 'absolute',
@@ -36,9 +36,11 @@ const style = {
 const TicketModal = (props) => {
 
     const [dbUsers, setDbUsers] = useState({});
+    const [comments, setComments] = useState([]);
 
     useEffect(() => {
         readFromDB('users',setDbUsers);
+        queryDB(26377, setComments);
     }, []);
 
     const ticket = props.ticket[1];
@@ -65,11 +67,15 @@ const TicketModal = (props) => {
                             <Title
                                 title={ticket.title}
                             />
-                            <span style={{'display':'block','paddingTop':'25px', 'color':'#172B4D'}}>Description</span>
-                            <Description>
-                                Temp Description
-                            </Description>
-                            <span style={{'display':'block','paddingTop':'25px', 'color':'#172B4D'}}>Comments</span>
+                            <span style={{'display':'block','paddingTop':'25px', 'color':'#172B4D', 'fontFamily':'CircularStdMedium', 'marginLeft':'3px'}}>Description</span>
+                            <Description
+                                description={ticket.description}
+                            />
+                            <span style={{'display':'block','paddingTop':'25px', 'color':'#172B4D','fontFamily':'CircularStdMedium','marginLeft':'3px'}}>Comments</span>
+                            <Comments
+                                comments={comments.sort((a,b) => { return a.timestamp < b.timestamp ? -1 : 1})}     //Sorted for now until we can add sort to Firebase queries
+                                users={dbUsers}
+                            />
                         </TicketMainPanel>
                         <TicketSidePanel>
                             <span style={{'display':'block','paddingTop':'25px', 'color':'#5e6c84','fontSize':'12.5px', 'fontFamily':'CircularStdBold'}}>STATUS</span>
@@ -97,33 +103,233 @@ const TicketModal = (props) => {
         );
 }
 
-const Title = (props) => {
+const Comments = (props) => {
+
+    const [value, setValue] = useState("");
+    const [isEditting, setIsEditting] = useState(false);
+
+    const onSave = () => {
+        setIsEditting(false);
+        //write to db
+    }
+
+    const onCancel = () => {
+        setIsEditting(false);
+        setValue("");
+    }
+    
+    const onChange = (e) => {
+
+        if(!isEditting) {
+            setIsEditting(true);
+        }
+
+        setValue(e.target.value);
+    }
+
+    const comments = props.comments.map((comment,i) => {
+
+        const user = Object.entries(props.users).filter(user => user[0] == comment.userId)[0];
+        console.log(user);
+
+        return(
+            <div style={{'display':'flex', 'flex-direction':'row', 'gap':'25px'}}>
+                <div>
+                    <UserAvatar
+                        img={user[1].photo}
+                        height={'32px'}
+                        width={'32px'}
+                    />
+                </div>
+                <div style={{'display':'flex', 'flex-direction':'column'}}>
+                    {/* <UserAvatar
+                        img={user[1].photo}
+                        height={'24px'}
+                        width={'24px'}
+                    /> */}
+                    {/* <span>{moment(comment.timestamp).calendar()}{user[1].firstName}{user[1].lastName}{comment.msg}</span> */}
+                    <div style={{'display':'flex', 'flex-direction':'row','gap':'12px'}}>
+                        <div style={{"fontSize":"15px", 'fontFamily':'CircularStdMedium', 'color':'#42526E'}}>
+                            {user[1].firstName + " " + user[1].lastName}
+                        </div>
+                        <div style={{"fontSize":"14.5px", 'fontFamily':'CircularStdBook', 'color':'#42526E'}}>
+                            {moment(comment.timestamp).calendar()}
+                        </div>
+                    </div>
+                    <div style={{"fontSize":"15px", 'fontFamily':'CircularStdBook', 'color':'#172B4D', 'paddingTop':'10px'}} >
+                        {comment.msg}
+                    </div>
+                </div>
+            </div>
+        );
+    });
+
+    const addComment =
+                            <div style={{'display':'flex', 'flex-direction':'row', 'gap':'25px'}}>
+                                <UserAvatar
+                                    img={"https://i.ibb.co/vhJVFpQ/joey-tribbiani-3.jpg"}
+                                    height={'32px'}
+                                    width={'32px'}
+                                />
+                                <div style={{'display':'flex', 'flex-direction':'column', 'gap':'0', 'width':'100%'}} >
+                                    <AddComment
+                                        value={value}
+                                        onChange={onChange}
+                                        height="44px"
+                                        width="90%"
+                                        fontSize="15px"
+                                        placeholder="Add a comment..."
+                                    />
+                                    {isEditting &&
+                                    <div>
+                                        <Button
+                                            text="Save"
+                                            bgColor="#0052cc"
+                                            color="white"
+                                            hoverColor="#005eeb"
+                                            onClick={()=>onSave()}
+                                        />
+                                        <Button
+                                            text="Cancel"
+                                            hoverColor="#dfe1e6"
+                                            onClick={()=>onCancel()}
+                                        />
+                                    </div>
+                                    }
+                                </div>
+                            </div>
+    return(
+        <div style={{'display':'flex', 'flex-direction':'column', 'gap':'15px','paddingTop':'25px'}}>
+            {comments}
+            {addComment}
+        </div>
+    )
+}
+
+const UserAvatar = styled.div`
+    display: block;
+    background-image: url(${props => props.img});
+    background-position:50% 50%;
+    background-repeat:no-repeat;
+    background-size: cover;
+    background-color: rgb(235, 236, 240);
+    height: ${props => props.height};
+    width: ${props => props.height};
+    border-radius:100%;
+    flex-shrink: 0;
+`
+
+const Description = (props) => {
 
     const [isEditting, setIsEditting] = useState(false);
-    const [value, setValue] = useState(props.title);
+    const [value, setValue] = useState(props.description);
+    const defaultVal = props.description;
+
     const onChange = (e) => {
+
+        if(!isEditting) {
+            setIsEditting(true);
+        }
+
         setValue(e.target.value);
+    }
+
+    const onSave = () => {
+        setIsEditting(false);
+        //write to db
+    }
+
+    const onCancel = () => {
+        setIsEditting(false);
+        setValue(defaultVal);
     }
 
     return(
         <div>
-            {!isEditting &&
-                <TitleContainer
-                    onClick={()=>{setIsEditting(true)}}
-                >
-                    <span style={{'display':'block','paddingTop':'30px', 'color':'#172B4D','fontSize':'24px'}}>{value}</span>
-                </TitleContainer>
+            <TitleInput
+                value={value}
+                onChange={onChange}
+                height="35px"
+                width="100%"
+                fontSize="15px"
+                mt="1px"
+            >
+            </TitleInput>
+            {
+                isEditting &&
+                    <div>
+                        <Button
+                            text="Save changes"
+                            bgColor="#0052cc"
+                            color="white"
+                            hoverColor="#005eeb"
+                            onClick={()=>onSave()}
+                        />
+                        <Button
+                            text="Cancel"
+                            hoverColor="#dfe1e6"
+                            onClick={()=>onCancel()}
+                        />
+                    </div>
+                    
             }
-            {isEditting &&
-                <TextInput
-                    value={value}
-                    onChange={onChange}
-                    height="35px"
-                    width="100%"
-                    fontSize="24px"
-                    mt="35px"
-                >
-                </TextInput>
+        </div>
+    );
+}
+
+const Title = (props) => {
+
+    const [isEditting, setIsEditting] = useState(false);
+    const [value, setValue] = useState(props.title);
+    const defaultVal = props.title;
+
+    const onChange = (e) => {
+
+        if(!isEditting) {
+            setIsEditting(true);
+        }
+
+        setValue(e.target.value);
+    }
+
+    const onSave = () => {
+        setIsEditting(false);
+        //write to db
+    }
+
+    const onCancel = () => {
+        setIsEditting(false);
+        setValue(defaultVal);
+    }
+
+    return(
+        <div>
+            <TitleInput
+                value={value}
+                onChange={onChange}
+                height="35px"
+                width="100%"
+                fontSize="24px"
+                mt="35px"
+            >
+            </TitleInput>
+            {
+                isEditting &&
+                    <div>
+                        <Button
+                            text="Save changes"
+                            bgColor="#0052cc"
+                            color="white"
+                            hoverColor="#005eeb"
+                            onClick={()=>onSave()}
+                        />
+                        <Button
+                            text="Cancel"
+                            hoverColor="#dfe1e6"
+                            onClick={()=>onCancel()}
+                        />
+                    </div>
+                    
             }
         </div>
     );
@@ -145,10 +351,6 @@ const RenderTicketTypeIcon = (type) => {
             return(<BookmarkIcon sx={{ color: "#65ba43", 'fontSize':{fontSize}}}/>);
     }
 }
-
-const Description = styled.div`
-
-`
 
 const TitleContainer = styled.div`
     cursor: pointer;

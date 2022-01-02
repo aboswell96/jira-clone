@@ -68,6 +68,7 @@ const DropDown = (props) => {
                         return(
                         <Container
                             onClick={() => props.onClick(prio.title)}
+                            style={{'border': '1px solid #F4F5F7'}}
                         >
                         <UserInfo>
                             {RenderTicketSeverityIcon(prio.title)}

@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getDatabase, ref, child, get, set} from "firebase/database";
+import { getDatabase, ref, child, get, set, query, orderByChild,equalTo } from "firebase/database";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAzsxJkZBNIVjO5ps1EAiFu09VrDo3L7hY",
@@ -43,6 +43,16 @@ export const writeToDB = (path,data, cb) => {
   
 }
 
+export const queryDB = (ticketId, cb) => {
+  const db = getDatabase();
+  const x = query(ref(db, 'comments/' + ticketId.toString()));
+  // x.equalTo(26377);
+  get(x).then((snapshot)=> {
+    cb(snapshot.val());
+    console.log(JSON.stringify(snapshot.val()));
+  })
+}
+
 export const setupFirebaseInitialData = () => {
 
     const tickets = [
@@ -54,6 +64,7 @@ export const setupFirebaseInitialData = () => {
         'priority':'sev2',
         'assignee': -1,
         'lane': 'backlog',
+        'description': 'temp Description 2',
       }
     },
     {
@@ -64,6 +75,7 @@ export const setupFirebaseInitialData = () => {
         'priority':'sev1',
         'assignee': -1,
         'lane': 'backlog',
+        'description': 'temp Description 2',
       }
     },
     {
@@ -74,6 +86,7 @@ export const setupFirebaseInitialData = () => {
         'priority':'high',
         'assignee': 64980,
         'lane': 'inDevelopment',
+        'description': 'temp Description 2',
       }
     },
     {
@@ -84,6 +97,7 @@ export const setupFirebaseInitialData = () => {
         'priority':'low',
         'assignee': 71653,
         'lane': 'inDevelopment',
+        'description': 'temp Description 2',
       }
     },
     {
@@ -94,6 +108,7 @@ export const setupFirebaseInitialData = () => {
         'priority':'sev2',
         'assignee': 86862,
         'lane': 'inDevelopment',
+        'description': 'temp Description 2',
       }
     },
     {
@@ -104,6 +119,7 @@ export const setupFirebaseInitialData = () => {
         'priority':'low',
         'assignee': 64980,
         'lane': 'inProgress',
+        'description': 'temp Description 2',
       }
     },
     {
@@ -114,6 +130,7 @@ export const setupFirebaseInitialData = () => {
         'priority':'sev1',
         'assignee': 64980,
         'lane': 'done',
+        'description': 'temp Description 2',
       }
     }];
 
@@ -143,28 +160,64 @@ export const setupFirebaseInitialData = () => {
       }
     }];
 
+    const oneDay = 1000*60*60*24;
+    const comments = [
+      {
+        26377 : [
+        {
+            'msg': "Nice work on this!",
+            'timestamp': new Date().getTime(),
+            'userId': '64980',
+        },
+        {
+            'msg': "Is this still in progress?",
+            'timestamp': new Date().getTime() - oneDay,
+            'userId': '86862',
+        },
+        {
+          'msg': "Do we need this for this release?",
+          'timestamp': new Date().getTime() - 2*oneDay,
+          'userId': '71653',
+        },
+        {
+          'msg': "Kicked out of current sprint due to escalations",
+          'timestamp': new Date().getTime() - 3*oneDay,
+          'userId': '64980',
+        }
+      ]
+    }
+  ]
+
     writeToDB('title',"Central Perk Project");
 
 
+    //write Tickets to DB
     tickets.forEach(ticket => {
       console.log(Object.keys(ticket)[0] + " " + JSON.stringify(Object.values(ticket)));
       writeToDB('tickets/' + Object.keys(ticket)[0], ...Object.values(ticket));
     });
 
+    //write users to DB
     users.forEach(user => {
       console.log(Object.keys(user)[0] + " " + JSON.stringify(Object.values(user)));
       writeToDB('users/' + Object.keys(user)[0], ...Object.values(user));
     });
 
-
-    const dbRef = ref(getDatabase());
-    get(child(dbRef, `/`)).then((snapshot) => {
-      if (snapshot.exists()) {
-        console.log(JSON.stringify(snapshot.val()));
-      } else {
-        console.log("No data available");
-      }
-    }).catch((error) => {
-      console.error(error);
+    //write comments to DB
+    comments.forEach(comment => {
+      console.log(Object.keys(comment)[0] + " " + JSON.stringify(Object.values(comment)));
+      writeToDB('comments/' + Object.keys(comment)[0], ...Object.values(comment));
     });
+
+
+    // const dbRef = ref(getDatabase());
+    // get(child(dbRef, `/`)).then((snapshot) => {
+    //   if (snapshot.exists()) {
+    //     console.log(JSON.stringify(snapshot.val()));
+    //   } else {
+    //     console.log("No data available");
+    //   }
+    // }).catch((error) => {
+    //   console.error(error);
+    // });
 }

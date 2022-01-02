@@ -7,11 +7,6 @@ const UserTile = (props) => {
     const [isExpanded,setIsExpanded] = useState(false);
     const [value,setValue] = useState(props.user);
 
-    const f = () => {
-        console.log("Dasdasdsa")
-        setIsExpanded(!isExpanded)
-    }
-
     const onClick = (newVal) => {
         setValue(newVal)
         setIsExpanded(false)
@@ -20,7 +15,7 @@ const UserTile = (props) => {
     return(
         <div>
         <Container
-            onClick={f}
+            onClick={()=>{setIsExpanded(!isExpanded)}}
             style={{'border': '1px solid #dfe1e6'}}
         >
             <UserInfo>
@@ -59,19 +54,16 @@ const DropDown = (props) => {
                         return(
                         <Container
                             onClick={() => {props.onClick(user)}}
+                            style={{'border': '1px solid #F4F5F7'}}
                         >
-                        <UserInfo>
-                            {
+                            <UserInfo>
                                 <UserAvatar
                                         img={user[1].photo}
                                         height={'24px'}
                                         width={'24px'}
                                 />
-                            }
-                            {
-                                user[1].firstName + " " + user[1].lastName
-                            }
-                        </UserInfo> 
+                                {user[1].firstName + " " + user[1].lastName}
+                            </UserInfo> 
                         </Container>
                         );
                     }

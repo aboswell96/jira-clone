@@ -56,8 +56,11 @@ const Settings = (props) => {
         </TextInputWrapper>
         <Button
             text="Save changes"
+            bgColor="#0052cc"
+            color="white"
             marginTop="30px"
             onClick={()=>props.onClick(name)}
+            hoverColor="#005eeb"
         />
         </Container>
     );
