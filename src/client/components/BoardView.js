@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-import TextSearchBox from '../utils/TextSearchBox';
+import TextSearchBox from './TextSearchBox';
 
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
@@ -14,13 +14,13 @@ import Tooltip from '@mui/material/Tooltip';
 import _ from "lodash"
 
 import { DragDropContainer, DropTarget } from 'react-drag-drop-container';
-import TicketModal from '../utils/TicketModal';
+import TicketModal from './TicketModal';
 
 import { readFromDB,writeToDB } from '../../firebase/firebase';
 
 import ClipLoader from "react-spinners/ClipLoader";
 
-import { delay } from '../utils/helpers';
+import { delay } from './helpers';
 
 const tempLanes = [
     {

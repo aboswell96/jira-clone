@@ -1,8 +1,8 @@
 import React,{useState} from 'react';
 import styled from 'styled-components';
 import ProjectURL from '../ProjectURL';
-import TextInput from '../utils/TextInput';
-import Button from '../utils/Button';
+import TextInput from './TextInput';
+import Button from './Button';
 
 const Container = styled.div`
     margin-left: 40px;

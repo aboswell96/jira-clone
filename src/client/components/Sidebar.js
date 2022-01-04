@@ -5,7 +5,7 @@ import {Link } from 'react-router-dom';
 
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
-import SearchIssuesModal from '../utils/SearchIssues';
+import SearchIssuesModal from './SearchIssues';
 
 const Sidebar = () => {
 
