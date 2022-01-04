@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import ProjectURL from '../ProjectURL';
 
-import BoardView from '../BoardView/BoardView';
+import BoardView from './BoardView';
 
 const Container = styled.div`
     margin-left: 40px;

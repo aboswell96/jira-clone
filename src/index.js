@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
-import Project from './client/Project/Project';
+import Project from './client/components/Project';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import BoardContainer from './client/BoardContainer/BoardContainer';
-import Settings from './client/Settings/Settings';
+import BoardContainer from './client/components/BoardContainer';
+import Settings from './client/components/Settings';
 
 import {setupFirebaseInitialData, readFromDB,writeToDB, saveComment} from '../src/firebase/firebase';
 
