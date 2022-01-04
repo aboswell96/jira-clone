@@ -133,7 +133,7 @@ const BoardView = () => {
                     onClick={OnMyIssuesClicked}
                     active={myIssuesSelected}
                 >
-                    My Issues
+                    Only My Issues
                 </BoardFilter>
                 <BoardFilter
                     onClick={OnRecentlyUpdatedClicked}
@@ -172,7 +172,11 @@ const Swimlanes = (props) => {
         setOpen(true);
         setTicketSelected(ticket);
     }
-    const handleClose = () => setOpen(false);
+    // const handleClose = () => setOpen(false);
+    const handleClose = () => {
+        setTicketSelected({});
+        setOpen(false);
+    }
     const [ticketSelected, setTicketSelected] = useState({});
 
     const [dbTickets, setDbTickets] = useState([]);
@@ -180,10 +184,6 @@ const Swimlanes = (props) => {
     useEffect(() => {
         readFromDB('tickets',setDbTickets);
     },[])
-
-    useEffect(() => {
-        // console.log("loaded " + JSON.stringify(dbTickets));
-    },[dbTickets]);
 
     //these fire on mount and update so it must have a condition to prevent infinite renders!
     const OnDragEnter = (e, i) => {
@@ -227,10 +227,14 @@ const Swimlanes = (props) => {
         }
         else {
             //If any user filters are selected
-            if (props.usersSelected.some(user => user.isSelected))
+            if (props.myIssuesSelected) 
+            {
+                filteredTickets = filteredTickets.filter(ticket => ticket[1].assignee == 64980);
+            }
+            else if (props.usersSelected.some(user => user.isSelected))
             {
                 const filteredUsers = props.usersSelected.filter(user => user.isSelected);
-                filteredTickets = filteredTickets.filter(ticket => filteredUsers.some(user => (user.id == ticket[1].assignee) || (props.myIssuesSelected && ticket[1].assignee == 64980)));
+                filteredTickets = filteredTickets.filter(ticket => filteredUsers.some(user => (user.id == ticket[1].assignee)));
             }
         }
 

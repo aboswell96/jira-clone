@@ -50,12 +50,9 @@ const TicketModal = (props) => {
 
     const Unassigned = ["00000",{"firstName":'Unassigned','lastName':'','photo':'https://ibb.co/M9PdhH9'}];
 
+    //To-do: chance to event listener since this query is not gauranteed to find the new comment
     const OnSubmitComment = (commentMsg) => {
         saveComment(props.ticket[0], commentMsg);
-        queryDB(parseInt(props.ticket[0]), setComments);
-    }
-
-    const onCommentCommitted = () => {
         queryDB(parseInt(props.ticket[0]), setComments);
     }
 
