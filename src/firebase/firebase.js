@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getDatabase, ref, child, get, set, query, orderByChild,equalTo } from "firebase/database";
+import { getDatabase, ref, child, get, set, query, push } from "firebase/database";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAzsxJkZBNIVjO5ps1EAiFu09VrDo3L7hY",
@@ -41,6 +41,17 @@ export const writeToDB = (path,data, cb) => {
       set(ref(db, path), data);
     }
   
+}
+
+export const saveComment = (ticketId, commentMsg) => {
+  const db = getDatabase();
+  const postListRef = ref(db, 'comments/' + ticketId);
+  const newPostRef = push(postListRef);
+  set(newPostRef, {
+    'msg':commentMsg,
+    'timestamp': new Date().getTime(),
+    'userId': '64980',
+  });
 }
 
 export const queryDB = (ticketId, cb) => {

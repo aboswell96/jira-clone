@@ -1,7 +1,7 @@
 import React, {useState,useEffect} from 'react';
 import styled from 'styled-components';
 
-import { readFromDB, queryDB } from '../../firebase/firebase';
+import { readFromDB, queryDB, writeToDB, saveComment } from '../../firebase/firebase';
 
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
@@ -37,11 +37,11 @@ const TicketModal = (props) => {
 
     const [dbUsers, setDbUsers] = useState({});
     const [comments, setComments] = useState([]);
-
+    console.log(comments);
     useEffect(() => {
         readFromDB('users',setDbUsers);
-        queryDB(26377, setComments);
-    }, []);
+        queryDB(parseInt(props.ticket[0]), setComments);
+    }, [props.ticket]);
 
     const ticket = props.ticket[1];
     const ticketID = props.ticket[0];
@@ -49,6 +49,15 @@ const TicketModal = (props) => {
     const assignee = Object.entries(dbUsers).filter(user => user[0] == ticket.assignee);
 
     const Unassigned = ["00000",{"firstName":'Unassigned','lastName':'','photo':'https://ibb.co/M9PdhH9'}];
+
+    const OnSubmitComment = (commentMsg) => {
+        saveComment(props.ticket[0], commentMsg);
+        queryDB(parseInt(props.ticket[0]), setComments);
+    }
+
+    const onCommentCommitted = () => {
+        queryDB(parseInt(props.ticket[0]), setComments);
+    }
 
     return(
             <Modal
@@ -73,8 +82,9 @@ const TicketModal = (props) => {
                             />
                             <span style={{'display':'block','paddingTop':'25px', 'color':'#172B4D','fontFamily':'CircularStdMedium','marginLeft':'3px'}}>Comments</span>
                             <Comments
-                                comments={comments.sort((a,b) => { return a.timestamp < b.timestamp ? -1 : 1})}     //Sorted for now until we can add sort to Firebase queries
+                                comments={(comments && Object.keys(comments).length>0 ) ? Object.values(comments).sort((a,b) => { return a.timestamp < b.timestamp ? -1 : 1}) : []}     //Sorted for now until we can add sort to Firebase queries
                                 users={dbUsers}
+                                onSubmit={OnSubmitComment}
                             />
                         </TicketMainPanel>
                         <TicketSidePanel>
@@ -108,8 +118,10 @@ const Comments = (props) => {
     const [value, setValue] = useState("");
     const [isEditting, setIsEditting] = useState(false);
 
-    const onSave = () => {
+    const onSubmit = () => {
         setIsEditting(false);
+        props.onSubmit(value);
+        setValue("");
         //write to db
     }
 
@@ -142,12 +154,6 @@ const Comments = (props) => {
                     />
                 </div>
                 <div style={{'display':'flex', 'flex-direction':'column'}}>
-                    {/* <UserAvatar
-                        img={user[1].photo}
-                        height={'24px'}
-                        width={'24px'}
-                    /> */}
-                    {/* <span>{moment(comment.timestamp).calendar()}{user[1].firstName}{user[1].lastName}{comment.msg}</span> */}
                     <div style={{'display':'flex', 'flex-direction':'row','gap':'12px'}}>
                         <div style={{"fontSize":"15px", 'fontFamily':'CircularStdMedium', 'color':'#42526E'}}>
                             {user[1].firstName + " " + user[1].lastName}
@@ -187,7 +193,7 @@ const Comments = (props) => {
                                             bgColor="#0052cc"
                                             color="white"
                                             hoverColor="#005eeb"
-                                            onClick={()=>onSave()}
+                                            onClick={onSubmit}
                                         />
                                         <Button
                                             text="Cancel"
@@ -351,10 +357,6 @@ const RenderTicketTypeIcon = (type) => {
             return(<BookmarkIcon sx={{ color: "#65ba43", 'fontSize':{fontSize}}}/>);
     }
 }
-
-const TitleContainer = styled.div`
-    cursor: pointer;
-`
 
 const TicketPanels = styled.div`
     display:flex;

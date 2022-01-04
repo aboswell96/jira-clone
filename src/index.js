@@ -5,7 +5,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import BoardContainer from './client/BoardContainer/BoardContainer';
 import Settings from './client/Settings/Settings';
 
-import {setupFirebaseInitialData, readFromDB,writeToDB} from '../src/firebase/firebase';
+import {setupFirebaseInitialData, readFromDB,writeToDB, saveComment} from '../src/firebase/firebase';
 
 const SETUP_INITIAL_FIREBASE_DATA = false;
 
@@ -25,6 +25,8 @@ const App = () => {
   if (SETUP_INITIAL_FIREBASE_DATA) {
     setupFirebaseInitialData();
   }
+
+  // saveComment();
 
   return(
     <React.StrictMode>
