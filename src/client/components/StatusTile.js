@@ -64,6 +64,7 @@ const DropDown = (props) => {
             if(status.title !== props.value) {
                 return(
                     <Container
+                        key={i}
                         onClick={()=>props.onClick(status.title)}
                         style={{'border': '1px solid #F4F5F7'}}
                     >

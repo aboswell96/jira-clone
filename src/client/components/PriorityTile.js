@@ -31,7 +31,7 @@ const PriorityTile = (props) => {
     const onClick = (newVal) => {
         setValue(newVal);
         setIsExpanded(false);
-        props.onWrite('priority', newVal);
+        props.onWrite('priority', MAPPING.filter(prio => prio.title === newVal)[0].code);
     }
 
     return(

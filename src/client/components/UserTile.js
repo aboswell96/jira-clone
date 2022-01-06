@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components';
 import useComponentVisible from '../customHooks/useComponentVisible';
 
@@ -9,10 +9,6 @@ const UserTile = (props) => {
 
     const [isExpanded,setIsExpanded] = useState(false);
     const [value,setValue] = useState(props.user);
-
-    useEffect(()=> {
-        setValue(props.user);
-    },[props.user])
 
     const onClick = (newVal) => {
         setValue(newVal);
@@ -61,6 +57,7 @@ const DropDown = (props) => {
                     if(props.value[0] !== user[0]) {
                         return(
                         <Container
+                            key={i}
                             onClick={() => {props.onClick(user)}}
                             style={{'border': '1px solid #F4F5F7'}}
                         >
