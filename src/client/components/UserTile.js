@@ -1,15 +1,23 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import useComponentVisible from '../customHooks/useComponentVisible';
 
 const UserTile = (props) => {
 
+
+    if (props.field === 'assignee') console.log(props.user)
+
     const [isExpanded,setIsExpanded] = useState(false);
     const [value,setValue] = useState(props.user);
 
+    useEffect(()=> {
+        setValue(props.user);
+    },[props.user])
+
     const onClick = (newVal) => {
-        setValue(newVal)
-        setIsExpanded(false)
+        setValue(newVal);
+        setIsExpanded(false);
+        props.onWrite(props.field, newVal[0]);
     }
 
     return(

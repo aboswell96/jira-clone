@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getDatabase, ref, child, get, set, query, push } from "firebase/database";
+import { getDatabase, ref, child, get, set, query, push, update } from "firebase/database";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAzsxJkZBNIVjO5ps1EAiFu09VrDo3L7hY",
@@ -40,7 +40,16 @@ export const writeToDB = (path,data, cb) => {
     }else {
       set(ref(db, path), data);
     }
-  
+}
+
+export const updateDB = (path, data, cb) => {
+  const db = getDatabase();
+  const updates = {};
+  updates[path] = data;
+  update(ref(db), updates)
+  .then(() => {
+    cb();
+  })
 }
 
 export const saveComment = (ticketId, commentMsg) => {
@@ -54,10 +63,19 @@ export const saveComment = (ticketId, commentMsg) => {
   });
 }
 
-export const queryDB = (ticketId, cb) => {
+//TODO: refactor these 2 functions
+export const queryCommentsDB = (ticketId, cb) => {
   const db = getDatabase();
   const x = query(ref(db, 'comments/' + ticketId.toString()));
-  // x.equalTo(26377);
+  get(x).then((snapshot)=> {
+    cb(snapshot.val());
+    // console.log(JSON.stringify(snapshot.val()));
+  })
+}
+
+export const queryTicketDB = (ticketId, cb) => {
+  const db = getDatabase();
+  const x = query(ref(db, 'tickets/' + ticketId.toString()));
   get(x).then((snapshot)=> {
     cb(snapshot.val());
     console.log(JSON.stringify(snapshot.val()));
@@ -76,6 +94,7 @@ export const setupFirebaseInitialData = () => {
         'assignee': -1,
         'lane': 'backlog',
         'description': 'temp Description 2',
+        'reporter': -1,
       }
     },
     {
@@ -87,6 +106,7 @@ export const setupFirebaseInitialData = () => {
         'assignee': -1,
         'lane': 'backlog',
         'description': 'temp Description 2',
+        'reporter': -1,
       }
     },
     {
@@ -98,6 +118,7 @@ export const setupFirebaseInitialData = () => {
         'assignee': 64980,
         'lane': 'inDevelopment',
         'description': 'temp Description 2',
+        'reporter': -1,
       }
     },
     {
@@ -109,6 +130,7 @@ export const setupFirebaseInitialData = () => {
         'assignee': 71653,
         'lane': 'inDevelopment',
         'description': 'temp Description 2',
+        'reporter': -1,
       }
     },
     {
@@ -120,6 +142,7 @@ export const setupFirebaseInitialData = () => {
         'assignee': 86862,
         'lane': 'inDevelopment',
         'description': 'temp Description 2',
+        'reporter': -1,
       }
     },
     {
@@ -131,6 +154,7 @@ export const setupFirebaseInitialData = () => {
         'assignee': 64980,
         'lane': 'inProgress',
         'description': 'temp Description 2',
+        'reporter': -1,
       }
     },
     {
@@ -142,6 +166,7 @@ export const setupFirebaseInitialData = () => {
         'assignee': 64980,
         'lane': 'done',
         'description': 'temp Description 2',
+        'reporter': -1,
       }
     }];
 
@@ -204,19 +229,19 @@ export const setupFirebaseInitialData = () => {
 
     //write Tickets to DB
     tickets.forEach(ticket => {
-      console.log(Object.keys(ticket)[0] + " " + JSON.stringify(Object.values(ticket)));
+      // console.log(Object.keys(ticket)[0] + " " + JSON.stringify(Object.values(ticket)));
       writeToDB('tickets/' + Object.keys(ticket)[0], ...Object.values(ticket));
     });
 
     //write users to DB
     users.forEach(user => {
-      console.log(Object.keys(user)[0] + " " + JSON.stringify(Object.values(user)));
+      // console.log(Object.keys(user)[0] + " " + JSON.stringify(Object.values(user)));
       writeToDB('users/' + Object.keys(user)[0], ...Object.values(user));
     });
 
     //write comments to DB
     comments.forEach(comment => {
-      console.log(Object.keys(comment)[0] + " " + JSON.stringify(Object.values(comment)));
+      // console.log(Object.keys(comment)[0] + " " + JSON.stringify(Object.values(comment)));
       writeToDB('comments/' + Object.keys(comment)[0], ...Object.values(comment));
     });
 

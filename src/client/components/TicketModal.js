@@ -1,7 +1,7 @@
 import React, {useState,useEffect} from 'react';
 import styled from 'styled-components';
 
-import { readFromDB, queryDB, writeToDB, saveComment } from '../../firebase/firebase';
+import { readFromDB, queryCommentsDB, updateDB, saveComment } from '../../firebase/firebase';
 
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
@@ -37,23 +37,36 @@ const TicketModal = (props) => {
 
     const [dbUsers, setDbUsers] = useState({});
     const [comments, setComments] = useState([]);
-    console.log(comments);
+    
     useEffect(() => {
         readFromDB('users',setDbUsers);
-        queryDB(parseInt(props.ticket[0]), setComments);
+    },[])
+
+    useEffect(() => {
+        queryCommentsDB(parseInt(props.ticket[0]), setComments);
     }, [props.ticket]);
 
     const ticket = props.ticket[1];
     const ticketID = props.ticket[0];
-
     const assignee = Object.entries(dbUsers).filter(user => user[0] == ticket.assignee);
+    const reporter = Object.entries(dbUsers).filter(user => user[0] == ticket.reporter);
 
-    const Unassigned = ["00000",{"firstName":'Unassigned','lastName':'','photo':'https://ibb.co/M9PdhH9'}];
+    console.log("rerender modal assignee = " + JSON.stringify(assignee));
+
+    useEffect( ()=> {
+        console.log("remount");
+    },[])
+
+    const Unassigned = ["-1",{"firstName":'Unassigned','lastName':'','photo':'https://ibb.co/M9PdhH9'}];
 
     //To-do: chance to event listener since this query is not gauranteed to find the new comment
     const OnSubmitComment = (commentMsg) => {
         saveComment(props.ticket[0], commentMsg);
-        queryDB(parseInt(props.ticket[0]), setComments);
+        queryCommentsDB(parseInt(props.ticket[0]), setComments);
+    }
+
+    const onWrite = (path, newValue) => {
+        updateDB('tickets/' + props.ticket[0] + "/" + path, newValue, props.onCommit);
     }
 
     return(
@@ -72,10 +85,12 @@ const TicketModal = (props) => {
                             </TicketType>
                             <Title
                                 title={ticket.title}
+                                onWrite={onWrite}
                             />
                             <span style={{'display':'block','paddingTop':'25px', 'color':'#172B4D', 'fontFamily':'CircularStdMedium', 'marginLeft':'3px'}}>Description</span>
                             <Description
                                 description={ticket.description}
+                                onWrite={onWrite}
                             />
                             <span style={{'display':'block','paddingTop':'25px', 'color':'#172B4D','fontFamily':'CircularStdMedium','marginLeft':'3px'}}>Comments</span>
                             <Comments
@@ -88,20 +103,26 @@ const TicketModal = (props) => {
                             <span style={{'display':'block','paddingTop':'25px', 'color':'#5e6c84','fontSize':'12.5px', 'fontFamily':'CircularStdBold'}}>STATUS</span>
                             <StatusTile
                                 status={ticket.lane}
+                                onWrite={onWrite}
                             />
                             <span style={{'display':'block','paddingTop':'25px', 'color':'#5e6c84','fontSize':'12.5px', 'fontFamily':'CircularStdBold'}}>ASSIGNEES</span>
-                                <UserTile
-                                    user={assignee.length > 0 ? assignee[0] : Unassigned}
-                                    users={Object.entries(dbUsers).concat([Unassigned])}
-                                />
+                            <UserTile
+                                user={assignee.length > 0 ? assignee[0] : Unassigned}
+                                users={Object.entries(dbUsers).concat([Unassigned])}
+                                onWrite={onWrite}
+                                field='assignee'
+                            />
                             <span style={{'display':'block','paddingTop':'25px', 'color':'#5e6c84','fontSize':'12.5px', 'fontFamily':'CircularStdBold'}}>REPORTER</span>
                             <UserTile
-                                    user={assignee.length > 0 ? assignee[0] : Unassigned}
-                                    users={Object.entries(dbUsers).concat([Unassigned])}
-                                />
+                                user={reporter.length > 0 ? reporter[0] : Unassigned}
+                                users={Object.entries(dbUsers).concat([Unassigned])}
+                                onWrite={onWrite}
+                                field='reporter'
+                            />
                             <span style={{'display':'block','paddingTop':'25px', 'color':'#5e6c84','fontSize':'12.5px', 'fontFamily':'CircularStdBold'}}>PRIORITY</span>
                             <PriorityTile
                                 priority={ticket.priority}
+                                onWrite={onWrite}
                             />
                         </TicketSidePanel>
                     </TicketPanels>
@@ -239,7 +260,7 @@ const Description = (props) => {
 
     const onSave = () => {
         setIsEditting(false);
-        //write to db
+        props.onWrite('description', value);
     }
 
     const onCancel = () => {
@@ -297,7 +318,7 @@ const Title = (props) => {
 
     const onSave = () => {
         setIsEditting(false);
-        //write to db
+        props.onWrite('title', value);
     }
 
     const onCancel = () => {

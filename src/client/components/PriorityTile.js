@@ -29,29 +29,30 @@ const PriorityTile = (props) => {
     const [value,setValue] = useState(MAPPING.filter(prio => prio.code === props.priority)[0].title);
 
     const onClick = (newVal) => {
-        setValue(newVal)
-        setIsExpanded(false)
+        setValue(newVal);
+        setIsExpanded(false);
+        props.onWrite('priority', newVal);
     }
 
     return(
         <div style={{'width':'75%'}}>
-        <Container
-            onClick={()=>setIsExpanded(!isExpanded)}
-            style={{'border': '1px solid #dfe1e6'}}
-        >
-            <UserInfo>
-                {RenderTicketSeverityIcon(value)}
-                {value}
-            </UserInfo>
-        </Container>
-        <div>
-            {isExpanded &&          
-                <DropDown
-                    value={value}
-                    onClick={onClick}
-                />
-            }
-        </div>
+            <Container
+                onClick={()=>setIsExpanded(!isExpanded)}
+                style={{'border': '1px solid #dfe1e6'}}
+            >
+                <UserInfo>
+                    {RenderTicketSeverityIcon(value)}
+                    {value}
+                </UserInfo>
+            </Container>
+            <div>
+                {isExpanded &&          
+                    <DropDown
+                        value={value}
+                        onClick={onClick}
+                    />
+                }
+            </div>
         </div>
     );
 }

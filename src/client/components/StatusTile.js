@@ -28,6 +28,7 @@ const StatusTile = (props) => {
     const onClick = (newVal) => {
         setValue(newVal)
         setIsExpanded(false)
+        props.onWrite('lane', MAPPING.filter(item => item.title === newVal)[0].code);
     }
 
     return(

@@ -297,6 +297,7 @@ const Swimlanes = (props) => {
                 open={open}
                 handleClose={handleClose}
                 ticket={ticketSelected}
+                onCommit={OnDBChangeCommitted} //TODO: improve naming
             /> : ""}
         </BoardViewContainer>
     );
