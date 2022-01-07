@@ -174,7 +174,7 @@ const Swimlanes = (props) => {
     }
     // const handleClose = () => setOpen(false);
     const handleClose = () => {
-        setTicketSelected({});
+        //setTicketSelected({});
         setOpen(false);
     }
     const [ticketSelected, setTicketSelected] = useState({});
@@ -298,6 +298,7 @@ const Swimlanes = (props) => {
                 handleClose={handleClose}
                 ticket={ticketSelected}
                 onCommit={OnDBChangeCommitted} //TODO: improve naming
+                users={props.users}
             /> : ""}
         </BoardViewContainer>
     );

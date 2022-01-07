@@ -35,21 +35,16 @@ const style = {
 
 const TicketModal = (props) => {
 
-    const [dbUsers, setDbUsers] = useState({});
     const [comments, setComments] = useState([]);
-    
-    useEffect(() => {
-        readFromDB('users',setDbUsers);
-    },[])
+    const ticket = props.ticket[1];
+    const ticketID = props.ticket[0];
+    const assignee = Object.entries(props.users).filter(user => user[0] == ticket.assignee);
+    const reporter = Object.entries(props.users).filter(user => user[0] == ticket.reporter);
+
 
     useEffect(() => {
         queryCommentsDB(parseInt(props.ticket[0]), setComments);
     }, [props.ticket]);
-
-    const ticket = props.ticket[1];
-    const ticketID = props.ticket[0];
-    const assignee = Object.entries(dbUsers).filter(user => user[0] == ticket.assignee);
-    const reporter = Object.entries(dbUsers).filter(user => user[0] == ticket.reporter);
 
     console.log("rerender modal assignee = " + JSON.stringify(assignee));
 
@@ -95,7 +90,7 @@ const TicketModal = (props) => {
                             <span style={{'display':'block','paddingTop':'25px', 'color':'#172B4D','fontFamily':'CircularStdMedium','marginLeft':'3px'}}>Comments</span>
                             <Comments
                                 comments={(comments && Object.keys(comments).length>0 ) ? Object.values(comments).sort((a,b) => { return a.timestamp < b.timestamp ? -1 : 1}) : []}     //Sorted for now until we can add sort to Firebase queries
-                                users={dbUsers}
+                                users={props.users}
                                 onSubmit={OnSubmitComment}
                             />
                         </TicketMainPanel>
@@ -108,14 +103,14 @@ const TicketModal = (props) => {
                             <span style={{'display':'block','paddingTop':'25px', 'color':'#5e6c84','fontSize':'12.5px', 'fontFamily':'CircularStdBold'}}>ASSIGNEES</span>
                             <UserTile
                                 user={assignee.length > 0 ? assignee[0] : Unassigned}
-                                users={Object.entries(dbUsers).concat([Unassigned])}
+                                users={Object.entries(props.users).concat([Unassigned])}
                                 onWrite={onWrite}
                                 field='assignee'
                             />
                             <span style={{'display':'block','paddingTop':'25px', 'color':'#5e6c84','fontSize':'12.5px', 'fontFamily':'CircularStdBold'}}>REPORTER</span>
                             <UserTile
                                 user={reporter.length > 0 ? reporter[0] : Unassigned}
-                                users={Object.entries(dbUsers).concat([Unassigned])}
+                                users={Object.entries(props.users).concat([Unassigned])}
                                 onWrite={onWrite}
                                 field='reporter'
                             />
