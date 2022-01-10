@@ -123,7 +123,7 @@ const TicketModal = (props) => {
     }
 
     const onWrite = (path, newValue) => {
-        updateDB('tickets/' + props.ticket[0] + "/" + path, newValue, props.onCommit);
+        updateDB('tickets/' + props.ticket[0] + "/" + path, newValue);
     }
 
     return(

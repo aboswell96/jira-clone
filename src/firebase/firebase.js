@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getDatabase, ref, child, get, set, query, push, update } from "firebase/database";
+import { getDatabase, ref, child, get, set, query, push, update, onValue } from "firebase/database";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAzsxJkZBNIVjO5ps1EAiFu09VrDo3L7hY",
@@ -48,8 +48,18 @@ export const updateDB = (path, data, cb) => {
   updates[path] = data;
   update(ref(db), updates)
   .then(() => {
-    cb();
+    if(cb) cb();
   })
+}
+
+export const addDBListener = (cb) => {
+  const db = getDatabase();
+  const ticketsRef = ref(db, 'tickets');
+  onValue(ticketsRef, (snapshot) => {
+    const data = snapshot.val();
+    console.log("update..." + JSON.stringify(data));
+    cb(data);
+  });
 }
 
 export const saveComment = (ticketId, commentMsg) => {

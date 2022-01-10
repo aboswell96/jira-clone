@@ -16,7 +16,7 @@ import _ from "lodash"
 import { DragDropContainer, DropTarget } from 'react-drag-drop-container';
 import TicketModal from './TicketModal';
 
-import { readFromDB,writeToDB } from '../../firebase/firebase';
+import { addDBListener, readFromDB,writeToDB } from '../../firebase/firebase';
 
 import ClipLoader from "react-spinners/ClipLoader";
 
@@ -184,6 +184,7 @@ const Swimlanes = (props) => {
 
     useEffect(() => {
         readFromDB('tickets',setDbTickets);
+        addDBListener(()=>{readFromDB('tickets',setDbTickets)});
     },[])
 
     //these fire on mount and update so it must have a condition to prevent infinite renders!
@@ -199,9 +200,6 @@ const Swimlanes = (props) => {
         }
     }
 
-    const OnDBChangeCommitted = () => {
-        readFromDB('tickets',setDbTickets);
-    }
 
     const onDrop = (e) => {
         const ticketObj = Object.entries(dbTickets).filter(ticket => ticket[0] === e.dragData.ticketId)[0];
@@ -214,7 +212,7 @@ const Swimlanes = (props) => {
 
         var newTicket = _.cloneDeep(ticketObj);
         newTicket[1].lane = e.dropData.laneTitle;
-        writeToDB('tickets/' + newTicket[0],newTicket[1], OnDBChangeCommitted);
+        writeToDB('tickets/' + newTicket[0],newTicket[1]);
         setCurrentLaneHovered(-1);
     };
 
@@ -298,7 +296,6 @@ const Swimlanes = (props) => {
                 open={open}
                 handleClose={handleClose}
                 ticket={ticketSelected}
-                onCommit={OnDBChangeCommitted} //TODO: improve naming
                 users={props.users}
             /> : ""}
         </BoardViewContainer>

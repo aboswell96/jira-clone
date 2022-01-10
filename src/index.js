@@ -7,7 +7,7 @@ import Settings from './client/components/Settings';
 
 import {setupFirebaseInitialData, readFromDB,writeToDB} from '../src/firebase/firebase';
 
-const SETUP_INITIAL_FIREBASE_DATA = true;
+const SETUP_INITIAL_FIREBASE_DATA = false;
 
 const App = () => {
 

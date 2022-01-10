@@ -28,10 +28,10 @@ const style = {
     boxShadow: 24,
     verticalAlign:'top',
     transform: 'translate(-50%, -50%)',
-  };
+};
 
 const CreateTicket = (props) => {
-    const [users, setUsers] = useState([{},{},{}]);
+    const [users, setUsers] = useState([[]]);
     const Unassigned = ["-1",{"firstName":'Unassigned','lastName':'','photo':'https://ibb.co/M9PdhH9'}];
 
     //Ticket Attributes
@@ -40,6 +40,32 @@ const CreateTicket = (props) => {
     const [assignee, setAssignee] = useState(Unassigned);
     const [reporter, setReporter] = useState(Unassigned);
     const [priority, setPriority] = useState("low");
+
+    const [title, setTitle] = useState("Enter a title...");
+    const onTitleChange = (e) => {
+        setTitle(e.target.value);
+    }
+
+    const [description, setDescription] = useState("");
+    const onDescriptionChange = (e) => {
+        setDescription(e.target.value);
+    }
+
+    const onAssigneeChange = (newVal) => {
+        if(newVal === '-1') {
+            setAssignee(Unassigned);
+        } else {
+            setAssignee(Object.entries(users).filter(user => user[0] == newVal)[0]);
+        }
+    }
+
+    const OnReporterChange = (newVal) => {
+        if(newVal === '-1') {
+            setReporter(Unassigned);
+        } else {
+            setReporter(Object.entries(users).filter(user => user[0] == newVal)[0]);
+        }
+    }
 
     const onCreate = () => {
         onWrite();
@@ -54,11 +80,11 @@ const CreateTicket = (props) => {
     const onWrite = () => {
         const newTicket= {
             'assignee': assignee[0],
-            'description': 'temp',
+            'description': description,
             'lane': status,
             'priority': priority,
             'reporter': reporter,
-            'title': 'new ticket',
+            'title': title,
             'type': issueType,
         }
         writeToDB('tickets/' + Math.floor(1000 + Math.random() * 9000), newTicket);
@@ -79,13 +105,15 @@ const CreateTicket = (props) => {
                                 {"STORY" + "-" + Math.floor(1000 + Math.random() * 9000)}
                             </TicketType> */}
                             <Title
-                                title={"Enter a title here..."}
+                                value={title}
+                                onChange={onTitleChange}
                                 onWrite={onWrite}
                             />
                             <span style={{'display':'block','paddingTop':'25px', 'color':'#172B4D', 'fontFamily':'CircularStdMedium', 'marginLeft':'3px'}}>Description</span>
                             <Description
-                                description={""}
+                                value={description}
                                 onWrite={onWrite}
+                                onChange={onDescriptionChange}
                             />               
                         </TicketMainPanel>
                         <TicketSidePanel>
@@ -102,14 +130,14 @@ const CreateTicket = (props) => {
                             <span style={{'display':'block','paddingTop':'25px', 'color':'#5e6c84','fontSize':'12.5px', 'fontFamily':'CircularStdBold'}}>Assignee</span>
                             <UserTile
                                 user={assignee}
-                                setUser={setAssignee}
+                                setUser={onAssigneeChange}
                                 users={Object.entries(users).concat([Unassigned])}
                                 field='assignee'
                             />
                             <span style={{'display':'block','paddingTop':'25px', 'color':'#5e6c84','fontSize':'12.5px', 'fontFamily':'CircularStdBold'}}>Reporter</span>
                             <UserTile
                                 user={reporter}
-                                setUser={setReporter}
+                                setUser={OnReporterChange}
                                 users={Object.entries(users).concat([Unassigned])}
                                 field='reporter'
                             />
@@ -140,16 +168,10 @@ const CreateTicket = (props) => {
 }
 
 const Description = (props) => {
-
-    const [value, setValue] = useState(props.description);
-    const onChange = (e) => {
-        setValue(e.target.value);
-    }
-
     return(
             <TitleInput
-                value={value}
-                onChange={onChange}
+                value={props.value}
+                onChange={props.onChange}
                 height="35px"
                 width="100%"
                 fontSize="15px"
@@ -161,18 +183,10 @@ const Description = (props) => {
 }
 
 const Title = (props) => {
-
-    const [value, setValue] = useState(props.title);
-
-    const onChange = (e) => {
-
-        setValue(e.target.value);
-    }
-
     return(
         <TitleInput
-            value={value}
-            onChange={onChange}
+            value={props.value}
+            onChange={props.onChange}
             height="35px"
             width="100%"
             fontSize="24px"
