@@ -26,12 +26,12 @@ const MAPPING = [
 const PriorityTile = (props) => {
 
     const [isExpanded,setIsExpanded] = useState(false);
-    const [value,setValue] = useState(MAPPING.filter(prio => prio.code === props.priority)[0].title);
+
+    const value = MAPPING.filter(prio => prio.code === props.priority)[0].title;
 
     const onClick = (newVal) => {
-        setValue(newVal);
+        props.setPriority(newVal);
         setIsExpanded(false);
-        props.onWrite('priority', MAPPING.filter(prio => prio.title === newVal)[0].code);
     }
 
     return(
@@ -68,7 +68,7 @@ const DropDown = (props) => {
                     if(prio.title !== props.value ) {
                         return(
                         <Container
-                            onClick={() => props.onClick(prio.title)}
+                            onClick={() => props.onClick(prio.code)}
                             style={{'border': '1px solid #F4F5F7'}}
                         >
                         <UserInfo>

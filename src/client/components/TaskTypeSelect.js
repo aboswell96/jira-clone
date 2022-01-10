@@ -23,12 +23,11 @@ const MAPPING = [
 const TaskTypeSelect = (props) => {
 
     const [isExpanded,setIsExpanded] = useState(false);
-    const [value,setValue] = useState(MAPPING.filter(type => type.code === props.type)[0].title);
+    const value = MAPPING.filter(type => type.code === props.issueType)[0].title;
 
     const onClick = (newVal) => {
-        setValue(newVal);
+        props.setIssueType(newVal);
         setIsExpanded(false);
-        // props.onWrite('priority', MAPPING.filter(prio => prio.title === newVal)[0].code);
     }
 
     return(
@@ -64,15 +63,16 @@ const DropDown = (props) => {
 
                     if(type.title !== props.value ) {
                         return(
-                        <Container
-                            onClick={() => props.onClick(type.title)}
-                            style={{'border': '1px solid #F4F5F7'}}
-                        >
-                        <UserInfo>
-                            {RenderTicketTypeIcon(type.code)}
-                            {type.title}
-                        </UserInfo>
-                        </Container>
+                            <Container
+                                key={i}
+                                onClick={() => props.onClick(type.code)}
+                                style={{'border': '1px solid #F4F5F7'}}
+                            >
+                            <UserInfo>
+                                {RenderTicketTypeIcon(type.code)}
+                                {type.title}
+                            </UserInfo>
+                            </Container>
                         );
                     }
             }))}

@@ -23,12 +23,12 @@ const MAPPING = [
 const StatusTile = (props) => {
 
     const [isExpanded,setIsExpanded] = useState(false);
-    const [value,setValue] = useState(MAPPING.filter(item => item.code === props.status)[0].title);
+    // const [value,setValue] = useState(MAPPING.filter(item => item.code === props.status)[0].title);
+    const value = MAPPING.filter(item => item.code === props.status)[0].title;
 
     const onClick = (newVal) => {
-        setValue(newVal)
-        setIsExpanded(false)
-        props.onWrite('lane', MAPPING.filter(item => item.title === newVal)[0].code);
+        props.setStatus(newVal);
+        setIsExpanded(false);
     }
 
     return(
@@ -65,7 +65,7 @@ const DropDown = (props) => {
                 return(
                     <Container
                         key={i}
-                        onClick={()=>props.onClick(status.title)}
+                        onClick={()=>props.onClick(status.code)}
                         style={{'border': '1px solid #F4F5F7'}}
                     >
                     <UserInfo>

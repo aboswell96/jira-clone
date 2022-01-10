@@ -1,4 +1,4 @@
-import React, {useState,useEffect} from 'react';
+import React, {useState,useEffect, useMemo} from 'react';
 import styled from 'styled-components';
 
 import { readFromDB, queryCommentsDB, updateDB, saveComment } from '../../firebase/firebase';
@@ -17,6 +17,7 @@ import TitleInput from './TitleInput';
 import Button from './Button';
 import moment from 'moment';
 import AddComment from './AddComment';
+import TaskTypeSelect from './TaskTypeSelect';
 
 const style = {
     position: 'absolute',
@@ -31,28 +32,89 @@ const style = {
     boxShadow: 24,
     verticalAlign:'top',
     transform: 'translate(-50%, -50%)',
-  };
+};
 
 const TicketModal = (props) => {
 
-    const [comments, setComments] = useState([]);
-    const ticket = props.ticket[1];
-    const ticketID = props.ticket[0];
-    const assignee = Object.entries(props.users).filter(user => user[0] == ticket.assignee);
-    const reporter = Object.entries(props.users).filter(user => user[0] == ticket.reporter);
-
+    const Unassigned = ["-1",{"firstName":'Unassigned','lastName':'','photo':'https://ibb.co/M9PdhH9'}];
+    const init = {
+        assignee: 64980,
+        description: "temp Description 2",
+        lane: "inDevelopment",
+        priority: "high",
+        reporter: 64980,
+        title: "Add ticket search",
+        type: "story",
+    };
 
     useEffect(() => {
+        readFromDB('tickets/' + props.ticket[0], setTicketTest)
         queryCommentsDB(parseInt(props.ticket[0]), setComments);
-    }, [props.ticket]);
+    },[props.ticket])
 
-    console.log("rerender modal assignee = " + JSON.stringify(assignee));
+    const [ticketTest, setTicketTest] = useState(init);
 
-    useEffect( ()=> {
-        console.log("remount");
-    },[])
+    //Fires when the ticket passed in by BoardView changes eg. user clicks on a ticket
+    useEffect(() => {
+        setIssueType(ticketTest.type);
+        setStatus(ticketTest.lane);
 
-    const Unassigned = ["-1",{"firstName":'Unassigned','lastName':'','photo':'https://ibb.co/M9PdhH9'}];
+        const newAssignee = Object.entries(props.users).filter(user => user[0] == ticketTest.assignee);
+        if(newAssignee.length > 0){
+            setAssignee(Object.entries(props.users).filter(user => user[0] == ticketTest.assignee)[0]);
+        } else {
+            setAssignee(["-1",{"firstName":'Unassigned','lastName':'','photo':'https://ibb.co/M9PdhH9'}]);
+        }
+
+        const newReporter = Object.entries(props.users).filter(user => user[0] == ticketTest.reporter);
+        if(newReporter.length > 0){
+            setReporter(Object.entries(props.users).filter(user => user[0] == ticketTest.reporter)[0]);
+        } else {
+            setReporter(["-1",{"firstName":'Unassigned','lastName':'','photo':'https://ibb.co/M9PdhH9'}]);
+        }
+        setPriority(ticketTest.priority);
+    }, [ticketTest, props.users])
+
+    //Ticket Attributes
+    const [issueType, setIssueType] = useState(ticketTest.type);
+    const [status, setStatus] = useState(ticketTest.lane);
+    const [assignee, setAssignee] = useState(Object.entries(props.users).filter(user => user[0] == ticketTest.assignee));
+    const [reporter, setReporter] = useState(Object.entries(props.users).filter(user => user[0] == ticketTest.reporter));
+    const [priority, setPriority] = useState(ticketTest.priority);
+    const [comments, setComments] = useState([]);
+
+    const OnIssueChange = (newVal) => {
+        onWrite('type',newVal);
+        setIssueType(newVal);
+    }
+
+    const OnStatusChange = (newVal) => {
+        onWrite('lane',newVal);
+        setStatus(newVal);
+    }
+
+    const OnAssigneeChange = (newVal) => {
+        onWrite('assignee',newVal);
+        if(newVal === '-1') {
+            setAssignee(Unassigned);
+        } else {
+            setAssignee(Object.entries(props.users).filter(user => user[0] == newVal)[0]);
+        }
+    }
+
+    const OnReporterChange = (newVal) => {
+        onWrite('reporter',newVal);
+        if(newVal === '-1') {
+            setReporter(Unassigned);
+        } else {
+            setReporter(Object.entries(props.users).filter(user => user[0] == newVal)[0]);
+        }
+    }
+
+    const OnPriorityChange = (newVal) => {
+        onWrite('priority',newVal);
+        setPriority(newVal);
+    }
 
     //To-do: chance to event listener since this query is not gauranteed to find the new comment
     const OnSubmitComment = (commentMsg) => {
@@ -75,16 +137,16 @@ const TicketModal = (props) => {
                     <TicketPanels>
                         <TicketMainPanel>
                             <TicketType>
-                                {RenderTicketTypeIcon(ticket.type)}
-                                {ticket.type.toUpperCase() + "-" + ticketID}
+                                {RenderTicketTypeIcon(issueType)}
+                                {issueType.toUpperCase() + "-" + props.ticket[0]}
                             </TicketType>
                             <Title
-                                title={ticket.title}
+                                title={ticketTest.title}
                                 onWrite={onWrite}
                             />
                             <span style={{'display':'block','paddingTop':'25px', 'color':'#172B4D', 'fontFamily':'CircularStdMedium', 'marginLeft':'3px'}}>Description</span>
                             <Description
-                                description={ticket.description}
+                                description={ticketTest.description}
                                 onWrite={onWrite}
                             />
                             <span style={{'display':'block','paddingTop':'25px', 'color':'#172B4D','fontFamily':'CircularStdMedium','marginLeft':'3px'}}>Comments</span>
@@ -95,29 +157,34 @@ const TicketModal = (props) => {
                             />
                         </TicketMainPanel>
                         <TicketSidePanel>
-                            <span style={{'display':'block','paddingTop':'25px', 'color':'#5e6c84','fontSize':'12.5px', 'fontFamily':'CircularStdBold'}}>STATUS</span>
-                            <StatusTile
-                                status={ticket.lane}
-                                onWrite={onWrite}
+                        <span style={{'display':'block','paddingTop':'25px', 'color':'#5e6c84','fontSize':'12.5px', 'fontFamily':'CircularStdBold'}}>Issue Type</span>
+                            <TaskTypeSelect
+                                issueType={issueType}
+                                setIssueType={OnIssueChange}
                             />
-                            <span style={{'display':'block','paddingTop':'25px', 'color':'#5e6c84','fontSize':'12.5px', 'fontFamily':'CircularStdBold'}}>ASSIGNEES</span>
+                            <span style={{'display':'block','paddingTop':'25px', 'color':'#5e6c84','fontSize':'12.5px', 'fontFamily':'CircularStdBold'}}>Status</span>
+                            <StatusTile
+                                status={status}
+                                setStatus={OnStatusChange}
+                            />
+                            <span style={{'display':'block','paddingTop':'25px', 'color':'#5e6c84','fontSize':'12.5px', 'fontFamily':'CircularStdBold'}}>Assignee</span>
                             <UserTile
-                                user={assignee.length > 0 ? assignee[0] : Unassigned}
+                                user={assignee}
+                                setUser={OnAssigneeChange}
                                 users={Object.entries(props.users).concat([Unassigned])}
-                                onWrite={onWrite}
                                 field='assignee'
                             />
-                            <span style={{'display':'block','paddingTop':'25px', 'color':'#5e6c84','fontSize':'12.5px', 'fontFamily':'CircularStdBold'}}>REPORTER</span>
+                            <span style={{'display':'block','paddingTop':'25px', 'color':'#5e6c84','fontSize':'12.5px', 'fontFamily':'CircularStdBold'}}>Reporter</span>
                             <UserTile
-                                user={reporter.length > 0 ? reporter[0] : Unassigned}
+                                user={reporter}
+                                setUser={OnReporterChange}
                                 users={Object.entries(props.users).concat([Unassigned])}
-                                onWrite={onWrite}
                                 field='reporter'
                             />
-                            <span style={{'display':'block','paddingTop':'25px', 'color':'#5e6c84','fontSize':'12.5px', 'fontFamily':'CircularStdBold'}}>PRIORITY</span>
+                            <span style={{'display':'block','paddingTop':'25px', 'color':'#5e6c84','fontSize':'12.5px', 'fontFamily':'CircularStdBold'}}>Priority</span>
                             <PriorityTile
-                                priority={ticket.priority}
-                                onWrite={onWrite}
+                                priority={priority}
+                                setPriority={OnPriorityChange}
                             />
                         </TicketSidePanel>
                     </TicketPanels>
@@ -155,8 +222,6 @@ const Comments = (props) => {
     const comments = props.comments.map((comment,i) => {
 
         const user = Object.entries(props.users).filter(user => user[0] == comment.userId)[0];
-        console.log(user);
-
         return(
             <div style={{'display':'flex', 'flex-direction':'row', 'gap':'25px'}}>
                 <div>

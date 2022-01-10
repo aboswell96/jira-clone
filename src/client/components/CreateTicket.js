@@ -1,15 +1,12 @@
 import React, {useState,useEffect} from 'react';
 import styled from 'styled-components';
 
-import { readFromDB} from '../../firebase/firebase';
+import { readFromDB, writeToDB} from '../../firebase/firebase';
 
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import UserTile from './UserTile';
 
-import BookmarkIcon from '@mui/icons-material/Bookmark';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import BugReportIcon from '@mui/icons-material/BugReport';
 import StatusTile from './StatusTile';
 import PriorityTile from './PriorityTile';
 
@@ -34,25 +31,38 @@ const style = {
   };
 
 const CreateTicket = (props) => {
-
     const [users, setUsers] = useState([{},{},{}]);
+    const Unassigned = ["-1",{"firstName":'Unassigned','lastName':'','photo':'https://ibb.co/M9PdhH9'}];
 
+    //Ticket Attributes
+    const [issueType, setIssueType] = useState("story");
+    const [status, setStatus] = useState("backlog");
+    const [assignee, setAssignee] = useState(Unassigned);
+    const [reporter, setReporter] = useState(Unassigned);
+    const [priority, setPriority] = useState("low");
+
+    const onCreate = () => {
+        onWrite();
+        props.handleClose();
+    }
+
+    //Read Users from DB after mount
     useEffect(() => {
         readFromDB('users',setUsers);
     }, []);
 
-    useEffect( ()=> {
-        console.log("remount");
-    },[])
-
-    const Unassigned = ["-1",{"firstName":'Unassigned','lastName':'','photo':'https://ibb.co/M9PdhH9'}];
-
-
-    const onWrite = (path, newValue) => {
-        // updateDB('tickets/' + props.ticket[0] + "/" + path, newValue, props.onCommit);
+    const onWrite = () => {
+        const newTicket= {
+            'assignee': assignee[0],
+            'description': 'temp',
+            'lane': status,
+            'priority': priority,
+            'reporter': reporter,
+            'title': 'new ticket',
+            'type': issueType,
+        }
+        writeToDB('tickets/' + Math.floor(1000 + Math.random() * 9000), newTicket);
     }
-
-    console.log("render");
 
     return(
             <Modal
@@ -81,32 +91,32 @@ const CreateTicket = (props) => {
                         <TicketSidePanel>
                             <span style={{'display':'block','paddingTop':'25px', 'color':'#5e6c84','fontSize':'12.5px', 'fontFamily':'CircularStdBold'}}>Issue Type</span>
                             <TaskTypeSelect
-                                type={"story"}
-                                onWrite={onWrite}
+                                issueType={issueType}
+                                setIssueType={setIssueType}
                             />
                             <span style={{'display':'block','paddingTop':'25px', 'color':'#5e6c84','fontSize':'12.5px', 'fontFamily':'CircularStdBold'}}>Status</span>
                             <StatusTile
-                                status={"backlog"}
-                                onWrite={onWrite}
+                                status={status}
+                                setStatus={setStatus}
                             />
                             <span style={{'display':'block','paddingTop':'25px', 'color':'#5e6c84','fontSize':'12.5px', 'fontFamily':'CircularStdBold'}}>Assignee</span>
                             <UserTile
-                                user={Unassigned}
+                                user={assignee}
+                                setUser={setAssignee}
                                 users={Object.entries(users).concat([Unassigned])}
-                                onWrite={onWrite}
                                 field='assignee'
                             />
                             <span style={{'display':'block','paddingTop':'25px', 'color':'#5e6c84','fontSize':'12.5px', 'fontFamily':'CircularStdBold'}}>Reporter</span>
                             <UserTile
-                                user={Unassigned}
+                                user={reporter}
+                                setUser={setReporter}
                                 users={Object.entries(users).concat([Unassigned])}
-                                onWrite={onWrite}
                                 field='reporter'
                             />
                             <span style={{'display':'block','paddingTop':'25px', 'color':'#5e6c84','fontSize':'12.5px', 'fontFamily':'CircularStdBold'}}>Priority</span>
                             <PriorityTile
-                                priority={"low"}
-                                onWrite={onWrite}
+                                priority={priority}
+                                setPriority={setPriority}
                             />
                         </TicketSidePanel>
                     </TicketPanels>
@@ -116,7 +126,7 @@ const CreateTicket = (props) => {
                             bgColor="#0052cc"
                             color="white"
                             hoverColor="#005eeb"
-                            onClick={props.handleClose}
+                            onClick={onCreate}
                         />
                         <Button
                             text="Cancel"
@@ -170,23 +180,6 @@ const Title = (props) => {
         >
         </TitleInput>
     );
-}
-
-const RenderTicketTypeIcon = (type) => {
-
-    const fontSize = 18;
-
-    switch(type) {
-
-        case "story":
-            return(<BookmarkIcon sx={{ color: "#65ba43", 'fontSize':{fontSize}}}/>);
-        case "task":
-            return(<CheckBoxIcon color="primary" sx={{'fontSize':{fontSize}}}/>);
-        case "bug":
-            return(<BugReportIcon color="action" sx={{'fontSize':{fontSize}}}/>);
-        default:
-            return(<BookmarkIcon sx={{ color: "#65ba43", 'fontSize':{fontSize}}}/>);
-    }
 }
 
 const TicketPanels = styled.div`

@@ -3,45 +3,40 @@ import styled from 'styled-components';
 import useComponentVisible from '../customHooks/useComponentVisible';
 
 const UserTile = (props) => {
-
-
-    if (props.field === 'assignee') console.log(props.user)
-
     const [isExpanded,setIsExpanded] = useState(false);
-    const [value,setValue] = useState(props.user);
+    const value = props.user;
 
     const onClick = (newVal) => {
-        setValue(newVal);
+        props.setUser(newVal);
         setIsExpanded(false);
-        props.onWrite(props.field, newVal[0]);
     }
 
     return(
         <div>
-        <Container
-            onClick={()=>{setIsExpanded(!isExpanded)}}
-            style={{'border': '1px solid #dfe1e6'}}
-        >
-            <UserInfo>
-            {value.length > 1 &&
-                <UserAvatar
-                        img={value[1].photo}
-                        height={'24px'}
-                        width={'24px'}
+            <Container
+                onClick={()=>{setIsExpanded(!isExpanded)}}
+                style={{'border': '1px solid #dfe1e6'}}
+            >
+                <UserInfo>
+                {value.length > 1 &&
+                    <UserAvatar
+                            img={value[1].photo}
+                            height={'24px'}
+                            width={'24px'}
+                    />
+                }
+                {value.length > 1 && 
+                    value[1].firstName + " " + value[1].lastName
+                }
+                </UserInfo>
+            </Container>
+            {isExpanded && value.length > 1 && 
+                <DropDown
+                    users={props.users}
+                    value={value}
+                    onClick={onClick}
                 />
             }
-            {value.length > 1 && 
-                value[1].firstName + " " + value[1].lastName
-            }
-            </UserInfo>
-        </Container>
-        {isExpanded && value.length > 1 && 
-            <DropDown
-                users={props.users}
-                value={value}
-                onClick={onClick}
-            />
-        }
         </div>
     )
 }
@@ -58,7 +53,7 @@ const DropDown = (props) => {
                         return(
                         <Container
                             key={i}
-                            onClick={() => {props.onClick(user)}}
+                            onClick={() => {props.onClick(user[0])}}
                             style={{'border': '1px solid #F4F5F7'}}
                         >
                             <UserInfo>
