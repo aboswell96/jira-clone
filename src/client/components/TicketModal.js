@@ -56,6 +56,8 @@ const TicketModal = (props) => {
 
     //Fires when the ticket passed in by BoardView changes eg. user clicks on a ticket
     useEffect(() => {
+        setTitle(ticketTest.title);
+        setDescription(ticketTest.description);
         setIssueType(ticketTest.type);
         setStatus(ticketTest.lane);
 
@@ -76,6 +78,8 @@ const TicketModal = (props) => {
     }, [ticketTest, props.users])
 
     //Ticket Attributes
+    const [title, setTitle] = useState(ticketTest.title);
+    const [description, setDescription] = useState(ticketTest.description);
     const [issueType, setIssueType] = useState(ticketTest.type);
     const [status, setStatus] = useState(ticketTest.lane);
     const [assignee, setAssignee] = useState(Object.entries(props.users).filter(user => user[0] == ticketTest.assignee));
@@ -141,12 +145,12 @@ const TicketModal = (props) => {
                                 {issueType.toUpperCase() + "-" + props.ticket[0]}
                             </TicketType>
                             <Title
-                                title={ticketTest.title}
+                                title={title}
                                 onWrite={onWrite}
                             />
                             <span style={{'display':'block','paddingTop':'25px', 'color':'#172B4D', 'fontFamily':'CircularStdMedium', 'marginLeft':'3px'}}>Description</span>
                             <Description
-                                description={ticketTest.description}
+                                description={description}
                                 onWrite={onWrite}
                             />
                             <span style={{'display':'block','paddingTop':'25px', 'color':'#172B4D','fontFamily':'CircularStdMedium','marginLeft':'3px'}}>Comments</span>
@@ -290,24 +294,15 @@ const Comments = (props) => {
     )
 }
 
-const UserAvatar = styled.div`
-    display: block;
-    background-image: url(${props => props.img});
-    background-position:50% 50%;
-    background-repeat:no-repeat;
-    background-size: cover;
-    background-color: rgb(235, 236, 240);
-    height: ${props => props.height};
-    width: ${props => props.height};
-    border-radius:100%;
-    flex-shrink: 0;
-`
-
 const Description = (props) => {
 
     const [isEditting, setIsEditting] = useState(false);
     const [value, setValue] = useState(props.description);
     const defaultVal = props.description;
+
+    useEffect(() => {
+        setValue(props.description);
+    }, [props.description])
 
     const onChange = (e) => {
 
@@ -366,6 +361,10 @@ const Title = (props) => {
     const [isEditting, setIsEditting] = useState(false);
     const [value, setValue] = useState(props.title);
     const defaultVal = props.title;
+
+    useEffect(() => {
+        setValue(props.title);
+    }, [props.title])
 
     const onChange = (e) => {
 
@@ -435,6 +434,19 @@ const RenderTicketTypeIcon = (type) => {
             return(<BookmarkIcon sx={{ color: "#65ba43", 'fontSize':{fontSize}}}/>);
     }
 }
+
+const UserAvatar = styled.div`
+    display: block;
+    background-image: url(${props => props.img});
+    background-position:50% 50%;
+    background-repeat:no-repeat;
+    background-size: cover;
+    background-color: rgb(235, 236, 240);
+    height: ${props => props.height};
+    width: ${props => props.height};
+    border-radius:100%;
+    flex-shrink: 0;
+`
 
 const TicketPanels = styled.div`
     display:flex;
