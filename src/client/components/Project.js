@@ -26,11 +26,12 @@ const Container = styled.div`
     flex-direction: row;
     justify-content: flex-start;
     height: 100vh;
+    width: 100%;
     gap: 0;
 `
 
 const Board = styled.div`
-    width: 100%;
+    width: 100%
 `
 
 const Project = (props) => {

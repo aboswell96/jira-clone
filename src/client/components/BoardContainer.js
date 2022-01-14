@@ -5,8 +5,9 @@ import BoardView from './BoardView';
 
 const Container = styled.div`
     margin-left: 40px;
+    margin-right: 40px;
     margin-top: 30px;
-    width: 100%;
+    width: auto;
 `
 
 const Title = styled.div`

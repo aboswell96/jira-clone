@@ -13,7 +13,9 @@ import Tooltip from '@mui/material/Tooltip';
 
 import _ from "lodash"
 
-import { DragDropContainer, DropTarget } from 'react-drag-drop-container';
+// import { DragDropContainer, DropTarget } from 'react-drag-drop-container';
+import DropTarget from './DragAndDrop/DropTarget';
+import DragDropContainer from './DragAndDrop/DragDropContainer';
 import TicketModal from './TicketModal';
 
 import { addDBListener, readFromDB,writeToDB } from '../../firebase/firebase';
@@ -276,6 +278,9 @@ const Swimlanes = (props) => {
                 dropData={{'laneTitle':lane.code}}
                 onDragEnter={(e) => OnDragEnter(e, i)}
                 onDragLeave={(e) => OnDragLeave(e, i)}
+                width="25%"
+                minWidth="145px"
+                height="auto"
             >
                 <Swimlane isHovered={currentLaneHovered === i}>
                     <SwimlaneHeader>
@@ -406,11 +411,10 @@ const BoardFilter = styled.button`
 
 const Swimlane = styled.div`
     background-color: rgb(244 245 247);
-    width: 370px;
     border: 5px solid rgb(244 245 247);
     border-radius: 2px;
     outline: none;
-    height: 100%;
+    height: auto;
 
     ${({ isHovered }) => isHovered && `
         border: 5px solid #4c9aff;
@@ -449,7 +453,7 @@ const TicketCard = styled.div`
     flex-direction: column;
     gap: 11px;
     color: #172B4D;
-    width: 350px;
+    ${'' /* max-width: 350px; */}
 
     &:hover {
         background-color: rgb(235, 236, 240);
