@@ -1,7 +1,7 @@
-import React, {useState,useEffect, useMemo} from 'react';
+import React, {useState,useEffect} from 'react';
 import styled from 'styled-components';
 
-import { readFromDB, queryCommentsDB, updateDB, saveComment } from '../../firebase/firebase';
+import { readFromDB, queryCommentsDB, updateDB, saveComment, deleteNodeDB } from '../../firebase/firebase';
 
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
@@ -10,8 +10,11 @@ import UserTile from './UserTile';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import BugReportIcon from '@mui/icons-material/BugReport';
+import CloseIcon from '@mui/icons-material/Close';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import StatusTile from './StatusTile';
 import PriorityTile from './PriorityTile';
+import Tooltip from '@mui/material/Tooltip';
 
 import TitleInput from './TitleInput';
 import Button from './Button';
@@ -130,6 +133,12 @@ const TicketModal = (props) => {
         updateDB('tickets/' + props.ticket[0] + "/" + path, newValue);
     }
 
+    const onDeleteTicket = () => {
+        deleteNodeDB('tickets/' + props.ticket[0]);
+        deleteNodeDB('comments/' + props.ticket[0]);
+        props.handleClose();
+    }
+
     return(
             <Modal
                 open={props.open}
@@ -138,12 +147,26 @@ const TicketModal = (props) => {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
+                <div style={{'display':'flex','flex-direction':'row','justify-content':'space-between','gap':'10px'}}>
+                    <TicketType>
+                        {RenderTicketTypeIcon(issueType)}
+                        {issueType.toUpperCase() + "-" + props.ticket[0]}
+                    </TicketType>
+                    <div style={{'display':'flex','flex-direction':'row','justify-content':'flex-end','gap':'10px'}}>
+                        <div style={{'width':30,'margin-right':'0', 'cursor':'pointer'}} onClick={onDeleteTicket}>
+                            <Tooltip title="Delete Ticket" placement="bottom">
+                                <DeleteOutlineOutlinedIcon color="action" sx={{'fontSize':30, 'mr':0}}/>
+                            </Tooltip>
+                        </div>
+                        <div style={{'width':30,'margin-right':'0','cursor':'pointer'}} onClick={props.handleClose}>
+                            <Tooltip title="Close" placement="bottom">
+                                <CloseIcon color="action" sx={{'fontSize':30, 'mr':0}}/>
+                            </Tooltip>
+                        </div>
+                    </div>
+                </div>
                     <TicketPanels>
                         <TicketMainPanel>
-                            <TicketType>
-                                {RenderTicketTypeIcon(issueType)}
-                                {issueType.toUpperCase() + "-" + props.ticket[0]}
-                            </TicketType>
                             <Title
                                 title={title}
                                 onWrite={onWrite}

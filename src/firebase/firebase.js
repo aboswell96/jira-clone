@@ -52,6 +52,10 @@ export const updateDB = (path, data, cb) => {
   })
 }
 
+export const deleteNodeDB = (path, cb) => {
+  updateDB(path,null,cb);
+}
+
 export const addDBListener = (cb) => {
   const db = getDatabase();
   const ticketsRef = ref(db, 'tickets');
