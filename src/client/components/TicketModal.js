@@ -131,6 +131,7 @@ const TicketModal = (props) => {
 
     const onWrite = (path, newValue) => {
         updateDB('tickets/' + props.ticket[0] + "/" + path, newValue);
+        updateDB('tickets/' + props.ticket[0] + "/lastUpdated", new Date().getTime());
     }
 
     const onDeleteTicket = () => {

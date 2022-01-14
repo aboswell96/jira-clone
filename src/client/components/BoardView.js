@@ -224,7 +224,11 @@ const Swimlanes = (props) => {
 
         if (props.recentlyUpdated) {
             //Show empty board for now if recently updated filter is selected
-            filteredTickets=[];
+            // filteredTickets=[];
+            const now = new Date().getTime();
+            const k_24hours = (24 * 60 * 60 * 1000);
+            //const k_1Minute = (60 * 1000);
+            filteredTickets = filteredTickets.filter(ticket => now - ticket[1].lastUpdated < k_24hours);
         }
         else {
             //If any user filters are selected
