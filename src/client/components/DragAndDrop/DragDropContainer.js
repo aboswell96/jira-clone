@@ -289,6 +289,7 @@ class DragDropContainer extends React.Component {
       zIndex: this.props.zIndex,
       opacity: this.props.dragElemOpacity,
       display: this.state.dragging ? 'block' : 'none',
+      width: '19%',
     };
 
     const ghost = (
