@@ -56,7 +56,7 @@ const CreateTicket = (props) => {
         if(newVal === '-1') {
             setAssignee(Unassigned);
         } else {
-            setAssignee(Object.entries(users).filter(user => user[0] == newVal)[0]);
+            setAssignee(Object.entries(users).filter(user => parseInt(user[0]) === newVal)[0]);
         }
     }
 
@@ -64,7 +64,7 @@ const CreateTicket = (props) => {
         if(newVal === '-1') {
             setReporter(Unassigned);
         } else {
-            setReporter(Object.entries(users).filter(user => user[0] == newVal)[0]);
+            setReporter(Object.entries(users).filter(user => parseInt(user[0]) === newVal)[0]);
         }
     }
 
@@ -211,16 +211,5 @@ const TicketSidePanel = styled.div`
     margin-left: 50px;
     width: 35%;
 `
-
-const TicketType = styled.div`
-    display: flex;
-    flex-direction: row;
-    gap: 7px;
-    font-size: 13px;
-    align-items: center;
-    font-family: CircularStdBook;
-    color: rgb(94, 108, 132);
-`
-
 
 export default CreateTicket;

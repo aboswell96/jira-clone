@@ -65,16 +65,15 @@ const TicketModal = (props) => {
         setIssueType(ticketTest.type);
         setStatus(ticketTest.lane);
 
-        const newAssignee = Object.entries(props.users).filter(user => user[0] == ticketTest.assignee);
+        const newAssignee = Object.entries(props.users).filter(user => parseInt(user[0]) === ticketTest.assignee);
         if(newAssignee.length > 0){
-            setAssignee(Object.entries(props.users).filter(user => user[0] == ticketTest.assignee)[0]);
+            setAssignee(Object.entries(props.users).filter(user => parseInt(user[0]) === ticketTest.assignee)[0]);
         } else {
             setAssignee(["-1",{"firstName":'Unassigned','lastName':'','photo':'https://ibb.co/M9PdhH9'}]);
         }
-
-        const newReporter = Object.entries(props.users).filter(user => user[0] == ticketTest.reporter);
+        const newReporter = Object.entries(props.users).filter(user => parseInt(user[0]) === ticketTest.reporter);
         if(newReporter.length > 0){
-            setReporter(Object.entries(props.users).filter(user => user[0] == ticketTest.reporter)[0]);
+            setReporter(Object.entries(props.users).filter(user => parseInt(user[0]) === ticketTest.reporter)[0]);
         } else {
             setReporter(["-1",{"firstName":'Unassigned','lastName':'','photo':'https://ibb.co/M9PdhH9'}]);
         }
@@ -86,8 +85,8 @@ const TicketModal = (props) => {
     const [description, setDescription] = useState(ticketTest.description);
     const [issueType, setIssueType] = useState(ticketTest.type);
     const [status, setStatus] = useState(ticketTest.lane);
-    const [assignee, setAssignee] = useState(Object.entries(props.users).filter(user => user[0] == ticketTest.assignee));
-    const [reporter, setReporter] = useState(Object.entries(props.users).filter(user => user[0] == ticketTest.reporter));
+    const [assignee, setAssignee] = useState(Object.entries(props.users).filter(user => parseInt(user[0]) === ticketTest.assignee));
+    const [reporter, setReporter] = useState(Object.entries(props.users).filter(user => parseInt(user[0]) === ticketTest.reporter));
     const [priority, setPriority] = useState(ticketTest.priority);
     const [comments, setComments] = useState([]);
 
@@ -106,7 +105,7 @@ const TicketModal = (props) => {
         if(newVal === '-1') {
             setAssignee(Unassigned);
         } else {
-            setAssignee(Object.entries(props.users).filter(user => user[0] == newVal)[0]);
+            setAssignee(Object.entries(props.users).filter(user => parseInt(user[0]) === newVal)[0]);
         }
     }
 
@@ -115,7 +114,7 @@ const TicketModal = (props) => {
         if(newVal === '-1') {
             setReporter(Unassigned);
         } else {
-            setReporter(Object.entries(props.users).filter(user => user[0] == newVal)[0]);
+            setReporter(Object.entries(props.users).filter(user => parseInt(user[0]) === newVal)[0]);
         }
     }
 
@@ -246,7 +245,7 @@ const Comments = (props) => {
     }
 
     const comments = props.comments.map((comment,i) => {
-        const user = Object.entries(props.users).filter(user => user[0] == comment.userId)[0];
+        const user = Object.entries(props.users).filter(user => parseInt(user[0]) === comment.userId)[0];
         return(
             <div style={{'display':'flex', 'flex-direction':'row', 'gap':'25px'}}>
                 <div>

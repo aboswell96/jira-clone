@@ -72,18 +72,12 @@ const SearchIssuesModal = (props) => {
     };
 
     const input = searchInput.toLowerCase().replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
-
     let filteredTickets = Object.entries(tickets).filter(ticket => ticket[1].title.toLowerCase().search(input) > -1);
 
-    // if(!input) {
-    //     filteredTickets = [];
-    // }
-
     const Tickets = filteredTickets.map((ticket,i) => {
-        const assignee = Object.entries(dbUsers).filter(user => ticket[1].assignee == user[0]);
+        const assignee = Object.entries(dbUsers).filter(user => parseInt(user[0]) === ticket[1].assignee);
         return(
             <TicketCard
-            // onClick={handleOpen}
             key={i}
             >
                 {ticket[1].title}

@@ -128,7 +128,7 @@ export const setupFirebaseInitialData = () => {
     {
       '31232':
       {
-        'title':'Try clicking on an Issue to see more information about it',
+        'title':'Try clicking on an Issue to see more information',
         'type':'story',
         'priority':'high',
         'assignee': 64980,

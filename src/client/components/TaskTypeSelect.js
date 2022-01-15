@@ -7,18 +7,18 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import BugReportIcon from '@mui/icons-material/BugReport';
 
 const MAPPING = [
-    {
-        'title': 'Story',
-        'code': 'story'
-    },
-    {
-        'title': 'Task',
-        'code': 'task'
-    },
-    {
-        'title': 'Bug',
-        'code': 'bug'
-    },];
+{
+    'title': 'Story',
+    'code': 'story'
+},
+{
+    'title': 'Task',
+    'code': 'task'
+},
+{
+    'title': 'Bug',
+    'code': 'bug'
+}];
 
 const TaskTypeSelect = (props) => {
 

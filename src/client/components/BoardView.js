@@ -270,7 +270,7 @@ const Swimlanes = (props) => {
         else if (props.usersSelected.some(user => user.isSelected))
         {
             const filteredUsers = props.usersSelected.filter(user => user.isSelected);
-            filteredTickets = filteredTickets.filter(ticket => filteredUsers.some(user => (user.id == ticket[1].assignee)));
+            filteredTickets = filteredTickets.filter(ticket => filteredUsers.some(user => (parseInt(user.id) === ticket[1].assignee)));
         }
 
 
@@ -278,7 +278,7 @@ const Swimlanes = (props) => {
         filteredTickets = filteredTickets.filter(ticket => ticket[1].title.toLowerCase().search(props.searchInput) > -1);
 
         const TicketComponents = filteredTickets.map((ticket,j) => {
-            const assignee = Object.entries(props.users).filter(user => ticket[1].assignee == user[0]);
+            const assignee = Object.entries(props.users).filter(user => parseInt(user[0]) === ticket[1].assignee);
             return( 
                 <DragDropContainer
                     targetKey="moveTicket"
