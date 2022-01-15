@@ -61,7 +61,8 @@ const Settings = (props) => {
             <TextInput
                 value={name}
                 onChange={onChange}
-                width="640px"
+                width="40%"
+                minWidth="375px"
                 height="30px"
                 pt="1px"
             />
@@ -72,7 +73,8 @@ const Settings = (props) => {
             <TextInput
                 value={description}
                 onChange={onDescriptionChange}
-                width="640px"
+                width="40%"
+                minWidth="375px"
                 height="30px"
                 pt="1px"
             />

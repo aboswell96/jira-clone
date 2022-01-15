@@ -30,7 +30,8 @@ const style = {
     pr: 35/8,
     pb: 60/8,
     pl: 35/8,
-    width: 1040,
+    width: '55%',
+    minWidth: 550,
     bgcolor: 'background.paper',
     boxShadow: 24,
     verticalAlign:'top',
@@ -222,7 +223,6 @@ const TicketModal = (props) => {
 }
 
 const Comments = (props) => {
-
     const [value, setValue] = useState("");
     const [isEditting, setIsEditting] = useState(false);
 
@@ -239,16 +239,13 @@ const Comments = (props) => {
     }
     
     const onChange = (e) => {
-
         if(!isEditting) {
             setIsEditting(true);
         }
-
         setValue(e.target.value);
     }
 
     const comments = props.comments.map((comment,i) => {
-
         const user = Object.entries(props.users).filter(user => user[0] == comment.userId)[0];
         return(
             <div style={{'display':'flex', 'flex-direction':'row', 'gap':'25px'}}>
@@ -381,7 +378,6 @@ const Description = (props) => {
 }
 
 const Title = (props) => {
-
     const [isEditting, setIsEditting] = useState(false);
     const [value, setValue] = useState(props.title);
     const defaultVal = props.title;
@@ -391,11 +387,9 @@ const Title = (props) => {
     }, [props.title])
 
     const onChange = (e) => {
-
         if(!isEditting) {
             setIsEditting(true);
         }
-
         setValue(e.target.value);
     }
 
@@ -436,16 +430,13 @@ const Title = (props) => {
                             onClick={()=>onCancel()}
                         />
                     </div>
-                    
             }
         </div>
     );
 }
 
 const RenderTicketTypeIcon = (type) => {
-
     const fontSize = 18;
-
     switch(type) {
 
         case "story":

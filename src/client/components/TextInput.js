@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 const TextInputComponent = styled.input`
     width: ${props => props.width};
+    min-width: ${props => props.minWidth};
     height: ${props => props.height};
     background-color: rgb(244 245 247);
     border: 1px solid rgb(223, 225, 230);
@@ -35,6 +36,7 @@ const TextInput = (props) => {
             value={props.value} 
             onChange={props.onChange}
             width={props.width}
+            minWidth={props.minWidth}
             height={props.height}
             placeholder={props.placeholder}
             fontSize={props.fontSize}
