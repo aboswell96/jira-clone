@@ -42,6 +42,38 @@ const tempLanes = [
         'code': 'done'
     }];
 
+const PRIORTY_MAPPING = [
+{
+    'title': 'Highest',
+    'code': 'sev2'
+},
+{
+    'title': 'Higher',
+    'code': 'sev1'
+},
+{
+    'title': 'Medium',
+    'code': 'high'
+},
+{
+    'title': 'Lowest',
+    'code': 'low'
+}];
+
+const ISSUE_MAPPING = [
+{
+    'title': 'Story',
+    'code': 'story'
+},
+{
+    'title': 'Task',
+    'code': 'task'
+},
+{
+    'title': 'Bug',
+    'code': 'bug'
+},];
+
 const BoardView = () => {
 
     const [searchInput,setSearchInput] = useState("");
@@ -259,8 +291,12 @@ const Swimlanes = (props) => {
                     >
                         {ticket[1].title}
                         <TicketIcons>
-                            {RenderTicketTypeIcon(ticket[1].type)}
-                            {RenderTicketSeverityIcon(ticket[1].priority)}
+                            <Tooltip title={ISSUE_MAPPING.filter(type => type.code === ticket[1].type)[0].title} placement="top">
+                                {RenderTicketTypeIcon(ticket[1].type)}
+                            </Tooltip>
+                            <Tooltip title={PRIORTY_MAPPING.filter(p => p.code === ticket[1].priority)[0].title} placement="top">
+                                {RenderTicketSeverityIcon(ticket[1].priority)}
+                            </Tooltip>
                             {assignee[0] &&
                             <Tooltip title={assignee[0][1].firstName + " " + assignee[0][1].lastName} placement="top">
                                 <UserAvatar
@@ -478,6 +514,7 @@ const UserAvatar = styled.div`
     width: ${props => props.height};
     border-radius:100%;
     margin-left: auto;
+    cursor: pointer;
 
     ${({ active }) => active && `
         outline: 3px solid #4c9aff;

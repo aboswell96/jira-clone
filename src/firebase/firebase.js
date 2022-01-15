@@ -102,12 +102,12 @@ export const setupFirebaseInitialData = () => {
     {
       '26377':
       {
-        'title':'Add Drag n Drop',
-        'type':'bug',
+        'title':'This is an issue of type Story',
+        'type':'story',
         'priority':'sev2',
         'assignee': -1,
         'lane': 'backlog',
-        'description': 'temp Description 2',
+        'description': 'Users can add descriptions to their issue here',
         'reporter': -1,
         'lastUpdated': 1642198609473 - 1000*60*60*24,
       }
@@ -115,12 +115,12 @@ export const setupFirebaseInitialData = () => {
     {
       '34891':
       {
-        'title':'Add backend',
+        'title':'Try dragging issues around to different columns to transition their status',
         'type':'story',
         'priority':'sev1',
         'assignee': -1,
         'lane': 'backlog',
-        'description': 'temp Description 2',
+        'description': 'Users can add descriptions to their issue here',
         'reporter': -1,
         'lastUpdated': 1642198609473 - 1000*60*60*24,
       }
@@ -128,12 +128,12 @@ export const setupFirebaseInitialData = () => {
     {
       '31232':
       {
-        'title':'Add ticket search',
+        'title':'Try clicking on an Issue to see more information about it',
         'type':'story',
         'priority':'high',
         'assignee': 64980,
         'lane': 'inDevelopment',
-        'description': 'temp Description 2',
+        'description': 'Users can add descriptions to their issue here',
         'reporter': -1,
         'lastUpdated': 1642198609473 - 1000*60*60*24,
       }
@@ -141,12 +141,12 @@ export const setupFirebaseInitialData = () => {
     {
       '31236':
       {
-        'title':'Add ticket filters by status',
+        'title':'Try using the board filters to search issues by assignee or title',
         'type':'task',
         'priority':'low',
         'assignee': 71653,
         'lane': 'inDevelopment',
-        'description': 'temp Description 2',
+        'description': 'Users can add descriptions to their issue here',
         'reporter': -1,
         'lastUpdated': 1642198609473 - 1000*60*60*24,
       }
@@ -154,12 +154,12 @@ export const setupFirebaseInitialData = () => {
     {
       '31239':
       {
-        'title':'Add description and project type to settings',
+        'title':'Users can also leave comments on an issue - Try Leaving a comment on an issue',
         'type':'story',
         'priority':'sev2',
         'assignee': 86862,
         'lane': 'inDevelopment',
-        'description': 'temp Description 2',
+        'description': 'Users can add descriptions to their issue here',
         'reporter': -1,
         'lastUpdated': 1642198609473 - 1000*60*60*24,
       }
@@ -167,12 +167,12 @@ export const setupFirebaseInitialData = () => {
     {
       '56343':
       {
-        'title':'Add BoardView',
+        'title':'Issues can be assigned a priority(lowest to highest) and a type(Bug,Task,Story)',
         'type':'story',
         'priority':'low',
         'assignee': 64980,
         'lane': 'inProgress',
-        'description': 'temp Description 2',
+        'description': 'Users can add descriptions to their issue here',
         'reporter': -1,
         'lastUpdated': 1642198609473 - 1000*60*60*24,
       }
@@ -180,12 +180,12 @@ export const setupFirebaseInitialData = () => {
     {
       '76866':
       {
-        'title':'add routes',
+        'title':'Each Issue has one reporter and one assignee',
         'type':'story',
         'priority':'sev1',
         'assignee': 64980,
         'lane': 'done',
-        'description': 'temp Description 2',
+        'description': 'Users can add descriptions to their issue here',
         'reporter': -1,
         'lastUpdated': 1642198609473 - 1000*60*60*24,
       }
@@ -227,7 +227,7 @@ export const setupFirebaseInitialData = () => {
             'userId': '64980',
         },
         {
-            'msg': "Is this still in progress?",
+            'msg': "Is this in the scope for this release",
             'timestamp': new Date().getTime() - oneDay,
             'userId': '86862',
         },
