@@ -60,7 +60,7 @@ class DropTarget extends React.Component {
   render() {
     const classNames = 'droptarget ' +  (this.state.highlighted ? this.props.highlightClassName : '');
     return (
-      <span ref={(t) => { this.elem = t; }} className={classNames} style={{'width':this.props.width,'min-width':this.props.minWidth,'height':this.props.height}}>
+      <span ref={(t) => { this.elem = t; }} className={classNames} style={{'width':this.props.width,'minWidth':this.props.minWidth,'height':this.props.height}}>
         {this.props.render ? this.props.render() : this.props.children}
       </span>
     );

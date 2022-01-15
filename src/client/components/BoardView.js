@@ -66,9 +66,9 @@ const BoardView = () => {
     },[dbUsers]);
 
     const createFilterStates = (users) => {
-        return Object.entries(users).map((user,i) =>  {
-            return({'id':user[0],'isSelected': false,});
-        })
+        let res=[];
+        Object.entries(users).forEach(user => res.push({'id':user[0],'isSelected': false,}));
+        return res;
     };
 
     const OnHeroClicked = (id) => {
@@ -87,11 +87,11 @@ const BoardView = () => {
         SetRecentlyUpdatedSelected(false);
     }
 
-    const OnMyIssuesClicked = (filter) => {
+    const OnMyIssuesClicked = () => {
         SetMyIssuesSelected(!myIssuesSelected);
     }
 
-    const OnRecentlyUpdatedClicked = (filter) => {
+    const OnRecentlyUpdatedClicked = () => {
         SetRecentlyUpdatedSelected(!recentlyUpdatedSelected);
     }
 
@@ -101,7 +101,7 @@ const BoardView = () => {
 
         if (loading) {
             return(
-                <ClipLoader color="#0747a6" loading={loading} size={28} />
+                <ClipLoader color="#0747a6" loading={loading} size={28} key={i}/>
             );
         }
 
@@ -233,7 +233,7 @@ const Swimlanes = (props) => {
         //If any user filters are selected
         if (props.myIssuesSelected) 
         {
-            filteredTickets = filteredTickets.filter(ticket => ticket[1].assignee == 64980);
+            filteredTickets = filteredTickets.filter(ticket => ticket[1].assignee === 64980);
         }
         else if (props.usersSelected.some(user => user.isSelected))
         {

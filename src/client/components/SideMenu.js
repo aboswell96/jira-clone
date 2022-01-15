@@ -99,7 +99,7 @@ const SideMenu = (props) => {
             <BoardOptions>
                 {tabs}
             </BoardOptions>
-            <hr style={{'border-top': '1px solid rgb(193, 199, 208)', 'width':'197px'}}></hr>
+            <hr style={{'borderTop': '1px solid rgb(193, 199, 208)', 'width':'197px'}}></hr>
             <BoardOptionsInDevelopment>
                 {tabsDev}
             </BoardOptionsInDevelopment>

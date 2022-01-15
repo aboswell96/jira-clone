@@ -72,9 +72,12 @@ const DropDown = (props) => {
                         {status.title}
                     </UserInfo>
                     </Container>
-                );
-            };
-            })}
+                );    
+        
+            } else {
+                return "";
+            }
+        })}
         </DropDownComponent>
     );
 

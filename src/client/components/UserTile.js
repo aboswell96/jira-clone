@@ -67,6 +67,9 @@ const DropDown = (props) => {
                         </Container>
                         );
                     }
+                    else{
+                        return "";
+                    }
             }))}
         </DropDownComponent>
     );

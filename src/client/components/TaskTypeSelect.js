@@ -74,6 +74,8 @@ const DropDown = (props) => {
                             </UserInfo>
                             </Container>
                         );
+                    } else {
+                        return "";
                     }
             }))}
         </DropDownComponent>

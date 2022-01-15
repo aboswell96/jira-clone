@@ -185,7 +185,7 @@ const Container = styled.div`
 
 const NoResults = () => {
     return (
-        <div style={{'display':'flex', 'flex-direction':'column', 'width':'300px','margin':'auto', 'color':'white', 'font-size':'30px'}}>
+        <div style={{'display':'flex', 'flexDirection':'column', 'width':'300px','margin':'auto', 'color':'white', 'fontSize':'30px'}}>
         <SearchOffIcon
             sx={{'margin':'auto', 'fontSize':'30px'}}
         />

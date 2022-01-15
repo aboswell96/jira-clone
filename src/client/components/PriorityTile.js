@@ -68,6 +68,7 @@ const DropDown = (props) => {
                     if(prio.title !== props.value ) {
                         return(
                         <Container
+                            key={i}
                             onClick={() => props.onClick(prio.code)}
                             style={{'border': '1px solid #F4F5F7'}}
                         >
@@ -77,6 +78,8 @@ const DropDown = (props) => {
                         </UserInfo>
                         </Container>
                         );
+                    } else {
+                        return "";
                     }
             }))}
         </DropDownComponent>

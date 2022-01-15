@@ -148,12 +148,12 @@ const TicketModal = (props) => {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                <div style={{'display':'flex','flex-direction':'row','justify-content':'space-between','gap':'10px'}}>
+                <div style={{'display':'flex','flexDirection':'row','justifyContent':'space-between','gap':'10px'}}>
                     <TicketType>
                         {RenderTicketTypeIcon(issueType)}
                         {issueType.toUpperCase() + "-" + props.ticket[0]}
                     </TicketType>
-                    <div style={{'display':'flex','flex-direction':'row','justify-content':'flex-end','gap':'10px'}}>
+                    <div style={{'display':'flex','flexDirection':'row','justify-content':'flex-end','gap':'10px'}}>
                         <div style={{'width':30,'margin-right':'0', 'cursor':'pointer'}} onClick={onDeleteTicket}>
                             <Tooltip title="Delete Ticket" placement="bottom">
                                 <DeleteOutlineOutlinedIcon color="action" sx={{'fontSize':30, 'mr':0}}/>

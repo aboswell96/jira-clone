@@ -12,7 +12,7 @@ const firebaseConfig = {
     measurementId: "G-S5TBDSJ5P8"
 };
 
-const app = initializeApp(firebaseConfig);
+initializeApp(firebaseConfig);
 
 export const readFromDB = (path,f) => {
     const dbRef = ref(getDatabase());
@@ -61,7 +61,7 @@ export const addDBListener = (cb) => {
   const ticketsRef = ref(db, 'tickets');
   onValue(ticketsRef, (snapshot) => {
     const data = snapshot.val();
-    console.log("update..." + JSON.stringify(data));
+    // console.log("update..." + JSON.stringify(data));
     cb(data);
   });
 }
