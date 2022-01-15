@@ -189,7 +189,21 @@ export const setupFirebaseInitialData = () => {
         'reporter': -1,
         'lastUpdated': 1642198609473 - 1000*60*60*24,
       }
-    }];
+    },
+    {
+      '89432':
+      {
+        'title':'Issues can be deleted by clicking on the issue and using the Delete button',
+        'type':'story',
+        'priority':'low',
+        'assignee': 64980,
+        'lane': 'backlog',
+        'description': 'Users can add descriptions to their issue here',
+        'reporter': -1,
+        'lastUpdated': 1642198609473 - 1000*60*60*24,
+      }
+    }
+  ];
 
     const users = [
     {
@@ -239,6 +253,33 @@ export const setupFirebaseInitialData = () => {
         {
           'msg': "Kicked out of current sprint due to escalations",
           'timestamp': new Date().getTime() - 3*oneDay,
+          'userId': '64980',
+        }
+      ]
+    },
+    {
+      31239 : [
+        {
+          'msg': "Nice work on this Monica!",
+          'timestamp': new Date().getTime(),
+          'userId': '64980',
+        }
+      ]
+    },
+    {
+      31232 : [
+        {
+          'msg': "Users can change information on the ticket such as the title, description, or any of the attributes on the right side",
+          'timestamp': new Date().getTime(),
+          'userId': '64980',
+        }
+      ]
+    },
+    {
+      56343 : [
+        {
+          'msg': "Users can change priority or the issue type",
+          'timestamp': new Date().getTime(),
           'userId': '64980',
         }
       ]

@@ -245,9 +245,9 @@ const Comments = (props) => {
     }
 
     const comments = props.comments.map((comment,i) => {
-        const user = Object.entries(props.users).filter(user => parseInt(user[0]) === comment.userId)[0];
+        const user = Object.entries(props.users).filter(user => user[0] === comment.userId)[0];
         return(
-            <div style={{'display':'flex', 'flex-direction':'row', 'gap':'25px'}}>
+            <div style={{'display':'flex', 'flex-direction':'row', 'gap':'25px'}} key={i}>
                 <div>
                     <UserAvatar
                         img={user[1].photo}
@@ -409,7 +409,7 @@ const Title = (props) => {
                 onChange={onChange}
                 height="35px"
                 width="100%"
-                fontSize="24px"
+                fontSize={value.length > 60 ? "18px" : "24px"}
                 mt="35px"
             >
             </TitleInput>
