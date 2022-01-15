@@ -13,8 +13,9 @@ const App = () => {
 
   const [projectName,SetProjectName] = useState("loading...");
 
-  const OnUpdateSettingsSubmit = (newName) => {
+  const OnUpdateSettingsSubmit = (newName, newDescription) => {
     writeToDB('title', newName, () => {readFromDB('title',SetProjectName)});
+    writeToDB('projectDescription', newDescription);
   }
 
   //send network requests after mount

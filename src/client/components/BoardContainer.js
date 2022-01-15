@@ -22,6 +22,7 @@ const BoardContainer = (props) => {
         <Container>
             <ProjectURL
                 projectName={props.projectName}
+                pageName="Kanban Board"
             />
             <Title>
                 Kanban Board

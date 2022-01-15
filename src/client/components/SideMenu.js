@@ -63,7 +63,6 @@ const BoardMenuOptionDev = (props) => {
 }
 
 const tabsDev = tabsInDevelopment.map((tab,i) => {
-
     return(            
         <BoardMenuOptionDev
             key={i}

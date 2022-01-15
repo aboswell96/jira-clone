@@ -246,6 +246,7 @@ export const setupFirebaseInitialData = () => {
   ]
 
     writeToDB('title',"Central Perk Project");
+    writeToDB('projectDescription',"A tool used to track and coordinate work within a team");
 
 
     //write Tickets to DB

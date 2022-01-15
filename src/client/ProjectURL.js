@@ -27,7 +27,7 @@ const ProjectURL = (props) => {
                 /
             </div>
             <div>
-                Kanban Board
+                {props.pageName}
             </div>
         </Directory>
     )

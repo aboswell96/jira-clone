@@ -1,8 +1,9 @@
-import React,{useState} from 'react';
+import React,{useEffect, useState} from 'react';
 import styled from 'styled-components';
 import ProjectURL from '../ProjectURL';
 import TextInput from './TextInput';
 import Button from './Button';
+import { readFromDB } from '../../firebase/firebase';
 
 const Container = styled.div`
     margin-left: 40px;
@@ -29,21 +30,32 @@ const Text = styled.div`
 
 const Settings = (props) => {
 
-    const [name,setValue] = useState(props.projectName);
+    useEffect(() => {
+        readFromDB('projectDescription', setDescription);
+        readFromDB('title',setValue);
+    },[])
+
+    const [name,setValue] = useState("");
+    const [description, setDescription] = useState("");
 
     const onChange = (e) => {
         setValue(e.target.value);
+    }
+
+    const onDescriptionChange = (e) => {
+        setDescription(e.target.value);
     }
 
     return(
         <Container>
             <ProjectURL
                 projectName={props.projectName}
+                pageName="Project Details"
             />
         <Title>
             Project Details
         </Title>
-        <Text marginTop='50px'>Name
+        <Text marginTop='50px'>Project Name
         </Text>
         <TextInputWrapper>
             <TextInput
@@ -54,12 +66,23 @@ const Settings = (props) => {
                 pt="1px"
             />
         </TextInputWrapper>
+        <Text marginTop='15px'>Project Description
+        </Text>
+        <TextInputWrapper>
+            <TextInput
+                value={description}
+                onChange={onDescriptionChange}
+                width="640px"
+                height="30px"
+                pt="1px"
+            />
+        </TextInputWrapper>
         <Button
             text="Save changes"
             bgColor="#0052cc"
             color="white"
             marginTop="30px"
-            onClick={()=>props.onClick(name)}
+            onClick={()=>props.onClick(name, description)}
             hoverColor="#005eeb"
         />
         </Container>
