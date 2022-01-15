@@ -230,18 +230,17 @@ const Swimlanes = (props) => {
             //const k_1Minute = (60 * 1000);
             filteredTickets = filteredTickets.filter(ticket => now - ticket[1].lastUpdated < k_24hours);
         }
-        else {
-            //If any user filters are selected
-            if (props.myIssuesSelected) 
-            {
-                filteredTickets = filteredTickets.filter(ticket => ticket[1].assignee == 64980);
-            }
-            else if (props.usersSelected.some(user => user.isSelected))
-            {
-                const filteredUsers = props.usersSelected.filter(user => user.isSelected);
-                filteredTickets = filteredTickets.filter(ticket => filteredUsers.some(user => (user.id == ticket[1].assignee)));
-            }
+        //If any user filters are selected
+        if (props.myIssuesSelected) 
+        {
+            filteredTickets = filteredTickets.filter(ticket => ticket[1].assignee == 64980);
         }
+        else if (props.usersSelected.some(user => user.isSelected))
+        {
+            const filteredUsers = props.usersSelected.filter(user => user.isSelected);
+            filteredTickets = filteredTickets.filter(ticket => filteredUsers.some(user => (user.id == ticket[1].assignee)));
+        }
+
 
         //Filter with the SearchBox
         filteredTickets = filteredTickets.filter(ticket => ticket[1].title.toLowerCase().search(props.searchInput) > -1);

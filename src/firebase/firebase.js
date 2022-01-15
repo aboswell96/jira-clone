@@ -109,7 +109,7 @@ export const setupFirebaseInitialData = () => {
         'lane': 'backlog',
         'description': 'temp Description 2',
         'reporter': -1,
-        'lastUpdated': 1642198609473,
+        'lastUpdated': 1642198609473 - 1000*60*60*24,
       }
     },
     {
@@ -122,7 +122,7 @@ export const setupFirebaseInitialData = () => {
         'lane': 'backlog',
         'description': 'temp Description 2',
         'reporter': -1,
-        'lastUpdated': 1642198609473,
+        'lastUpdated': 1642198609473 - 1000*60*60*24,
       }
     },
     {
@@ -135,7 +135,7 @@ export const setupFirebaseInitialData = () => {
         'lane': 'inDevelopment',
         'description': 'temp Description 2',
         'reporter': -1,
-        'lastUpdated': 1642198609473,
+        'lastUpdated': 1642198609473 - 1000*60*60*24,
       }
     },
     {
@@ -148,7 +148,7 @@ export const setupFirebaseInitialData = () => {
         'lane': 'inDevelopment',
         'description': 'temp Description 2',
         'reporter': -1,
-        'lastUpdated': 1642198609473,
+        'lastUpdated': 1642198609473 - 1000*60*60*24,
       }
     },
     {
@@ -161,7 +161,7 @@ export const setupFirebaseInitialData = () => {
         'lane': 'inDevelopment',
         'description': 'temp Description 2',
         'reporter': -1,
-        'lastUpdated': 1642198609473,
+        'lastUpdated': 1642198609473 - 1000*60*60*24,
       }
     },
     {
@@ -174,7 +174,7 @@ export const setupFirebaseInitialData = () => {
         'lane': 'inProgress',
         'description': 'temp Description 2',
         'reporter': -1,
-        'lastUpdated': 1642198609473,
+        'lastUpdated': 1642198609473 - 1000*60*60*24,
       }
     },
     {
@@ -187,7 +187,7 @@ export const setupFirebaseInitialData = () => {
         'lane': 'done',
         'description': 'temp Description 2',
         'reporter': -1,
-        'lastUpdated': 1642198609473,
+        'lastUpdated': 1642198609473 - 1000*60*60*24,
       }
     }];
 
