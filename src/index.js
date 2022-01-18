@@ -7,7 +7,7 @@ import Settings from './client/components/Settings';
 
 import {setupFirebaseInitialData, readFromDB,writeToDB} from '../src/firebase/firebase';
 
-const SETUP_INITIAL_FIREBASE_DATA = true;
+const SETUP_INITIAL_FIREBASE_DATA = false;
 
 const App = () => {
 
@@ -31,16 +31,9 @@ const App = () => {
     <React.StrictMode>
     <BrowserRouter>
     <Routes>
-      <Route path="/" element={<Project
-        projectName={projectName}
-      />}>
-      <Route path="board" element={<BoardContainer
-        projectName={projectName}
-      />}/>
-      <Route path="settings" element={<Settings
-        projectName={projectName}
-        onClick={OnUpdateSettingsSubmit}
-      />}/>
+      <Route path="/" element={<Project projectName={projectName}/>}>
+      <Route path="board" element={<BoardContainer projectName={projectName}/>}/>
+      <Route path="settings" element={<Settings projectName={projectName} onClick={OnUpdateSettingsSubmit}/>}/>
       </Route>
     </Routes>
     </BrowserRouter>

@@ -167,7 +167,7 @@ export const setupFirebaseInitialData = () => {
     {
       '56343':
       {
-        'title':'Issues can be assigned a priority(lowest to highest) and a type(Bug,Task,Story)',
+        'title':'Issues can be assigned a priority (lowest to highest) and a type (Bug,Task,Story)',
         'type':'story',
         'priority':'low',
         'assignee': 64980,

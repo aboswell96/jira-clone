@@ -6,6 +6,8 @@ import '../style.css';
 import Sidebar from './Sidebar';
 import SideMenu from './SideMenu';
 
+import useWindowDimensions from '../customHooks/useWindowDimensions';
+
 const projectType = "Software project";
 
 const options = [
@@ -31,10 +33,16 @@ const Container = styled.div`
 `
 
 const Board = styled.div`
-    width: 100%
+    width: 100%;
+
+    ${({ isMinimized }) => isMinimized && `
+        padding-left: 64px;
+    `}
 `
 
 const Project = (props) => {
+
+    const { height, width } = useWindowDimensions();
 
     const OnClickBoardMenuOption = (newMenuOptionClicked) => {
         setSelectedMenuOption(newMenuOptionClicked);
@@ -45,6 +53,8 @@ const Project = (props) => {
     return(
         <Container>
             <Sidebar/>
+            {
+            width > 1000 &&
             <SideMenu 
                 current={selectedMenuOption}
                 onClick={OnClickBoardMenuOption}
@@ -52,7 +62,8 @@ const Project = (props) => {
                 projectName={props.projectName}
                 projectType={projectType}
             />
-            <Board>
+            }
+            <Board isMinimized={width <= 1000}>
                 <Outlet/>
             </Board>
         </Container>
