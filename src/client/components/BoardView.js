@@ -18,7 +18,7 @@ import DropTarget from './DragAndDrop/DropTarget';
 import DragDropContainer from './DragAndDrop/DragDropContainer';
 import TicketModal from './TicketModal';
 
-import { addDBListener, readFromDB,writeToDB } from '../../firebase/firebase';
+import { addDBListener, readFromDB,writeToDB, updateDB } from '../../firebase/firebase';
 
 import ClipLoader from "react-spinners/ClipLoader";
 
@@ -247,6 +247,7 @@ const Swimlanes = (props) => {
         var newTicket = _.cloneDeep(ticketObj);
         newTicket[1].lane = e.dropData.laneTitle;
         writeToDB('tickets/' + newTicket[0],newTicket[1]);
+        updateDB('tickets/' + newTicket[0] + "/lastUpdated", new Date().getTime());
         setCurrentLaneHovered(-1);
     };
 

@@ -32,8 +32,9 @@ const App = () => {
     <BrowserRouter>
     <Routes>
       <Route path="/" element={<Project projectName={projectName}/>}>
-      <Route path="board" element={<BoardContainer projectName={projectName}/>}/>
-      <Route path="settings" element={<Settings projectName={projectName} onClick={OnUpdateSettingsSubmit}/>}/>
+        <Route path="/" element={<BoardContainer projectName={projectName}/>}/>
+        <Route path="board" element={<BoardContainer projectName={projectName}/>}/>
+        <Route path="settings" element={<Settings projectName={projectName} onClick={OnUpdateSettingsSubmit}/>}/>
       </Route>
     </Routes>
     </BrowserRouter>
