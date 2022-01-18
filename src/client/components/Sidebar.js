@@ -112,6 +112,7 @@ const SidebarComponent = styled.div`
     transition: width 0.1s;
     margin: 0;
     position: absolute;
+    z-index: 1;
 `
 
 const NavOptions = styled.div`
