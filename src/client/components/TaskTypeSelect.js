@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import useComponentVisible from '../customHooks/useComponentVisible';
 
@@ -7,114 +7,106 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import BugReportIcon from '@mui/icons-material/BugReport';
 
 const MAPPING = [
-{
-    'title': 'Story',
-    'code': 'story'
-},
-{
-    'title': 'Task',
-    'code': 'task'
-},
-{
-    'title': 'Bug',
-    'code': 'bug'
-}];
+  {
+    title: 'Story',
+    code: 'story',
+  },
+  {
+    title: 'Task',
+    code: 'task',
+  },
+  {
+    title: 'Bug',
+    code: 'bug',
+  },
+];
 
 const TaskTypeSelect = (props) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const value = MAPPING.filter((type) => type.code === props.issueType)[0]
+    .title;
 
-    const [isExpanded,setIsExpanded] = useState(false);
-    const value = MAPPING.filter(type => type.code === props.issueType)[0].title;
+  const onClick = (newVal) => {
+    props.setIssueType(newVal);
+    setIsExpanded(false);
+  };
 
-    const onClick = (newVal) => {
-        props.setIssueType(newVal);
-        setIsExpanded(false);
-    }
-
-    return(
-        <div style={{'width':'75%'}}>
-            <Container
-                onClick={()=>setIsExpanded(!isExpanded)}
-                style={{'border': '1px solid #dfe1e6'}}
-            >
-                <UserInfo>
-                    {RenderTicketTypeIcon(MAPPING.filter(type => type.title === value)[0].code)}
-                    {value}
-                </UserInfo>
-            </Container>
-            <div>
-                {isExpanded &&          
-                    <DropDown
-                        value={value}
-                        onClick={onClick}
-                    />
-                }
-            </div>
-        </div>
-    );
-}
+  return (
+    <div style={{ width: '75%' }}>
+      <Container
+        onClick={() => setIsExpanded(!isExpanded)}
+        style={{ border: '1px solid #dfe1e6' }}
+      >
+        <UserInfo>
+          {RenderTicketTypeIcon(
+            MAPPING.filter((type) => type.title === value)[0].code
+          )}
+          {value}
+        </UserInfo>
+      </Container>
+      <div>{isExpanded && <DropDown value={value} onClick={onClick} />}</div>
+    </div>
+  );
+};
 
 const DropDown = (props) => {
+  const { ref, isComponentVisible } = useComponentVisible(true);
 
-    const { ref, isComponentVisible } = useComponentVisible(true);
-
-    return (
-        <DropDownComponent ref={ref}>
-            {isComponentVisible && (MAPPING.map((type,i) => {
-
-                    if(type.title !== props.value ) {
-                        return(
-                            <Container
-                                key={i}
-                                onClick={() => props.onClick(type.code)}
-                                style={{'border': '1px solid #F4F5F7'}}
-                            >
-                            <UserInfo>
-                                {RenderTicketTypeIcon(type.code)}
-                                {type.title}
-                            </UserInfo>
-                            </Container>
-                        );
-                    } else {
-                        return "";
-                    }
-            }))}
-        </DropDownComponent>
-    );
-
-}
+  return (
+    <DropDownComponent ref={ref}>
+      {isComponentVisible &&
+        MAPPING.map((type, i) => {
+          if (type.title !== props.value) {
+            return (
+              <Container
+                key={i}
+                onClick={() => props.onClick(type.code)}
+                style={{ border: '1px solid #F4F5F7' }}
+              >
+                <UserInfo>
+                  {RenderTicketTypeIcon(type.code)}
+                  {type.title}
+                </UserInfo>
+              </Container>
+            );
+          } else {
+            return '';
+          }
+        })}
+    </DropDownComponent>
+  );
+};
 
 const RenderTicketTypeIcon = (type) => {
+  const fontSize = 18;
 
-    const fontSize = 18;
-
-    switch(type) {
-
-        case "story":
-            return(<BookmarkIcon sx={{ color: "#65ba43", 'fontSize':{fontSize}}}/>);
-        case "task":
-            return(<CheckBoxIcon color="primary" sx={{'fontSize':{fontSize}}}/>);
-        case "bug":
-            return(<BugReportIcon color="action" sx={{'fontSize':{fontSize}}}/>);
-        default:
-            return(<BookmarkIcon sx={{ color: "#65ba43", 'fontSize':{fontSize}}}/>);
-    }
-}
+  switch (type) {
+    case 'story':
+      return <BookmarkIcon sx={{ color: '#65ba43', fontSize: { fontSize } }} />;
+    case 'task':
+      return <CheckBoxIcon color="primary" sx={{ fontSize: { fontSize } }} />;
+    case 'bug':
+      return <BugReportIcon color="action" sx={{ fontSize: { fontSize } }} />;
+    default:
+      return <BookmarkIcon sx={{ color: '#65ba43', fontSize: { fontSize } }} />;
+  }
+};
 
 export default TaskTypeSelect;
 
 const DropDownComponent = styled.div`
-    background-color: rgb(244 245 247);
-    position: absolute;
-    width: 169px;
-`
+  background-color: rgb(244 245 247);
+  position: absolute;
+  width: 169px;
+`;
 
 const UserInfo = styled.div`
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    justify-content: center;
-    height: inherit;
-`
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  justify-content: center;
+  height: inherit;
+`;
 
 const Container = styled.div`
     background-color: rgb(244 245 247);
@@ -127,4 +119,4 @@ const Container = styled.div`
 
     &:hover {
         background-color: rgb(235, 236, 240);
-`
+`;
