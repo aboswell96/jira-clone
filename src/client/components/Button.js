@@ -30,6 +30,7 @@ const Button = (props) => {
       bgColor={props.bgColor}
       color={props.color}
       hoverColor={props.hoverColor}
+      data-testid="button"
     >
       {props.text}
     </ButtonWrapper>
