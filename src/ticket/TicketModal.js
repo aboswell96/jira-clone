@@ -7,7 +7,7 @@ import {
   updateDB,
   saveComment,
   deleteNodeDB,
-} from '../../firebase/firebase';
+} from '../firebase/firebase';
 
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
@@ -23,7 +23,7 @@ import PriorityTile from './PriorityTile';
 import Tooltip from '@mui/material/Tooltip';
 
 import TitleInput from './TitleInput';
-import Button from './Button';
+import Button from '../common/Button';
 import moment from 'moment';
 import AddComment from './AddComment';
 import TaskTypeSelect from './TaskTypeSelect';

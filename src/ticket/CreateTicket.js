@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-import { readFromDB, writeToDB } from '../../firebase/firebase';
+import { readFromDB, writeToDB } from '../firebase/firebase';
 
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
@@ -11,7 +11,7 @@ import StatusTile from './StatusTile';
 import PriorityTile from './PriorityTile';
 
 import TitleInput from './TitleInput';
-import Button from './Button';
+import Button from '../common/Button';
 import TaskTypeSelect from './TaskTypeSelect';
 
 const style = {
@@ -32,7 +32,7 @@ const style = {
 
 const CreateTicket = (props) => {
   const [users, setUsers] = useState([[]]);
-  const Unassigned = [
+  const UNASSIGNED = [
     '-1',
     { firstName: 'Unassigned', lastName: '', photo: 'https://ibb.co/M9PdhH9' },
   ];
@@ -40,8 +40,8 @@ const CreateTicket = (props) => {
   //Ticket Attributes
   const [issueType, setIssueType] = useState('story');
   const [status, setStatus] = useState('backlog');
-  const [assignee, setAssignee] = useState(Unassigned);
-  const [reporter, setReporter] = useState(Unassigned);
+  const [assignee, setAssignee] = useState(UNASSIGNED);
+  const [reporter, setReporter] = useState(UNASSIGNED);
   const [priority, setPriority] = useState('low');
 
   const [title, setTitle] = useState('Enter a title...');
@@ -56,17 +56,17 @@ const CreateTicket = (props) => {
 
   const onAssigneeChange = (newVal) => {
     if (newVal === '-1') {
-      setAssignee(Unassigned);
+      setAssignee(UNASSIGNED);
     } else {
       setAssignee(
-        Object.entries(users).filter((user) => parseInt(user[0]) === newVal)[0]
+        Object.entries(users).filter((user) => parseInt(user[0]) == newVal)[0]
       );
     }
   };
 
   const OnReporterChange = (newVal) => {
     if (newVal === '-1') {
-      setReporter(Unassigned);
+      setReporter(UNASSIGNED);
     } else {
       setReporter(
         Object.entries(users).filter((user) => parseInt(user[0]) === newVal)[0]
@@ -83,6 +83,10 @@ const CreateTicket = (props) => {
   useEffect(() => {
     readFromDB('users', setUsers);
   }, []);
+
+  useEffect(() => {
+    console.log(users);
+  }, [users]);
 
   const onWrite = () => {
     const newTicket = {
@@ -168,7 +172,7 @@ const CreateTicket = (props) => {
             <UserTile
               user={assignee}
               setUser={onAssigneeChange}
-              users={Object.entries(users).concat([Unassigned])}
+              users={Object.entries(users).concat([UNASSIGNED])}
               field="assignee"
             />
             <span
@@ -185,7 +189,7 @@ const CreateTicket = (props) => {
             <UserTile
               user={reporter}
               setUser={OnReporterChange}
-              users={Object.entries(users).concat([Unassigned])}
+              users={Object.entries(users).concat([UNASSIGNED])}
               field="reporter"
             />
             <span

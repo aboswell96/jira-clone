@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import ProjectURL from '../ProjectURL';
-import TextInput from './TextInput';
-import Button from './Button';
-import { readFromDB } from '../../firebase/firebase';
+import ProjectURL from '../common/ProjectURL';
+import TextInput from '../common/TextInput';
+import Button from '../common/Button';
+import { readFromDB } from '../firebase/firebase';
 
 const Container = styled.div`
   margin-left: 40px;

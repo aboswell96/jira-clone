@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import ProjectURL from '../ProjectURL';
+import ProjectURL from '../common/ProjectURL';
 
 import BoardView from './BoardView';
 

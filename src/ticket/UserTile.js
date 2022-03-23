@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import useComponentVisible from '../customHooks/useComponentVisible';
+import useComponentVisible from '../common/customHooks/useComponentVisible';
 
 const UserTile = (props) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  console.log(props);
   const value = props.user;
 
   const onClick = (newVal) => {

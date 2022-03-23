@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
 import SearchIssuesModal from './SearchIssues';
-import CreateTicket from './CreateTicket';
+import CreateTicket from '../ticket/CreateTicket';
 
 const Sidebar = () => {
   const [sidebarWidth, SetSideBarWidth] = useState('64px');

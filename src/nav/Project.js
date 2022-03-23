@@ -3,10 +3,10 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import '../style.css';
 
-import Sidebar from './Sidebar';
+import Sidebar from '../search/Sidebar';
 import SideMenu from './SideMenu';
 
-import useWindowDimensions from '../customHooks/useWindowDimensions';
+import useWindowDimensions from '../common/customHooks/useWindowDimensions';
 
 const projectType = 'Software project';
 

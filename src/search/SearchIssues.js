@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
-import DebouncedTextSearchBox from './DebouncedTextSearchBox';
+import DebouncedTextSearchBox from '../common/DebouncedTextSearchBox';
 import Tooltip from '@mui/material/Tooltip';
 
 import BookmarkIcon from '@mui/icons-material/Bookmark';
@@ -14,7 +14,7 @@ import SearchOffIcon from '@mui/icons-material/SearchOff';
 
 import ClipLoader from 'react-spinners/ClipLoader';
 
-import { readFromDB } from '../../firebase/firebase';
+import { readFromDB } from '../firebase/firebase';
 
 import { debounce } from 'lodash';
 

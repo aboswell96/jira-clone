@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-import TextSearchBox from './TextSearchBox';
+import TextSearchBox from '../common/TextSearchBox';
 
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
@@ -16,18 +16,18 @@ import _ from 'lodash';
 // import { DragDropContainer, DropTarget } from 'react-drag-drop-container';
 import DropTarget from './DragAndDrop/DropTarget';
 import DragDropContainer from './DragAndDrop/DragDropContainer';
-import TicketModal from './TicketModal';
+import TicketModal from '../ticket/TicketModal';
 
 import {
   addDBListener,
   readFromDB,
   writeToDB,
   updateDB,
-} from '../../firebase/firebase';
+} from '../firebase/firebase';
 
 import ClipLoader from 'react-spinners/ClipLoader';
 
-import { delay } from './helpers';
+import { delay } from '../common/helpers';
 
 const tempLanes = [
   {
