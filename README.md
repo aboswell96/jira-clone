@@ -1,4 +1,4 @@
-Project Manager Personal Project
+Project Manager Personal Project \
 A tool for teams to organize and coordinate their work items
 ![image](https://user-images.githubusercontent.com/32175021/160260504-8da89810-28a4-4963-9dc8-900079755c53.png)
 ![image](https://user-images.githubusercontent.com/32175021/160260506-54450c42-4263-4064-bb63-a0ef786cd404.png)
