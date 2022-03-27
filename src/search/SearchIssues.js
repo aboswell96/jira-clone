@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
-import DebouncedTextSearchBox from '../common/DebouncedTextSearchBox';
+import TextSearchBox from '../common/TextSearchBox';
 import Tooltip from '@mui/material/Tooltip';
 
 import BookmarkIcon from '@mui/icons-material/Bookmark';
@@ -112,7 +112,7 @@ const SearchIssuesModal = (props) => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <DebouncedTextSearchBox
+          <TextSearchBox
             value={searchInput}
             onChange={onChangeDebounce}
             width="500px"

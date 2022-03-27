@@ -3,23 +3,18 @@ import React, { useState } from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
 import { act } from 'react-dom/test-utils';
 
-import TitleInput from './TitleInput';
+import AddComment from './AddComment';
 let container = null;
 
-const TitleInputWrapper = () => {
+const AddCommentWrapper = () => {
   const [value, setValue] = useState('initial value');
-  const onChange = (e) => {
-    setValue(e.target.value);
-  };
+
   return (
-    <TitleInput
+    <AddComment
       value={value}
-      onChange={onChange}
-      height="35px"
-      width="100%"
-      fontSize="15px"
-      mt="1px"
-      placeholder={'Enter a description here...'}
+      onChange={(e) => {
+        setValue(e.target.value);
+      }}
     />
   );
 };
@@ -34,11 +29,12 @@ afterEach(() => {
   container.remove();
   container = null;
 });
-it('renders with the correct initial text and after onchange event', () => {
+
+it('shows the correct input value', () => {
   act(() => {
-    render(<TitleInputWrapper />, container);
+    render(<AddCommentWrapper />, container);
   });
-  let x = getByTestId(container, 'title-input');
+  let x = getByTestId(container, 'add-comment');
   expect(x.value).toBe('initial value');
   fireEvent.change(x, { target: { value: 'new value' } });
   expect(x.value).toBe('new value');
