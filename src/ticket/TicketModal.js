@@ -26,7 +26,7 @@ import TitleInput from './TitleInput';
 import Button from '../common/Button';
 import moment from 'moment';
 import AddComment from './AddComment';
-import TaskTypeSelect from './TaskTypeSelect';
+import IssueTypeTile from './IssueTypeTile';
 
 const style = {
   position: 'absolute',
@@ -292,10 +292,7 @@ const TicketModal = (props) => {
             >
               Issue Type
             </span>
-            <TaskTypeSelect
-              issueType={issueType}
-              setIssueType={OnIssueChange}
-            />
+            <IssueTypeTile issueType={issueType} setIssueType={OnIssueChange} />
             <span
               style={{
                 display: 'block',

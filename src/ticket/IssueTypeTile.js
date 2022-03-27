@@ -21,7 +21,7 @@ const MAPPING = [
   },
 ];
 
-const TaskTypeSelect = (props) => {
+const IssueTypeTile = (props) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const value = MAPPING.filter((type) => type.code === props.issueType)[0]
     .title;
@@ -92,7 +92,7 @@ const RenderTicketTypeIcon = (type) => {
   }
 };
 
-export default TaskTypeSelect;
+export default IssueTypeTile;
 
 const DropDownComponent = styled.div`
   background-color: rgb(244 245 247);

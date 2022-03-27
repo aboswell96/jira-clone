@@ -24,7 +24,6 @@ it('successfully runs onClick', () => {
   let x = 0;
   const onClick = () => {
     x = x + 1;
-    console.log('pressed');
   };
   act(() => {
     render(<Button onClick={onClick} />, container);

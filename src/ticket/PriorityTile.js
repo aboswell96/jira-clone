@@ -35,7 +35,7 @@ const PriorityTile = (props) => {
   };
 
   return (
-    <div style={{ width: '75%' }}>
+    <div style={{ width: '75%' }} data-testid="priority-tile">
       <Container
         onClick={() => setIsExpanded(!isExpanded)}
         style={{ border: '1px solid #dfe1e6' }}

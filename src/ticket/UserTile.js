@@ -4,7 +4,6 @@ import useComponentVisible from '../common/customHooks/useComponentVisible';
 
 const UserTile = (props) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  console.log(props);
   const value = props.user;
 
   const onClick = (newVal) => {
@@ -13,7 +12,7 @@ const UserTile = (props) => {
   };
 
   return (
-    <div>
+    <div data-testid="user-tile">
       <Container
         onClick={() => {
           setIsExpanded(!isExpanded);
@@ -22,7 +21,12 @@ const UserTile = (props) => {
       >
         <UserInfo>
           {value.length > 1 && (
-            <UserAvatar img={value[1].photo} height={'24px'} width={'24px'} />
+            <UserAvatar
+              img={value[1].photo}
+              height={'24px'}
+              width={'24px'}
+              data-testid="user-photo"
+            />
           )}
           {value.length > 1 && value[1].firstName + ' ' + value[1].lastName}
         </UserInfo>
@@ -36,7 +40,6 @@ const UserTile = (props) => {
 
 const DropDown = (props) => {
   const { ref, isComponentVisible } = useComponentVisible(true);
-
   return (
     <DropDownComponent ref={ref}>
       {isComponentVisible &&

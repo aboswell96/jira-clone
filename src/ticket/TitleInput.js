@@ -40,6 +40,7 @@ const TitleInput = (props) => {
       fontSize={props.fontSize}
       mt={props.mt}
       onfocusout={props.onfocusout}
+      data-testid="title-input"
     />
   );
 };

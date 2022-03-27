@@ -12,7 +12,7 @@ import PriorityTile from './PriorityTile';
 
 import TitleInput from './TitleInput';
 import Button from '../common/Button';
-import TaskTypeSelect from './TaskTypeSelect';
+import IssueTypeTile from './IssueTypeTile';
 
 const style = {
   position: 'absolute',
@@ -145,7 +145,7 @@ const CreateTicket = (props) => {
             >
               Issue Type
             </span>
-            <TaskTypeSelect issueType={issueType} setIssueType={setIssueType} />
+            <IssueTypeTile issueType={issueType} setIssueType={setIssueType} />
             <span
               style={{
                 display: 'block',
