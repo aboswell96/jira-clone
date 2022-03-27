@@ -42,6 +42,7 @@ const TextSearchBox = (props) => {
         onChange={props.onChange}
         placeholder={props.placeholder}
         width={props.width}
+        data-testid="search-input"
       />
       <Icon>
         <SearchOutlinedIcon color="disabled" />

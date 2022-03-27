@@ -39,7 +39,6 @@ const TitleInput = (props) => {
       placeholder={props.placeholder}
       fontSize={props.fontSize}
       mt={props.mt}
-      onfocusout={props.onfocusout}
       data-testid="title-input"
     />
   );

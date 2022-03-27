@@ -40,7 +40,6 @@ const AddComment = (props) => {
       placeholder={props.placeholder}
       fontSize={props.fontSize}
       mt={props.mt}
-      onfocusout={props.onfocusout}
       data-testid="add-comment"
     />
   );

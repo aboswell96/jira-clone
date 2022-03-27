@@ -17,10 +17,6 @@ const Title = styled.div`
   font-family: CircularStdMedium;
 `;
 
-const TextInputWrapper = styled.div`
-  margin-top: 10px;
-`;
-
 const Text = styled.div`
   white-space: nowrap;
   font-family: CircularStdBook;
@@ -50,27 +46,26 @@ const Settings = (props) => {
       <ProjectURL projectName={props.projectName} pageName="Project Details" />
       <Title>Project Details</Title>
       <Text marginTop="50px">Project Name</Text>
-      <TextInputWrapper>
-        <TextInput
-          value={name}
-          onChange={onChange}
-          width="40%"
-          minWidth="375px"
-          height="30px"
-          pt="1px"
-        />
-      </TextInputWrapper>
-      <Text marginTop="15px">Project Description</Text>
-      <TextInputWrapper>
-        <TextInput
-          value={description}
-          onChange={onDescriptionChange}
-          width="40%"
-          minWidth="375px"
-          height="30px"
-          pt="1px"
-        />
-      </TextInputWrapper>
+      <TextInput
+        value={name}
+        onChange={onChange}
+        width="40%"
+        minWidth="375px"
+        height="30px"
+        pt="1px"
+        mt="10px"
+      />
+      <Text marginTop="30px">Project Description</Text>
+      <TextInput
+        value={description}
+        onChange={onDescriptionChange}
+        width="40%"
+        minWidth="375px"
+        height="30px"
+        pt="1px"
+        mt="10px"
+      />
+      <br />
       <Button
         text="Save changes"
         bgColor="#0052cc"

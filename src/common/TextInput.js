@@ -40,6 +40,7 @@ const TextInput = (props) => {
       placeholder={props.placeholder}
       fontSize={props.fontSize}
       mt={props.mt}
+      data-testid="text-input"
     />
   );
 };
