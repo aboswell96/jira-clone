@@ -3,16 +3,16 @@ import styled from 'styled-components';
 
 const TextInputComponent = styled.input`
   width: ${(props) => props.width};
+  min-width: ${(props) => props.minWidth};
   height: ${(props) => props.height};
-  background-color: white;
-  border: 1px solid white;
+  background-color: rgb(244 245 247);
+  border: 1px solid rgb(223, 225, 230);
   border-radius: 4px;
   outline: none;
   font-family: CircularStdBook;
   font-size: ${(props) => props.fontSize};
   padding-top: 1px;
   margin-top: ${(props) => props.mt};
-  color: #172b4d;
 
   &:hover {
     background-color: #ebecf0;
@@ -28,20 +28,21 @@ const TextInputComponent = styled.input`
   }
 `;
 
-const TitleInput = (props) => {
+const TextInput = (props) => {
   return (
     <TextInputComponent
       type="text"
       value={props.value}
       onChange={props.onChange}
       width={props.width}
+      minWidth={props.minWidth}
       height={props.height}
       placeholder={props.placeholder}
       fontSize={props.fontSize}
       mt={props.mt}
-      onfocusout={props.onfocusout}
+      data-testid="text-input"
     />
   );
 };
 
-export default TitleInput;
+export default TextInput;

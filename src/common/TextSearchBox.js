@@ -34,7 +34,7 @@ const ContainerRow = styled.div`
   position: relative;
 `;
 
-const DebouncedTextSearchBox = (props) => {
+const TextSearchBox = (props) => {
   return (
     <ContainerRow>
       <TextSearchBoxComponent
@@ -42,7 +42,7 @@ const DebouncedTextSearchBox = (props) => {
         onChange={props.onChange}
         placeholder={props.placeholder}
         width={props.width}
-        onKeyUp={props.debounce}
+        data-testid="search-input"
       />
       <Icon>
         <SearchOutlinedIcon color="disabled" />
@@ -51,4 +51,4 @@ const DebouncedTextSearchBox = (props) => {
   );
 };
 
-export default DebouncedTextSearchBox;
+export default TextSearchBox;

@@ -1,36 +1,33 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import useComponentVisible from '../customHooks/useComponentVisible';
+import useComponentVisible from '../common/customHooks/useComponentVisible';
 
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import BugReportIcon from '@mui/icons-material/BugReport';
 
 const MAPPING = [
   {
-    title: 'Highest',
-    code: 'sev2',
+    title: 'Story',
+    code: 'story',
   },
   {
-    title: 'Higher',
-    code: 'sev1',
+    title: 'Task',
+    code: 'task',
   },
   {
-    title: 'Medium',
-    code: 'high',
-  },
-  {
-    title: 'Lowest',
-    code: 'low',
+    title: 'Bug',
+    code: 'bug',
   },
 ];
 
-const PriorityTile = (props) => {
+const IssueTypeTile = (props) => {
   const [isExpanded, setIsExpanded] = useState(false);
-
-  const value = MAPPING.filter((prio) => prio.code === props.priority)[0].title;
+  const value = MAPPING.filter((type) => type.code === props.issueType)[0]
+    .title;
 
   const onClick = (newVal) => {
-    props.setPriority(newVal);
+    props.setIssueType(newVal);
     setIsExpanded(false);
   };
 
@@ -41,7 +38,9 @@ const PriorityTile = (props) => {
         style={{ border: '1px solid #dfe1e6' }}
       >
         <UserInfo>
-          {RenderTicketSeverityIcon(value)}
+          {RenderTicketTypeIcon(
+            MAPPING.filter((type) => type.title === value)[0].code
+          )}
           {value}
         </UserInfo>
       </Container>
@@ -56,17 +55,17 @@ const DropDown = (props) => {
   return (
     <DropDownComponent ref={ref}>
       {isComponentVisible &&
-        MAPPING.map((prio, i) => {
-          if (prio.title !== props.value) {
+        MAPPING.map((type, i) => {
+          if (type.title !== props.value) {
             return (
               <Container
                 key={i}
-                onClick={() => props.onClick(prio.code)}
+                onClick={() => props.onClick(type.code)}
                 style={{ border: '1px solid #F4F5F7' }}
               >
                 <UserInfo>
-                  {RenderTicketSeverityIcon(prio.title)}
-                  {prio.title}
+                  {RenderTicketTypeIcon(type.code)}
+                  {type.title}
                 </UserInfo>
               </Container>
             );
@@ -78,38 +77,22 @@ const DropDown = (props) => {
   );
 };
 
-const RenderTicketSeverityIcon = (priority) => {
-  var color = '';
+const RenderTicketTypeIcon = (type) => {
   const fontSize = 18;
-  switch (priority) {
-    case 'Highest':
-      color = '#cd1316';
-      break;
-    case 'Higher':
-      color = '#e97f33';
-      break;
-    case 'Medium':
-      color = '#57a55a';
-      break;
-    case 'Lowest':
-      color = '#2d8738';
-      break;
-    default:
-      color = '#2d8738';
-  }
 
-  if (priority === 'Highest' || priority === 'Higher') {
-    return (
-      <ArrowUpwardIcon sx={{ color: { color }, fontSize: { fontSize } }} />
-    );
-  } else {
-    return (
-      <ArrowDownwardIcon sx={{ color: { color }, fontSize: { fontSize } }} />
-    );
+  switch (type) {
+    case 'story':
+      return <BookmarkIcon sx={{ color: '#65ba43', fontSize: { fontSize } }} />;
+    case 'task':
+      return <CheckBoxIcon color="primary" sx={{ fontSize: { fontSize } }} />;
+    case 'bug':
+      return <BugReportIcon color="action" sx={{ fontSize: { fontSize } }} />;
+    default:
+      return <BookmarkIcon sx={{ color: '#65ba43', fontSize: { fontSize } }} />;
   }
 };
 
-export default PriorityTile;
+export default IssueTypeTile;
 
 const DropDownComponent = styled.div`
   background-color: rgb(244 245 247);

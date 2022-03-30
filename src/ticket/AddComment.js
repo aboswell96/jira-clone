@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const TextInputComponent = styled.input`
+const Container = styled.input`
   width: ${(props) => props.width};
   height: ${(props) => props.height};
   background-color: white;
@@ -31,7 +31,7 @@ const TextInputComponent = styled.input`
 
 const AddComment = (props) => {
   return (
-    <TextInputComponent
+    <Container
       type="text"
       value={props.value}
       onChange={props.onChange}
@@ -40,7 +40,7 @@ const AddComment = (props) => {
       placeholder={props.placeholder}
       fontSize={props.fontSize}
       mt={props.mt}
-      onfocusout={props.onfocusout}
+      data-testid="add-comment"
     />
   );
 };
