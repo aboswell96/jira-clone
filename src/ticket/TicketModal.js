@@ -143,27 +143,23 @@ const TicketModal = (props) => {
   };
 
   const OnAssigneeChange = (newVal) => {
-    onWrite('assignee', newVal);
+    onWrite('assignee', parseInt(newVal));
     if (newVal === '-1') {
       setAssignee(Unassigned);
     } else {
       setAssignee(
-        Object.entries(props.users).filter(
-          (user) => parseInt(user[0]) === newVal
-        )[0]
+        Object.entries(props.users).filter((user) => user[0] === newVal)[0]
       );
     }
   };
 
   const OnReporterChange = (newVal) => {
-    onWrite('reporter', newVal);
+    onWrite('reporter', parseInt(newVal));
     if (newVal === '-1') {
       setReporter(Unassigned);
     } else {
       setReporter(
-        Object.entries(props.users).filter(
-          (user) => parseInt(user[0]) === newVal
-        )[0]
+        Object.entries(props.users).filter((user) => user[0] === newVal)[0]
       );
     }
   };
@@ -383,7 +379,7 @@ const Comments = (props) => {
 
   const comments = props.comments.map((comment, i) => {
     const user = Object.entries(props.users).filter(
-      (user) => user[0] === comment.userId
+      (user) => parseInt(user[0]) === comment.userId
     )[0];
     return (
       <div
