@@ -383,7 +383,7 @@ const Comments = (props) => {
 
   const comments = props.comments.map((comment, i) => {
     const user = Object.entries(props.users).filter(
-      (user) => user[0] === comment.userId
+      (user) => user[0] == comment.userId
     )[0];
     return (
       <div

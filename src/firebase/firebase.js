@@ -109,7 +109,7 @@ export const queryTicketDB = (ticketId, cb) => {
 export const setupFirebaseInitialData = () => {
   const tickets = [
     {
-      26377: {
+      31232: {
         title: 'This is an issue of type Story',
         type: 'story',
         priority: 'sev2',
@@ -134,7 +134,7 @@ export const setupFirebaseInitialData = () => {
       },
     },
     {
-      31232: {
+      31239: {
         title: 'Try clicking on an Issue to see more information',
         type: 'story',
         priority: 'high',
@@ -159,13 +159,13 @@ export const setupFirebaseInitialData = () => {
       },
     },
     {
-      31239: {
+      26377: {
         title:
           'Users can also leave comments on an issue - Try Leaving a comment on an issue',
         type: 'story',
         priority: 'sev2',
         assignee: 86862,
-        lane: 'inDevelopment',
+        lane: 'backlog',
         description: 'Users can add descriptions to their issue here',
         reporter: -1,
         lastUpdated: 1642198609473 - 1000 * 60 * 60 * 24,
@@ -242,22 +242,22 @@ export const setupFirebaseInitialData = () => {
         {
           msg: 'Nice work on this!',
           timestamp: new Date().getTime(),
-          userId: '64980',
+          userId: 64980,
         },
         {
           msg: 'Is this in the scope for this release',
           timestamp: new Date().getTime() - oneDay,
-          userId: '86862',
+          userId: 86862,
         },
         {
           msg: 'Do we need this for this release?',
           timestamp: new Date().getTime() - 2 * oneDay,
-          userId: '71653',
+          userId: 71653,
         },
         {
           msg: 'Kicked out of current sprint due to escalations',
           timestamp: new Date().getTime() - 3 * oneDay,
-          userId: '64980',
+          userId: 64980,
         },
       ],
     },
@@ -266,7 +266,7 @@ export const setupFirebaseInitialData = () => {
         {
           msg: 'Nice work on this Monica!',
           timestamp: new Date().getTime(),
-          userId: '64980',
+          userId: 64980,
         },
       ],
     },
@@ -275,7 +275,7 @@ export const setupFirebaseInitialData = () => {
         {
           msg: 'Users can change information on the ticket such as the title, description, or any of the attributes on the right side',
           timestamp: new Date().getTime(),
-          userId: '64980',
+          userId: 64980,
         },
       ],
     },
@@ -284,7 +284,7 @@ export const setupFirebaseInitialData = () => {
         {
           msg: 'Users can change priority or the issue type',
           timestamp: new Date().getTime(),
-          userId: '64980',
+          userId: 64980,
         },
       ],
     },
