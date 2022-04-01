@@ -69,7 +69,7 @@ const CreateTicket = (props) => {
       setReporter(UNASSIGNED);
     } else {
       setReporter(
-        Object.entries(users).filter((user) => parseInt(user[0]) === newVal)[0]
+        Object.entries(users).filter((user) => parseInt(user[0]) == newVal)[0]
       );
     }
   };
