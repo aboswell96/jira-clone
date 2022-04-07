@@ -20,27 +20,29 @@ import {
 const TicketStatusKeyToUserString = [
   {
     title: 'Backlog',
-    code: 'backlog',
+    key: 'backlog',
   },
   {
     title: 'In Development',
-    code: 'inDevelopment',
+    key: 'inDevelopment',
   },
   {
     title: 'In Progress',
-    code: 'inProgress',
+    key: 'inProgress',
   },
   {
     title: 'Done',
-    code: 'done',
+    key: 'done',
   },
 ];
 
 const BoardView = () => {
   const [searchInput, setSearchInput] = useState('');
   const [usersSelected, SetUsersSelected] = useState([]);
-  const [myIssuesSelected, SetMyIssuesSelected] = useState(false);
-  const [recentlyUpdatedSelected, SetRecentlyUpdatedSelected] = useState(false);
+  const [isMyIssuesFilterSelected, setIsMyIssuesFilterSelected] =
+    useState(false);
+  const [isRecentlyUpdatedFilterSelected, setIsRecentlyUpdatedFilterSelected] =
+    useState(false);
   const [loading, setLoading] = useState(true);
 
   const onChange = (e) => {
@@ -78,23 +80,23 @@ const BoardView = () => {
   const OnClearFiltersClicked = () => {
     SetUsersSelected(createFilterStates(dbUsers));
     setSearchInput('');
-    SetMyIssuesSelected(false);
-    SetRecentlyUpdatedSelected(false);
+    setIsMyIssuesFilterSelected(false);
+    setIsRecentlyUpdatedFilterSelected(false);
   };
 
   const OnMyIssuesClicked = () => {
-    SetMyIssuesSelected(!myIssuesSelected);
+    setIsMyIssuesFilterSelected(!isMyIssuesFilterSelected);
   };
 
   const OnRecentlyUpdatedClicked = () => {
-    SetRecentlyUpdatedSelected(!recentlyUpdatedSelected);
+    setIsRecentlyUpdatedFilterSelected(!isRecentlyUpdatedFilterSelected);
   };
 
   const bIsFiltered =
     searchInput ||
     usersSelected.some((user) => user.isSelected) ||
-    myIssuesSelected ||
-    recentlyUpdatedSelected;
+    isMyIssuesFilterSelected ||
+    isRecentlyUpdatedFilterSelected;
 
   const userAvatars = Object.entries(dbUsers).map((user, i) => {
     if (loading) {
@@ -102,7 +104,7 @@ const BoardView = () => {
     }
 
     const isActive = usersSelected.some(
-      (userr) => userr.isSelected && userr.id === user[0]
+      (u) => u.isSelected && u.id === user[0]
     );
 
     return (
@@ -127,12 +129,15 @@ const BoardView = () => {
       <BoardFilters>
         <TextSearchBox value={searchInput} onChange={onChange} width="160px" />
         <UserAvatars>{userAvatars}</UserAvatars>
-        <BoardFilter onClick={OnMyIssuesClicked} active={myIssuesSelected}>
+        <BoardFilter
+          onClick={OnMyIssuesClicked}
+          active={isMyIssuesFilterSelected}
+        >
           Only My Issues
         </BoardFilter>
         <BoardFilter
           onClick={OnRecentlyUpdatedClicked}
-          active={recentlyUpdatedSelected}
+          active={isRecentlyUpdatedFilterSelected}
         >
           Recently Updated
         </BoardFilter>
@@ -147,8 +152,8 @@ const BoardView = () => {
           .replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1')} //ignore regex characters so the search doesn't break
         usersSelected={usersSelected}
         isFiltered={bIsFiltered}
-        myIssuesSelected={myIssuesSelected}
-        recentlyUpdated={recentlyUpdatedSelected}
+        isMyIssuesFilterSelected={isMyIssuesFilterSelected}
+        recentlyUpdated={isRecentlyUpdatedFilterSelected}
         users={dbUsers}
       />
     </div>
@@ -196,10 +201,10 @@ const Swimlanes = (props) => {
       (ticket) => ticket[0] === e.dragData.ticketId
     )[0];
     const ticketLane = TicketStatusKeyToUserString.filter(
-      (lane) => lane.code === ticketObj[1].lane
+      (lane) => lane.key === ticketObj[1].lane
     )[0];
 
-    if (ticketLane.code === e.dropData.laneTitle) {
+    if (ticketLane.key === e.dropData.laneTitle) {
       setCurrentLaneHovered(-1);
       return;
     }
@@ -213,7 +218,7 @@ const Swimlanes = (props) => {
 
   const swimLanes = TicketStatusKeyToUserString.map((lane, i) => {
     var filteredTickets = Object.entries(dbTickets).filter(
-      (ticket) => ticket[1].lane === lane.code
+      (ticket) => ticket[1].lane === lane.key
     );
     const numMaxTickets = filteredTickets.length;
 
@@ -225,7 +230,7 @@ const Swimlanes = (props) => {
       );
     }
     //If any user filters are selected
-    if (props.myIssuesSelected) {
+    if (props.isMyIssuesFilterSelected) {
       filteredTickets = filteredTickets.filter(
         (ticket) => ticket[1].assignee === 64980
       );
@@ -263,7 +268,7 @@ const Swimlanes = (props) => {
       <DropTarget
         key={i}
         targetKey="moveTicket"
-        dropData={{ laneTitle: lane.code }}
+        dropData={{ laneTitle: lane.key }}
         onDragEnter={(e) => OnDragEnter(e, i)}
         onDragLeave={(e) => OnDragLeave(e, i)}
         width="25%"
