@@ -1,23 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-
-import TextSearchBox from '../common/TextSearchBox';
-
-import BookmarkIcon from '@mui/icons-material/Bookmark';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import Divider from '@mui/material/Divider';
-import BugReportIcon from '@mui/icons-material/BugReport';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import Tooltip from '@mui/material/Tooltip';
-
 import _ from 'lodash';
-
-// import { DragDropContainer, DropTarget } from 'react-drag-drop-container';
+import Divider from '@mui/material/Divider';
+import Tooltip from '@mui/material/Tooltip';
+import ClipLoader from 'react-spinners/ClipLoader';
+import { delay } from '../common/helpers';
+import TextSearchBox from '../common/TextSearchBox';
 import DropTarget from './DragAndDrop/DropTarget';
 import DragDropContainer from './DragAndDrop/DragDropContainer';
 import TicketModal from '../ticket/TicketModal';
-
+import Ticket from './Ticket';
 import {
   addDBListener,
   readFromDB,
@@ -25,68 +17,32 @@ import {
   updateDB,
 } from '../firebase/firebase';
 
-import ClipLoader from 'react-spinners/ClipLoader';
-
-import { delay } from '../common/helpers';
-
-const tempLanes = [
+const TicketStatusKeyToUserString = [
   {
     title: 'Backlog',
-    code: 'backlog',
+    key: 'backlog',
   },
   {
     title: 'In Development',
-    code: 'inDevelopment',
+    key: 'inDevelopment',
   },
   {
     title: 'In Progress',
-    code: 'inProgress',
+    key: 'inProgress',
   },
   {
     title: 'Done',
-    code: 'done',
-  },
-];
-
-const PRIORTY_MAPPING = [
-  {
-    title: 'Highest',
-    code: 'sev2',
-  },
-  {
-    title: 'Higher',
-    code: 'sev1',
-  },
-  {
-    title: 'Medium',
-    code: 'high',
-  },
-  {
-    title: 'Lowest',
-    code: 'low',
-  },
-];
-
-const ISSUE_MAPPING = [
-  {
-    title: 'Story',
-    code: 'story',
-  },
-  {
-    title: 'Task',
-    code: 'task',
-  },
-  {
-    title: 'Bug',
-    code: 'bug',
+    key: 'done',
   },
 ];
 
 const BoardView = () => {
   const [searchInput, setSearchInput] = useState('');
   const [usersSelected, SetUsersSelected] = useState([]);
-  const [myIssuesSelected, SetMyIssuesSelected] = useState(false);
-  const [recentlyUpdatedSelected, SetRecentlyUpdatedSelected] = useState(false);
+  const [isMyIssuesFilterSelected, setIsMyIssuesFilterSelected] =
+    useState(false);
+  const [isRecentlyUpdatedFilterSelected, setIsRecentlyUpdatedFilterSelected] =
+    useState(false);
   const [loading, setLoading] = useState(true);
 
   const onChange = (e) => {
@@ -105,11 +61,11 @@ const BoardView = () => {
   }, [dbUsers]);
 
   const createFilterStates = (users) => {
-    let res = [];
+    let initState = [];
     Object.entries(users).forEach((user) =>
-      res.push({ id: user[0], isSelected: false })
+      initState.push({ id: user[0], isSelected: false })
     );
-    return res;
+    return initState;
   };
 
   const OnHeroClicked = (id) => {
@@ -124,23 +80,23 @@ const BoardView = () => {
   const OnClearFiltersClicked = () => {
     SetUsersSelected(createFilterStates(dbUsers));
     setSearchInput('');
-    SetMyIssuesSelected(false);
-    SetRecentlyUpdatedSelected(false);
+    setIsMyIssuesFilterSelected(false);
+    setIsRecentlyUpdatedFilterSelected(false);
   };
 
   const OnMyIssuesClicked = () => {
-    SetMyIssuesSelected(!myIssuesSelected);
+    setIsMyIssuesFilterSelected(!isMyIssuesFilterSelected);
   };
 
   const OnRecentlyUpdatedClicked = () => {
-    SetRecentlyUpdatedSelected(!recentlyUpdatedSelected);
+    setIsRecentlyUpdatedFilterSelected(!isRecentlyUpdatedFilterSelected);
   };
 
   const bIsFiltered =
-    searchInput.length ||
+    searchInput ||
     usersSelected.some((user) => user.isSelected) ||
-    myIssuesSelected ||
-    recentlyUpdatedSelected;
+    isMyIssuesFilterSelected ||
+    isRecentlyUpdatedFilterSelected;
 
   const userAvatars = Object.entries(dbUsers).map((user, i) => {
     if (loading) {
@@ -148,7 +104,7 @@ const BoardView = () => {
     }
 
     const isActive = usersSelected.some(
-      (userr) => userr.isSelected && userr.id === user[0]
+      (u) => u.isSelected && u.id === user[0]
     );
 
     return (
@@ -173,12 +129,15 @@ const BoardView = () => {
       <BoardFilters>
         <TextSearchBox value={searchInput} onChange={onChange} width="160px" />
         <UserAvatars>{userAvatars}</UserAvatars>
-        <BoardFilter onClick={OnMyIssuesClicked} active={myIssuesSelected}>
+        <BoardFilter
+          onClick={OnMyIssuesClicked}
+          active={isMyIssuesFilterSelected}
+        >
           Only My Issues
         </BoardFilter>
         <BoardFilter
           onClick={OnRecentlyUpdatedClicked}
-          active={recentlyUpdatedSelected}
+          active={isRecentlyUpdatedFilterSelected}
         >
           Recently Updated
         </BoardFilter>
@@ -193,8 +152,8 @@ const BoardView = () => {
           .replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1')} //ignore regex characters so the search doesn't break
         usersSelected={usersSelected}
         isFiltered={bIsFiltered}
-        myIssuesSelected={myIssuesSelected}
-        recentlyUpdated={recentlyUpdatedSelected}
+        isMyIssuesFilterSelected={isMyIssuesFilterSelected}
+        recentlyUpdated={isRecentlyUpdatedFilterSelected}
         users={dbUsers}
       />
     </div>
@@ -203,20 +162,18 @@ const BoardView = () => {
 
 const Swimlanes = (props) => {
   const [currentLaneHovered, setCurrentLaneHovered] = useState(-1);
-
   const [open, setOpen] = useState(false);
   const handleOpen = (ticket) => {
     setOpen(true);
     setTicketSelected(ticket);
   };
-  // const handleClose = () => setOpen(false);
+
   const handleClose = () => {
     //TODO: Read Tickets here
     //setTicketSelected({});
     setOpen(false);
   };
   const [ticketSelected, setTicketSelected] = useState({});
-
   const [dbTickets, setDbTickets] = useState([]);
 
   useEffect(() => {
@@ -243,11 +200,11 @@ const Swimlanes = (props) => {
     const ticketObj = Object.entries(dbTickets).filter(
       (ticket) => ticket[0] === e.dragData.ticketId
     )[0];
-    const ticketLane = tempLanes.filter(
-      (lane) => lane.code === ticketObj[1].lane
+    const ticketLane = TicketStatusKeyToUserString.filter(
+      (lane) => lane.key === ticketObj[1].lane
     )[0];
 
-    if (ticketLane.code === e.dropData.laneTitle) {
+    if (ticketLane.key === e.dropData.laneTitle) {
       setCurrentLaneHovered(-1);
       return;
     }
@@ -259,24 +216,21 @@ const Swimlanes = (props) => {
     setCurrentLaneHovered(-1);
   };
 
-  const swimLanes = tempLanes.map((lane, i) => {
+  const swimLanes = TicketStatusKeyToUserString.map((lane, i) => {
     var filteredTickets = Object.entries(dbTickets).filter(
-      (ticket) => ticket[1].lane === lane.code
+      (ticket) => ticket[1].lane === lane.key
     );
     const numMaxTickets = filteredTickets.length;
 
     if (props.recentlyUpdated) {
-      //Show empty board for now if recently updated filter is selected
-      // filteredTickets=[];
       const now = new Date().getTime();
       const k_24hours = 24 * 60 * 60 * 1000;
-      //const k_1Minute = (60 * 1000);
       filteredTickets = filteredTickets.filter(
         (ticket) => now - ticket[1].lastUpdated < k_24hours
       );
     }
     //If any user filters are selected
-    if (props.myIssuesSelected) {
+    if (props.isMyIssuesFilterSelected) {
       filteredTickets = filteredTickets.filter(
         (ticket) => ticket[1].assignee === 64980
       );
@@ -305,45 +259,7 @@ const Swimlanes = (props) => {
           onDrop={onDrop}
           dragData={{ ticketId: ticket[0] }}
         >
-          <TicketCard onClick={() => handleOpen(ticket)}>
-            {ticket[1].title}
-            <TicketIcons>
-              <Tooltip
-                title={
-                  ISSUE_MAPPING.filter(
-                    (type) => type.code === ticket[1].type
-                  )[0].title
-                }
-                placement="top"
-              >
-                {RenderTicketTypeIcon(ticket[1].type)}
-              </Tooltip>
-              <Tooltip
-                title={
-                  PRIORTY_MAPPING.filter(
-                    (p) => p.code === ticket[1].priority
-                  )[0].title
-                }
-                placement="top"
-              >
-                {RenderTicketSeverityIcon(ticket[1].priority)}
-              </Tooltip>
-              {assignee[0] && (
-                <Tooltip
-                  title={
-                    assignee[0][1].firstName + ' ' + assignee[0][1].lastName
-                  }
-                  placement="top"
-                >
-                  <UserAvatar
-                    img={assignee[0][1].photo}
-                    height={'24px'}
-                    width={'24px'}
-                  />
-                </Tooltip>
-              )}
-            </TicketIcons>
-          </TicketCard>
+          <Ticket handleOpen={handleOpen} ticket={ticket} assignee={assignee} />
         </DragDropContainer>
       );
     });
@@ -352,7 +268,7 @@ const Swimlanes = (props) => {
       <DropTarget
         key={i}
         targetKey="moveTicket"
-        dropData={{ laneTitle: lane.code }}
+        dropData={{ laneTitle: lane.key }}
         onDragEnter={(e) => OnDragEnter(e, i)}
         onDragLeave={(e) => OnDragLeave(e, i)}
         width="25%"
@@ -376,64 +292,16 @@ const Swimlanes = (props) => {
   return (
     <BoardViewContainer>
       {swimLanes}
-      {ticketSelected.length > 0 ? (
+      {ticketSelected.length && (
         <TicketModal
           open={open}
           handleClose={handleClose}
           ticket={ticketSelected}
           users={props.users}
         />
-      ) : (
-        ''
       )}
     </BoardViewContainer>
   );
-};
-
-const RenderTicketTypeIcon = (type) => {
-  const fontSize = 18;
-
-  switch (type) {
-    case 'story':
-      return <BookmarkIcon sx={{ color: '#65ba43', fontSize: { fontSize } }} />;
-    case 'task':
-      return <CheckBoxIcon color="primary" sx={{ fontSize: { fontSize } }} />;
-    case 'bug':
-      return <BugReportIcon color="action" sx={{ fontSize: { fontSize } }} />;
-    default:
-      return <BookmarkIcon color="success" sx={{ fontSize: { fontSize } }} />;
-  }
-};
-
-const RenderTicketSeverityIcon = (priority) => {
-  var color = '';
-  const fontSize = 18;
-  switch (priority) {
-    case 'sev2':
-      color = '#cd1316';
-      break;
-    case 'sev1':
-      color = '#e97f33';
-      break;
-    case 'high':
-      color = '#57a55a';
-      break;
-    case 'low':
-      color = '#2d8738';
-      break;
-    default:
-      color = '#2d8738';
-  }
-
-  if (priority === 'sev2' || priority === 'sev1') {
-    return (
-      <ArrowUpwardIcon sx={{ color: { color }, fontSize: { fontSize } }} />
-    );
-  } else {
-    return (
-      <ArrowDownwardIcon sx={{ color: { color }, fontSize: { fontSize } }} />
-    );
-  }
 };
 
 const BoardViewContainer = styled.div`
@@ -525,29 +393,6 @@ const SwimlaneHeader = styled.div`
   font-family: CircularStdBook;
   color: #5e6c84;
   font-size: 12.5px;
-`;
-
-const TicketCard = styled.div`
-  font-family: CircularStdBook;
-  background-color: white;
-  box-shadow: rgb(9 30 66 / 25%) 0px 1px 2px 0px;
-  transition: background 0.1s ease 0s;
-  border-radius: 3px;
-  cursor: pointer;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 11px;
-  color: #172b4d;
-  ${'' /* max-width: 350px; */}
-
-  &:hover {
-    background-color: rgb(235, 236, 240);
-  }
-`;
-
-const TicketIcons = styled.div`
-  display: flex;
 `;
 
 const UserAvatar = styled.div`
