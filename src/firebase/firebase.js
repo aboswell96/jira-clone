@@ -11,8 +11,10 @@ import {
   onValue,
 } from 'firebase/database';
 
+require('dotenv').config();
+
 const firebaseConfig = {
-  apiKey: 'AIzaSyAzsxJkZBNIVjO5ps1EAiFu09VrDo3L7hY',
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: 'jira-clone-94734.firebaseapp.com',
   databaseURL: 'https://jira-clone-94734-default-rtdb.firebaseio.com',
   projectId: 'jira-clone-94734',
