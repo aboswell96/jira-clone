@@ -81,13 +81,8 @@ const TicketModal = (props) => {
   //Life Cycle Methods
   useEffect(() => {
     setLoading(true);
-    const f = () => {
-      readFromDB('tickets/' + props.ticket[0], setTicket);
-      queryCommentsDB(parseInt(props.ticket[0]), setComments);
-    };
-    setTimeout(() => {
-      f();
-    }, 300);
+    readFromDB('tickets/' + props.ticket[0], setTicket);
+    queryCommentsDB(parseInt(props.ticket[0]), setComments);
   }, [props.ticket]);
 
   //Fires when the ticket passed in by BoardView changes eg. user clicks on a ticket
@@ -136,7 +131,9 @@ const TicketModal = (props) => {
       ]);
     }
     setPriority(ticket.priority);
-    setLoading(false);
+    setTimeout(() => {
+      setLoading(false);
+    }, 300);
   }, [ticket, props.users]);
 
   //Event Handlers
@@ -254,61 +251,31 @@ const TicketModal = (props) => {
             ) : (
               <Title title={title} onWrite={onWrite} />
             )}
-            <span
-              style={{
-                display: 'block',
-                paddingTop: '25px',
-                color: '#172B4D',
-                fontFamily: 'CircularStdMedium',
-                marginLeft: '3px',
-              }}
-            >
-              Description
-            </span>
+            <TextMain>Description</TextMain>
             {loading ? (
               <Skeleton variant="text" />
             ) : (
               <Description description={description} onWrite={onWrite} />
             )}
-            <span
-              style={{
-                display: 'block',
-                paddingTop: '25px',
-                color: '#172B4D',
-                fontFamily: 'CircularStdMedium',
-                marginLeft: '3px',
-              }}
-            >
-              Comments
-            </span>
+            <TextMain>Comments</TextMain>
             {loading ? (
               <Skeleton variant="text" />
             ) : (
               <Comments
                 comments={
-                  comments && Object.keys(comments).length > 0
-                    ? Object.values(comments).sort((a, b) => {
+                  comments?.length > 0
+                    ? comments.sort((a, b) => {
                         return a.timestamp < b.timestamp ? -1 : 1;
                       })
                     : []
-                } //Sorted for now until we can add sort to Firebase queries
+                }
                 users={props.users}
                 onSubmit={OnSubmitComment}
               />
             )}
           </TicketMainPanel>
           <TicketSidePanel>
-            <span
-              style={{
-                display: 'block',
-                paddingTop: '25px',
-                color: '#5e6c84',
-                fontSize: '12.5px',
-                fontFamily: 'CircularStdBold',
-              }}
-            >
-              Issue Type
-            </span>
+            <TextSub>Issue Type</TextSub>
             {loading ? (
               <Skeleton variant="rectangle" width="169px" height="32px" />
             ) : (
@@ -317,33 +284,13 @@ const TicketModal = (props) => {
                 setIssueType={OnIssueChange}
               />
             )}
-            <span
-              style={{
-                display: 'block',
-                paddingTop: '25px',
-                color: '#5e6c84',
-                fontSize: '12.5px',
-                fontFamily: 'CircularStdBold',
-              }}
-            >
-              Status
-            </span>
+            <TextSub>Status</TextSub>
             {loading ? (
               <Skeleton variant="rectangle" width="169px" height="32px" />
             ) : (
               <StatusTile status={status} setStatus={OnStatusChange} />
             )}
-            <span
-              style={{
-                display: 'block',
-                paddingTop: '25px',
-                color: '#5e6c84',
-                fontSize: '12.5px',
-                fontFamily: 'CircularStdBold',
-              }}
-            >
-              Assignee
-            </span>
+            <TextSub>Assignee</TextSub>
             {loading ? (
               <Skeleton variant="rectangle" width="169px" height="32px" />
             ) : (
@@ -354,17 +301,7 @@ const TicketModal = (props) => {
                 field="assignee"
               />
             )}
-            <span
-              style={{
-                display: 'block',
-                paddingTop: '25px',
-                color: '#5e6c84',
-                fontSize: '12.5px',
-                fontFamily: 'CircularStdBold',
-              }}
-            >
-              Reporter
-            </span>
+            <TextSub>Reporter</TextSub>
             {loading ? (
               <Skeleton variant="rectangle" width="169px" height="32px" />
             ) : (
@@ -375,17 +312,7 @@ const TicketModal = (props) => {
                 field="reporter"
               />
             )}
-            <span
-              style={{
-                display: 'block',
-                paddingTop: '25px',
-                color: '#5e6c84',
-                fontSize: '12.5px',
-                fontFamily: 'CircularStdBold',
-              }}
-            >
-              Priority
-            </span>
+            <TextSub>Priority</TextSub>
             {loading ? (
               <Skeleton variant="rectangle" width="169px" height="32px" />
             ) : (
@@ -409,7 +336,6 @@ const Comments = (props) => {
     setIsEditting(false);
     props.onSubmit(value);
     setValue('');
-    //write to db
   };
 
   const onCancel = () => {
@@ -544,7 +470,6 @@ const Description = (props) => {
     if (!isEditting) {
       setIsEditting(true);
     }
-
     setValue(e.target.value);
   };
 
@@ -694,6 +619,22 @@ const TicketType = styled.div`
   align-items: center;
   font-family: CircularStdBook;
   color: rgb(94, 108, 132);
+`;
+
+const TextMain = styled.span`
+  display: block;
+  padding-top: 25px;
+  color: #172b4d;
+  font-family: CircularStdMedium;
+  margin-left: 3px;
+`;
+
+const TextSub = styled.span`
+  display: block;
+  padding-top: 25px;
+  color: #5e6c84;
+  font-size: 12.5px;
+  font-family: CircularStdBold;
 `;
 
 export default TicketModal;
