@@ -244,13 +244,13 @@ const TicketModal = (props) => {
             </div>
           </div>
         </div>
+        {loading ? (
+          <Skeleton variant="rectangle" height="39px" />
+        ) : (
+          <Title title={title} onWrite={onWrite} />
+        )}
         <TicketPanels>
           <TicketMainPanel>
-            {loading ? (
-              <Skeleton variant="rectangle" height="39px" />
-            ) : (
-              <Title title={title} onWrite={onWrite} />
-            )}
             <TextMain>Description</TextMain>
             {loading ? (
               <Skeleton variant="text" />
@@ -488,7 +488,7 @@ const Description = (props) => {
       <TitleInput
         value={value}
         onChange={onChange}
-        height="35px"
+        height="100px"
         width="100%"
         fontSize="15px"
         mt="1px"
@@ -544,7 +544,7 @@ const Title = (props) => {
       <TitleInput
         value={value}
         onChange={onChange}
-        height="35px"
+        minHeight="35px"
         width="100%"
         fontSize={value.length > 60 ? '18px' : '24px'}
       ></TitleInput>

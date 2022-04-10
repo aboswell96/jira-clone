@@ -1,9 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const TextInputComponent = styled.input`
+const TextInputComponent = styled.textarea`
   width: ${(props) => props.width};
   height: ${(props) => props.height};
+  min-height: ${(props) => props.minHeight};
   background-color: white;
   border: 1px solid white;
   border-radius: 4px;
@@ -13,6 +14,7 @@ const TextInputComponent = styled.input`
   padding-top: 1px;
   margin-top: ${(props) => props.mt};
   color: #172b4d;
+  resize: none;
 
   &:hover {
     background-color: #ebecf0;
@@ -36,6 +38,7 @@ const TitleInput = (props) => {
       onChange={props.onChange}
       width={props.width}
       height={props.height}
+      minHeight={props.minHeight}
       placeholder={props.placeholder}
       fontSize={props.fontSize}
       mt={props.mt}
