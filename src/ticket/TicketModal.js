@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-
 import {
   readFromDB,
   queryCommentsDB,
@@ -8,11 +7,9 @@ import {
   saveComment,
   deleteNodeDB,
 } from '../firebase/firebase';
-
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import UserTile from './UserTile';
-
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import BugReportIcon from '@mui/icons-material/BugReport';
@@ -21,12 +18,12 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 import StatusTile from './StatusTile';
 import PriorityTile from './PriorityTile';
 import Tooltip from '@mui/material/Tooltip';
-
 import TitleInput from './TitleInput';
 import Button from '../common/Button';
 import moment from 'moment';
 import AddComment from './AddComment';
 import IssueTypeTile from './IssueTypeTile';
+import { Skeleton } from '@mui/material';
 
 const style = {
   position: 'absolute',
@@ -44,12 +41,14 @@ const style = {
   transform: 'translate(-50%, -50%)',
 };
 
+const UNASSIGNED = [
+  '-1',
+  { firstName: 'Unassigned', lastName: '', photo: 'https://ibb.co/M9PdhH9' },
+];
+
 const TicketModal = (props) => {
-  const Unassigned = [
-    '-1',
-    { firstName: 'Unassigned', lastName: '', photo: 'https://ibb.co/M9PdhH9' },
-  ];
-  const init = {
+  //States
+  const [ticket, setTicket] = useState({
     assignee: 64980,
     description: 'temp Description 2',
     lane: 'inDevelopment',
@@ -57,29 +56,54 @@ const TicketModal = (props) => {
     reporter: 64980,
     title: 'Add ticket search',
     type: 'story',
-  };
+  });
 
+  const [loading, setLoading] = useState(true);
+
+  //Ticket Attributes
+  const [title, setTitle] = useState(ticket.title);
+  const [description, setDescription] = useState(ticket.description);
+  const [issueType, setIssueType] = useState(ticket.type);
+  const [status, setStatus] = useState(ticket.lane);
+  const [assignee, setAssignee] = useState(
+    Object.entries(props.users).filter(
+      (user) => parseInt(user[0]) === ticket.assignee
+    )
+  );
+  const [reporter, setReporter] = useState(
+    Object.entries(props.users).filter(
+      (user) => parseInt(user[0]) === ticket.reporter
+    )
+  );
+  const [priority, setPriority] = useState(ticket.priority);
+  const [comments, setComments] = useState([]);
+
+  //Life Cycle Methods
   useEffect(() => {
-    readFromDB('tickets/' + props.ticket[0], setTicketTest);
-    queryCommentsDB(parseInt(props.ticket[0]), setComments);
+    setLoading(true);
+    const f = () => {
+      readFromDB('tickets/' + props.ticket[0], setTicket);
+      queryCommentsDB(parseInt(props.ticket[0]), setComments);
+    };
+    setTimeout(() => {
+      f();
+    }, 300);
   }, [props.ticket]);
-
-  const [ticketTest, setTicketTest] = useState(init);
 
   //Fires when the ticket passed in by BoardView changes eg. user clicks on a ticket
   useEffect(() => {
-    setTitle(ticketTest.title);
-    setDescription(ticketTest.description);
-    setIssueType(ticketTest.type);
-    setStatus(ticketTest.lane);
+    setTitle(ticket.title);
+    setDescription(ticket.description);
+    setIssueType(ticket.type);
+    setStatus(ticket.lane);
 
     const newAssignee = Object.entries(props.users).filter(
-      (user) => parseInt(user[0]) === ticketTest.assignee
+      (user) => parseInt(user[0]) === ticket.assignee
     );
     if (newAssignee.length > 0) {
       setAssignee(
         Object.entries(props.users).filter(
-          (user) => parseInt(user[0]) === ticketTest.assignee
+          (user) => parseInt(user[0]) === ticket.assignee
         )[0]
       );
     } else {
@@ -93,12 +117,12 @@ const TicketModal = (props) => {
       ]);
     }
     const newReporter = Object.entries(props.users).filter(
-      (user) => parseInt(user[0]) === ticketTest.reporter
+      (user) => parseInt(user[0]) === ticket.reporter
     );
     if (newReporter.length > 0) {
       setReporter(
         Object.entries(props.users).filter(
-          (user) => parseInt(user[0]) === ticketTest.reporter
+          (user) => parseInt(user[0]) === ticket.reporter
         )[0]
       );
     } else {
@@ -111,26 +135,11 @@ const TicketModal = (props) => {
         },
       ]);
     }
-    setPriority(ticketTest.priority);
-  }, [ticketTest, props.users]);
+    setPriority(ticket.priority);
+    setLoading(false);
+  }, [ticket, props.users]);
 
-  //Ticket Attributes
-  const [title, setTitle] = useState(ticketTest.title);
-  const [description, setDescription] = useState(ticketTest.description);
-  const [issueType, setIssueType] = useState(ticketTest.type);
-  const [status, setStatus] = useState(ticketTest.lane);
-  const [assignee, setAssignee] = useState(
-    Object.entries(props.users).filter(
-      (user) => parseInt(user[0]) === ticketTest.assignee
-    )
-  );
-  const [reporter, setReporter] = useState(
-    Object.entries(props.users).filter(
-      (user) => parseInt(user[0]) === ticketTest.reporter
-    )
-  );
-  const [priority, setPriority] = useState(ticketTest.priority);
-  const [comments, setComments] = useState([]);
+  //Event Handlers
 
   const OnIssueChange = (newVal) => {
     onWrite('type', newVal);
@@ -145,7 +154,7 @@ const TicketModal = (props) => {
   const OnAssigneeChange = (newVal) => {
     onWrite('assignee', parseInt(newVal));
     if (newVal === '-1') {
-      setAssignee(Unassigned);
+      setAssignee(UNASSIGNED);
     } else {
       setAssignee(
         Object.entries(props.users).filter((user) => user[0] === newVal)[0]
@@ -156,7 +165,7 @@ const TicketModal = (props) => {
   const OnReporterChange = (newVal) => {
     onWrite('reporter', parseInt(newVal));
     if (newVal === '-1') {
-      setReporter(Unassigned);
+      setReporter(UNASSIGNED);
     } else {
       setReporter(
         Object.entries(props.users).filter((user) => user[0] === newVal)[0]
@@ -240,7 +249,11 @@ const TicketModal = (props) => {
         </div>
         <TicketPanels>
           <TicketMainPanel>
-            <Title title={title} onWrite={onWrite} />
+            {loading ? (
+              <Skeleton variant="rectangle" height="39px" />
+            ) : (
+              <Title title={title} onWrite={onWrite} />
+            )}
             <span
               style={{
                 display: 'block',
@@ -252,7 +265,11 @@ const TicketModal = (props) => {
             >
               Description
             </span>
-            <Description description={description} onWrite={onWrite} />
+            {loading ? (
+              <Skeleton variant="text" />
+            ) : (
+              <Description description={description} onWrite={onWrite} />
+            )}
             <span
               style={{
                 display: 'block',
@@ -264,17 +281,21 @@ const TicketModal = (props) => {
             >
               Comments
             </span>
-            <Comments
-              comments={
-                comments && Object.keys(comments).length > 0
-                  ? Object.values(comments).sort((a, b) => {
-                      return a.timestamp < b.timestamp ? -1 : 1;
-                    })
-                  : []
-              } //Sorted for now until we can add sort to Firebase queries
-              users={props.users}
-              onSubmit={OnSubmitComment}
-            />
+            {loading ? (
+              <Skeleton variant="text" />
+            ) : (
+              <Comments
+                comments={
+                  comments && Object.keys(comments).length > 0
+                    ? Object.values(comments).sort((a, b) => {
+                        return a.timestamp < b.timestamp ? -1 : 1;
+                      })
+                    : []
+                } //Sorted for now until we can add sort to Firebase queries
+                users={props.users}
+                onSubmit={OnSubmitComment}
+              />
+            )}
           </TicketMainPanel>
           <TicketSidePanel>
             <span
@@ -288,7 +309,14 @@ const TicketModal = (props) => {
             >
               Issue Type
             </span>
-            <IssueTypeTile issueType={issueType} setIssueType={OnIssueChange} />
+            {loading ? (
+              <Skeleton variant="rectangle" width="169px" height="32px" />
+            ) : (
+              <IssueTypeTile
+                issueType={issueType}
+                setIssueType={OnIssueChange}
+              />
+            )}
             <span
               style={{
                 display: 'block',
@@ -300,7 +328,11 @@ const TicketModal = (props) => {
             >
               Status
             </span>
-            <StatusTile status={status} setStatus={OnStatusChange} />
+            {loading ? (
+              <Skeleton variant="rectangle" width="169px" height="32px" />
+            ) : (
+              <StatusTile status={status} setStatus={OnStatusChange} />
+            )}
             <span
               style={{
                 display: 'block',
@@ -312,12 +344,16 @@ const TicketModal = (props) => {
             >
               Assignee
             </span>
-            <UserTile
-              user={assignee}
-              setUser={OnAssigneeChange}
-              users={Object.entries(props.users).concat([Unassigned])}
-              field="assignee"
-            />
+            {loading ? (
+              <Skeleton variant="rectangle" width="169px" height="32px" />
+            ) : (
+              <UserTile
+                user={assignee}
+                setUser={OnAssigneeChange}
+                users={Object.entries(props.users).concat([UNASSIGNED])}
+                field="assignee"
+              />
+            )}
             <span
               style={{
                 display: 'block',
@@ -329,12 +365,16 @@ const TicketModal = (props) => {
             >
               Reporter
             </span>
-            <UserTile
-              user={reporter}
-              setUser={OnReporterChange}
-              users={Object.entries(props.users).concat([Unassigned])}
-              field="reporter"
-            />
+            {loading ? (
+              <Skeleton variant="rectangle" width="169px" height="32px" />
+            ) : (
+              <UserTile
+                user={reporter}
+                setUser={OnReporterChange}
+                users={Object.entries(props.users).concat([UNASSIGNED])}
+                field="reporter"
+              />
+            )}
             <span
               style={{
                 display: 'block',
@@ -346,7 +386,14 @@ const TicketModal = (props) => {
             >
               Priority
             </span>
-            <PriorityTile priority={priority} setPriority={OnPriorityChange} />
+            {loading ? (
+              <Skeleton variant="rectangle" width="169px" height="32px" />
+            ) : (
+              <PriorityTile
+                priority={priority}
+                setPriority={OnPriorityChange}
+              />
+            )}
           </TicketSidePanel>
         </TicketPanels>
       </Box>
@@ -575,7 +622,6 @@ const Title = (props) => {
         height="35px"
         width="100%"
         fontSize={value.length > 60 ? '18px' : '24px'}
-        mt="35px"
       ></TitleInput>
       {isEditting && (
         <div>
@@ -632,6 +678,7 @@ const TicketPanels = styled.div`
 
 const TicketMainPanel = styled.div`
   width: 65%;
+  paddingtop: 35px;
 `;
 
 const TicketSidePanel = styled.div`
