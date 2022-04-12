@@ -77,6 +77,7 @@ const TicketModal = (props) => {
   );
   const [priority, setPriority] = useState(ticket.priority);
   const [comments, setComments] = useState([]);
+  const [timestamp, setTimestamp] = useState(new Date().getTime());
 
   //Life Cycle Methods
   useEffect(() => {
@@ -87,6 +88,7 @@ const TicketModal = (props) => {
 
   //Fires when the ticket passed in by BoardView changes eg. user clicks on a ticket
   useEffect(() => {
+    console.log(ticket);
     setTitle(ticket.title);
     setDescription(ticket.description);
     setIssueType(ticket.type);
@@ -131,6 +133,7 @@ const TicketModal = (props) => {
       ]);
     }
     setPriority(ticket.priority);
+    setTimestamp(ticket.lastUpdated);
     setTimeout(() => {
       setLoading(false);
     }, 300);
@@ -187,6 +190,7 @@ const TicketModal = (props) => {
       'tickets/' + props.ticket[0] + '/lastUpdated',
       new Date().getTime()
     );
+    setTimestamp(new Date().getTime());
   };
 
   const onDeleteTicket = () => {
@@ -251,6 +255,19 @@ const TicketModal = (props) => {
         )}
         <TicketPanels>
           <TicketMainPanel>
+            <TextMain>
+              Last updated
+              <div
+                style={{
+                  fontSize: '14.5px',
+                  fontFamily: 'CircularStdBook',
+                  color: '#42526E',
+                  marginTop: '2px',
+                }}
+              >
+                {moment(timestamp).calendar()}
+              </div>
+            </TextMain>
             <TextMain>Description</TextMain>
             {loading ? (
               <Skeleton variant="text" />
