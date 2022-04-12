@@ -255,19 +255,22 @@ const TicketModal = (props) => {
         )}
         <TicketPanels>
           <TicketMainPanel>
-            <TextMain>
-              Last updated
+            <TextMain>Last updated</TextMain>
+            {loading ? (
+              <Skeleton variant="text" />
+            ) : (
               <div
                 style={{
                   fontSize: '14.5px',
                   fontFamily: 'CircularStdBook',
                   color: '#42526E',
                   marginTop: '2px',
+                  marginLeft: '3px',
                 }}
               >
                 {moment(timestamp).calendar()}
               </div>
-            </TextMain>
+            )}
             <TextMain>Description</TextMain>
             {loading ? (
               <Skeleton variant="text" />
