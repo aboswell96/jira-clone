@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import _ from 'lodash';
 import Divider from '@mui/material/Divider';
@@ -16,6 +16,7 @@ import {
   writeToDB,
   updateDB,
 } from '../firebase/firebase';
+import { ThemeContext } from '../nav/Project';
 
 const TicketStatusKeyToUserString = [
   {
@@ -37,6 +38,7 @@ const TicketStatusKeyToUserString = [
 ];
 
 const BoardView = () => {
+  const darkTheme = useContext(ThemeContext);
   const [searchInput, setSearchInput] = useState('');
   const [usersSelected, SetUsersSelected] = useState([]);
   const [isMyIssuesFilterSelected, setIsMyIssuesFilterSelected] =
@@ -127,23 +129,32 @@ const BoardView = () => {
   return (
     <div style={{ marginTop: '30px' }}>
       <BoardFilters>
-        <TextSearchBox value={searchInput} onChange={onChange} width="160px" />
+        <TextSearchBox
+          value={searchInput}
+          onChange={onChange}
+          darkTheme={darkTheme}
+          width="160px"
+        />
         <UserAvatars>{userAvatars}</UserAvatars>
         <BoardFilter
           onClick={OnMyIssuesClicked}
           active={isMyIssuesFilterSelected}
+          darkTheme={darkTheme}
         >
           Only My Issues
         </BoardFilter>
         <BoardFilter
           onClick={OnRecentlyUpdatedClicked}
           active={isRecentlyUpdatedFilterSelected}
+          darkTheme={darkTheme}
         >
           Recently Updated
         </BoardFilter>
         {bIsFiltered && <Divider orientation="vertical" flexItem />}
         {bIsFiltered && (
-          <ClearFilter onClick={OnClearFiltersClicked}>Clear All</ClearFilter>
+          <ClearFilter onClick={OnClearFiltersClicked} darkTheme={darkTheme}>
+            Clear All
+          </ClearFilter>
         )}
       </BoardFilters>
       <Swimlanes
@@ -161,6 +172,7 @@ const BoardView = () => {
 };
 
 const Swimlanes = (props) => {
+  const darkTheme = useContext(ThemeContext);
   const [currentLaneHovered, setCurrentLaneHovered] = useState(-1);
   const [open, setOpen] = useState(false);
   const handleOpen = (ticket) => {
@@ -275,7 +287,7 @@ const Swimlanes = (props) => {
         minWidth="145px"
         height="auto"
       >
-        <Swimlane isHovered={currentLaneHovered === i}>
+        <Swimlane isHovered={currentLaneHovered === i} darkTheme={darkTheme}>
           <SwimlaneHeader>
             {lane.title.toUpperCase() +
               ' ' +
@@ -319,7 +331,7 @@ const BoardFilters = styled.div`
 `;
 
 const ClearFilter = styled.button`
-  background-color: white;
+  background-color: ${(props) => (props.darkTheme ? '#010409' : 'white')};
   border: none;
   color: rgb(66, 82, 110);
   font-family: CircularStdBook;
@@ -340,7 +352,7 @@ const ClearFilter = styled.button`
 `;
 
 const BoardFilter = styled.button`
-  background-color: white;
+  background-color: ${(props) => (props.darkTheme ? '#010409' : 'white')};
   border: none;
   color: rgb(66, 82, 110);
   font-family: CircularStdBook;
@@ -350,20 +362,21 @@ const BoardFilter = styled.button`
   &:hover {
     ${'' /* color: rgb(94, 108, 132); */}
     cursor: pointer;
-    background-color: rgb(244 245 247);
+    background-color: ${(props) => (props.darkTheme ? '#0d1117' : '#F4F5F7')};
   }
 
   ${({ active }) =>
     active &&
     `
-        background: rgb(210, 229, 254) !important;
+        background-color: ${(props) =>
+          props.darkTheme ? '#0d1117' : '#d2e5fe'};
         color: rgb(0, 82, 204);
     `}
 `;
 
 const Swimlane = styled.div`
-  background-color: rgb(244 245 247);
-  border: 5px solid rgb(244 245 247);
+  background-color: ${(props) => (props.darkTheme ? '#0d1117' : '#f4f5f7')};
+  border: 5px solid ${(props) => (props.darkTheme ? '#0d1117' : '#f4f5f7')};
   border-radius: 2px;
   outline: none;
   height: auto;

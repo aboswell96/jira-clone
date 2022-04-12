@@ -6,7 +6,8 @@ import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 const TextSearchBoxComponent = styled.input`
   width: ${(props) => props.width};
   height: 28px;
-  background-color: rgb(244 245 247);
+  color: ${(props) => (props.darkTheme ? 'white' : 'black')};
+  background-color: ${(props) => (props.darkTheme ? '#161b22' : '#f4f5f7')};
   border: 1px solid rgb(223, 225, 230);
   border-radius: 4px;
   outline: none;
@@ -15,11 +16,11 @@ const TextSearchBoxComponent = styled.input`
   text-indent: 35px;
 
   &:hover {
-    background-color: #ebecf0;
+    background-color: ${(props) => (props.darkTheme ? '#21262d' : '#ebecf0')};
   }
 
   &:focus {
-    background-color: white;
+    background-color: ${(props) => (props.darkTheme ? '#21262d' : 'white')};
     outline: 2px solid #4c9aff;
   }
 `;
@@ -43,9 +44,10 @@ const TextSearchBox = (props) => {
         placeholder={props.placeholder}
         width={props.width}
         data-testid="search-input"
+        darkTheme={props.darkTheme}
       />
       <Icon>
-        <SearchOutlinedIcon color="disabled" />
+        <SearchOutlinedIcon color={props.darkTheme ? 'primary' : 'disabled'} />
       </Icon>
     </ContainerRow>
   );

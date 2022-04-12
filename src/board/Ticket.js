@@ -5,6 +5,8 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import Tooltip from '@mui/material/Tooltip';
 import styled from 'styled-components';
+import { useContext } from 'react';
+import { ThemeContext } from '../nav/Project';
 
 const PriorityKeyToUserString = [
   {
@@ -41,8 +43,13 @@ const IssueKeyToUserString = [
 ];
 
 const Ticket = (props) => {
+  const darkTheme = useContext(ThemeContext);
+
   return (
-    <TicketCard onClick={() => props.handleOpen(props.ticket)}>
+    <TicketCard
+      onClick={() => props.handleOpen(props.ticket)}
+      darkTheme={darkTheme}
+    >
       {props.ticket[1].title}
       <TicketIcons>
         <Tooltip
@@ -135,7 +142,7 @@ const RenderTicketSeverityIcon = (priority) => {
 
 const TicketCard = styled.div`
   font-family: CircularStdBook;
-  background-color: white;
+  background-color: ${(props) => (props.darkTheme ? '#161b22' : 'white')};
   box-shadow: rgb(9 30 66 / 25%) 0px 1px 2px 0px;
   transition: background 0.1s ease 0s;
   border-radius: 3px;
@@ -144,11 +151,9 @@ const TicketCard = styled.div`
   display: flex;
   flex-direction: column;
   gap: 11px;
-  color: #172b4d;
-  ${'' /* max-width: 350px; */}
-
+  color: ${(props) => (props.darkTheme ? 'white' : '#172b4d')};
   &:hover {
-    background-color: rgb(235, 236, 240);
+    background-color: ${(props) => (props.darkTheme ? '#21262d' : '#ebecf0')};
   }
 `;
 

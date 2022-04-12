@@ -4,7 +4,8 @@ import styled from 'styled-components';
 const Container = styled.input`
   width: ${(props) => props.width};
   height: ${(props) => props.height};
-  background-color: white;
+  background-color: ${(props) => (props.darkTheme ? '#161b22' : 'white')};
+
   border: 1px solid #dfe1e6;
   border-radius: 4px;
   outline: none;
@@ -12,7 +13,7 @@ const Container = styled.input`
   font-size: ${(props) => props.fontSize};
   padding-top: 1px;
   margin-top: ${(props) => props.mt};
-  color: #172b4d;
+  color: ${(props) => (props.darkTheme ? 'white' : '#172b4d')};
   cursor: pointer;
 
   &:hover {
@@ -20,7 +21,7 @@ const Container = styled.input`
   }
 
   &:focus {
-    background-color: white;
+    background-color: ${(props) => (props.darkTheme ? '#161b22' : 'white')};
     border: 2px solid #4c9aff;
     padding-top: 0;
     padding-left: 1px;
@@ -41,6 +42,7 @@ const AddComment = (props) => {
       fontSize={props.fontSize}
       mt={props.mt}
       data-testid="add-comment"
+      darkTheme={props.darkTheme}
     />
   );
 };

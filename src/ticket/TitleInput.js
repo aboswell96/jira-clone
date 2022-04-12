@@ -5,7 +5,7 @@ const TextInputComponent = styled.textarea`
   width: ${(props) => props.width};
   height: ${(props) => props.height};
   min-height: ${(props) => props.minHeight};
-  background-color: white;
+  background-color: ${(props) => (props.darkTheme ? '#161b22' : 'white')};
   border: 1px solid white;
   border-radius: 4px;
   outline: none;
@@ -13,15 +13,15 @@ const TextInputComponent = styled.textarea`
   font-size: ${(props) => props.fontSize};
   padding-top: 1px;
   margin-top: ${(props) => props.mt};
-  color: #172b4d;
+  color: ${(props) => (props.darkTheme ? 'white' : '#172b4d')};
   resize: none;
 
   &:hover {
-    background-color: #ebecf0;
+    background-color: ${(props) => (props.darkTheme ? '#21262d' : '#ebecf0')};
   }
 
   &:focus {
-    background-color: white;
+    background-color: ${(props) => (props.darkTheme ? '#21262d' : 'white')};
     border: 2px solid #4c9aff;
     padding-top: 0;
     padding-left: 1px;
@@ -43,6 +43,7 @@ const TitleInput = (props) => {
       fontSize={props.fontSize}
       mt={props.mt}
       data-testid="title-input"
+      darkTheme={props.darkTheme}
     />
   );
 };

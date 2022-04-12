@@ -1,7 +1,9 @@
+import { useContext } from 'react';
 import styled from 'styled-components';
 import ProjectURL from '../common/ProjectURL';
 
 import BoardView from './BoardView';
+import { ThemeContext } from '../nav/Project';
 
 const Container = styled.div`
   margin-left: 40px;
@@ -15,13 +17,15 @@ const Title = styled.div`
   margin-top: 10px;
   font-size: 24px;
   font-family: CircularStdMedium;
+  color: ${(props) => (props.darkTheme ? 'white' : 'black')};
 `;
 
 const BoardContainer = (props) => {
+  const darkTheme = useContext(ThemeContext);
   return (
     <Container>
       <ProjectURL projectName={props.projectName} pageName="Kanban Board" />
-      <Title>Kanban Board</Title>
+      <Title darkTheme={darkTheme}>Kanban Board</Title>
       <BoardView />
     </Container>
   );
