@@ -6,7 +6,8 @@ import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 const TextSearchBoxComponent = styled.input`
   width: ${(props) => props.width};
   height: 28px;
-  background-color: rgb(244 245 247);
+  ${'' /* background-color: rgb(244 245 247); */}
+  background-color: ${(props) => (props.darkTheme ? '#161b22' : '#f4f5f7')};
   border: 1px solid rgb(223, 225, 230);
   border-radius: 4px;
   outline: none;
@@ -43,9 +44,10 @@ const TextSearchBox = (props) => {
         placeholder={props.placeholder}
         width={props.width}
         data-testid="search-input"
+        darkTheme={props.darkTheme}
       />
       <Icon>
-        <SearchOutlinedIcon color="disabled" />
+        <SearchOutlinedIcon color={props.darkTheme ? 'primary' : 'disabled'} />
       </Icon>
     </ContainerRow>
   );

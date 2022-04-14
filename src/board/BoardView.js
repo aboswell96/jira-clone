@@ -129,7 +129,12 @@ const BoardView = () => {
   return (
     <div style={{ marginTop: '30px' }}>
       <BoardFilters>
-        <TextSearchBox value={searchInput} onChange={onChange} width="160px" />
+        <TextSearchBox
+          value={searchInput}
+          onChange={onChange}
+          darkTheme={darkTheme}
+          width="160px"
+        />
         <UserAvatars>{userAvatars}</UserAvatars>
         <BoardFilter
           onClick={OnMyIssuesClicked}
@@ -357,13 +362,14 @@ const BoardFilter = styled.button`
   &:hover {
     ${'' /* color: rgb(94, 108, 132); */}
     cursor: pointer;
-    background-color: rgb(244 245 247);
+    background-color: ${(props) => (props.darkTheme ? '#0d1117' : '#F4F5F7')};
   }
 
   ${({ active }) =>
     active &&
     `
-        background: rgb(210, 229, 254) !important;
+        background-color: ${(props) =>
+          props.darkTheme ? '#0d1117' : '#d2e5fe'};
         color: rgb(0, 82, 204);
     `}
 `;
