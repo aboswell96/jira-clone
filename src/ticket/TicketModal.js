@@ -120,7 +120,7 @@ const TicketModal = (props) => {
     setPriority(ticket.priority);
     setTimestamp(ticket.lastUpdated);
     setTimeout(() => {
-      // setLoading(false);
+      setLoading(false);
     }, 300);
   }, [ticket, props.users]);
 
