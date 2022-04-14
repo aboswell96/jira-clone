@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import styled from 'styled-components';
 import {
   readFromDB,
@@ -24,22 +24,7 @@ import moment from 'moment';
 import AddComment from './AddComment';
 import IssueTypeTile from './IssueTypeTile';
 import { Skeleton } from '@mui/material';
-
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  pt: 25 / 8,
-  pr: 35 / 8,
-  pb: 60 / 8,
-  pl: 35 / 8,
-  width: '55%',
-  minWidth: 550,
-  bgcolor: 'background.paper',
-  boxShadow: 24,
-  verticalAlign: 'top',
-  transform: 'translate(-50%, -50%)',
-};
+import { ThemeContext } from '../nav/Project';
 
 const UNASSIGNED = [
   '-1',
@@ -47,6 +32,7 @@ const UNASSIGNED = [
 ];
 
 const TicketModal = (props) => {
+  const darkTheme = useContext(ThemeContext);
   //States
   const [ticket, setTicket] = useState({
     assignee: 64980,
@@ -88,7 +74,6 @@ const TicketModal = (props) => {
 
   //Fires when the ticket passed in by BoardView changes eg. user clicks on a ticket
   useEffect(() => {
-    console.log(ticket);
     setTitle(ticket.title);
     setDescription(ticket.description);
     setIssueType(ticket.type);
@@ -135,7 +120,7 @@ const TicketModal = (props) => {
     setPriority(ticket.priority);
     setTimestamp(ticket.lastUpdated);
     setTimeout(() => {
-      setLoading(false);
+      // setLoading(false);
     }, 300);
   }, [ticket, props.users]);
 
@@ -199,6 +184,23 @@ const TicketModal = (props) => {
     props.handleClose();
   };
 
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    pt: 25 / 8,
+    pr: 35 / 8,
+    pb: 60 / 8,
+    pl: 35 / 8,
+    width: '55%',
+    minWidth: 550,
+    bgcolor: darkTheme ? '#010409' : 'background.paper',
+    boxShadow: 24,
+    verticalAlign: 'top',
+    transform: 'translate(-50%, -50%)',
+    border: darkTheme ? '2px solid white' : '',
+  };
+
   return (
     <Modal
       open={props.open}
@@ -215,7 +217,7 @@ const TicketModal = (props) => {
             gap: '10px',
           }}
         >
-          <TicketType>
+          <TicketType darkTheme={darkTheme}>
             {RenderTicketTypeIcon(issueType)}
             {issueType.toUpperCase() + '-' + props.ticket[0]}
           </TicketType>
@@ -249,21 +251,28 @@ const TicketModal = (props) => {
           </div>
         </div>
         {loading ? (
-          <Skeleton variant="rectangle" height="39px" />
+          <Skeleton
+            variant="rectangle"
+            height="39px"
+            sx={{ bgcolor: darkTheme ? 'grey.900' : '' }}
+          />
         ) : (
           <Title title={title} onWrite={onWrite} />
         )}
         <TicketPanels>
           <TicketMainPanel>
-            <TextMain>Last updated</TextMain>
+            <TextMain darkTheme={darkTheme}>Last updated</TextMain>
             {loading ? (
-              <Skeleton variant="text" />
+              <Skeleton
+                variant="text"
+                sx={{ bgcolor: darkTheme ? 'grey.900' : '' }}
+              />
             ) : (
               <div
                 style={{
                   fontSize: '14.5px',
                   fontFamily: 'CircularStdBook',
-                  color: '#42526E',
+                  color: darkTheme ? 'white' : '#42526E',
                   marginTop: '2px',
                   marginLeft: '3px',
                 }}
@@ -271,15 +280,21 @@ const TicketModal = (props) => {
                 {moment(timestamp).calendar()}
               </div>
             )}
-            <TextMain>Description</TextMain>
+            <TextMain darkTheme={darkTheme}>Description</TextMain>
             {loading ? (
-              <Skeleton variant="text" />
+              <Skeleton
+                variant="text"
+                sx={{ bgcolor: darkTheme ? 'grey.900' : '' }}
+              />
             ) : (
               <Description description={description} onWrite={onWrite} />
             )}
-            <TextMain>Comments</TextMain>
+            <TextMain darkTheme={darkTheme}>Comments</TextMain>
             {loading ? (
-              <Skeleton variant="text" />
+              <Skeleton
+                variant="text"
+                sx={{ bgcolor: darkTheme ? 'grey.900' : '' }}
+              />
             ) : (
               <Comments
                 comments={
@@ -295,24 +310,39 @@ const TicketModal = (props) => {
             )}
           </TicketMainPanel>
           <TicketSidePanel>
-            <TextSub>Issue Type</TextSub>
+            <TextSub darkTheme={darkTheme}>Issue Type</TextSub>
             {loading ? (
-              <Skeleton variant="rectangle" width="169px" height="32px" />
+              <Skeleton
+                variant="rectangle"
+                width="169px"
+                height="32px"
+                sx={{ bgcolor: darkTheme ? 'grey.900' : '' }}
+              />
             ) : (
               <IssueTypeTile
                 issueType={issueType}
                 setIssueType={OnIssueChange}
               />
             )}
-            <TextSub>Status</TextSub>
+            <TextSub darkTheme={darkTheme}>Status</TextSub>
             {loading ? (
-              <Skeleton variant="rectangle" width="169px" height="32px" />
+              <Skeleton
+                variant="rectangle"
+                width="169px"
+                height="32px"
+                sx={{ bgcolor: darkTheme ? 'grey.900' : '' }}
+              />
             ) : (
               <StatusTile status={status} setStatus={OnStatusChange} />
             )}
-            <TextSub>Assignee</TextSub>
+            <TextSub darkTheme={darkTheme}>Assignee</TextSub>
             {loading ? (
-              <Skeleton variant="rectangle" width="169px" height="32px" />
+              <Skeleton
+                variant="rectangle"
+                width="169px"
+                height="32px"
+                sx={{ bgcolor: darkTheme ? 'grey.900' : '' }}
+              />
             ) : (
               <UserTile
                 user={assignee}
@@ -321,9 +351,14 @@ const TicketModal = (props) => {
                 field="assignee"
               />
             )}
-            <TextSub>Reporter</TextSub>
+            <TextSub darkTheme={darkTheme}>Reporter</TextSub>
             {loading ? (
-              <Skeleton variant="rectangle" width="169px" height="32px" />
+              <Skeleton
+                variant="rectangle"
+                width="169px"
+                height="32px"
+                sx={{ bgcolor: darkTheme ? 'grey.900' : '' }}
+              />
             ) : (
               <UserTile
                 user={reporter}
@@ -332,9 +367,14 @@ const TicketModal = (props) => {
                 field="reporter"
               />
             )}
-            <TextSub>Priority</TextSub>
+            <TextSub darkTheme={darkTheme}>Priority</TextSub>
             {loading ? (
-              <Skeleton variant="rectangle" width="169px" height="32px" />
+              <Skeleton
+                variant="rectangle"
+                width="169px"
+                height="32px"
+                sx={{ bgcolor: darkTheme ? 'grey.900' : '' }}
+              />
             ) : (
               <PriorityTile
                 priority={priority}
@@ -349,6 +389,7 @@ const TicketModal = (props) => {
 };
 
 const Comments = (props) => {
+  const darkTheme = useContext(ThemeContext);
   const [value, setValue] = useState('');
   const [isEditting, setIsEditting] = useState(false);
 
@@ -376,7 +417,11 @@ const Comments = (props) => {
     )[0];
     return (
       <div
-        style={{ display: 'flex', 'flex-direction': 'row', gap: '25px' }}
+        style={{
+          display: 'flex',
+          'flex-direction': 'row',
+          gap: '25px',
+        }}
         key={i}
       >
         <div>
@@ -390,7 +435,7 @@ const Comments = (props) => {
               style={{
                 fontSize: '15px',
                 fontFamily: 'CircularStdMedium',
-                color: '#42526E',
+                color: darkTheme ? 'white' : '#42526E',
               }}
             >
               {user[1].firstName + ' ' + user[1].lastName}
@@ -399,7 +444,7 @@ const Comments = (props) => {
               style={{
                 fontSize: '14.5px',
                 fontFamily: 'CircularStdBook',
-                color: '#42526E',
+                color: darkTheme ? 'white' : '#42526E',
               }}
             >
               {moment(comment.timestamp).calendar()}
@@ -409,7 +454,7 @@ const Comments = (props) => {
             style={{
               fontSize: '15px',
               fontFamily: 'CircularStdBook',
-              color: '#172B4D',
+              color: darkTheme ? 'white' : '#172B4D',
               paddingTop: '10px',
             }}
           >
@@ -442,6 +487,7 @@ const Comments = (props) => {
           width="90%"
           fontSize="15px"
           placeholder="Add a comment..."
+          darkTheme={darkTheme}
         />
         {isEditting && (
           <div>
@@ -478,6 +524,7 @@ const Comments = (props) => {
 };
 
 const Description = (props) => {
+  const darkTheme = useContext(ThemeContext);
   const [isEditting, setIsEditting] = useState(false);
   const [value, setValue] = useState(props.description);
   const defaultVal = props.description;
@@ -512,6 +559,7 @@ const Description = (props) => {
         width="100%"
         fontSize="15px"
         mt="1px"
+        darkTheme={darkTheme}
       ></TitleInput>
       {isEditting && (
         <div>
@@ -534,6 +582,7 @@ const Description = (props) => {
 };
 
 const Title = (props) => {
+  const darkTheme = useContext(ThemeContext);
   const [isEditting, setIsEditting] = useState(false);
   const [value, setValue] = useState(props.title);
   const defaultVal = props.title;
@@ -567,6 +616,7 @@ const Title = (props) => {
         minHeight="35px"
         width="100%"
         fontSize={value.length > 60 ? '18px' : '24px'}
+        darkTheme={darkTheme}
       ></TitleInput>
       {isEditting && (
         <div>
@@ -638,13 +688,13 @@ const TicketType = styled.div`
   font-size: 13px;
   align-items: center;
   font-family: CircularStdBook;
-  color: rgb(94, 108, 132);
+  color: ${(props) => (props.darkTheme ? 'white' : '#5e6c84')};
 `;
 
 const TextMain = styled.span`
   display: block;
   padding-top: 25px;
-  color: #172b4d;
+  color: ${(props) => (props.darkTheme ? 'white' : '#172b4d')};
   font-family: CircularStdMedium;
   margin-left: 3px;
 `;
@@ -655,6 +705,7 @@ const TextSub = styled.span`
   color: #5e6c84;
   font-size: 12.5px;
   font-family: CircularStdBold;
+  color: ${(props) => (props.darkTheme ? 'white' : '#172b4d')};
 `;
 
 export default TicketModal;

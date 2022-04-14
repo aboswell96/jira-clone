@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 import useComponentVisible from '../common/customHooks/useComponentVisible';
 
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import BugReportIcon from '@mui/icons-material/BugReport';
+import { ThemeContext } from '../nav/Project';
 
 const MAPPING = [
   {
@@ -22,6 +23,7 @@ const MAPPING = [
 ];
 
 const IssueTypeTile = (props) => {
+  const darkTheme = useContext(ThemeContext);
   const [isExpanded, setIsExpanded] = useState(false);
   const value = MAPPING.filter((type) => type.code === props.issueType)[0]
     .title;
@@ -36,6 +38,7 @@ const IssueTypeTile = (props) => {
       <Container
         onClick={() => setIsExpanded(!isExpanded)}
         style={{ border: '1px solid #dfe1e6' }}
+        darkTheme={darkTheme}
       >
         <UserInfo>
           {RenderTicketTypeIcon(
@@ -51,7 +54,7 @@ const IssueTypeTile = (props) => {
 
 const DropDown = (props) => {
   const { ref, isComponentVisible } = useComponentVisible(true);
-
+  const darkTheme = useContext(ThemeContext);
   return (
     <DropDownComponent ref={ref}>
       {isComponentVisible &&
@@ -62,6 +65,7 @@ const DropDown = (props) => {
                 key={i}
                 onClick={() => props.onClick(type.code)}
                 style={{ border: '1px solid #F4F5F7' }}
+                darkTheme={darkTheme}
               >
                 <UserInfo>
                   {RenderTicketTypeIcon(type.code)}
@@ -95,7 +99,7 @@ const RenderTicketTypeIcon = (type) => {
 export default IssueTypeTile;
 
 const DropDownComponent = styled.div`
-  background-color: rgb(244 245 247);
+  background-color: '#F4F5F7';
   position: absolute;
   width: 169px;
 `;
@@ -109,14 +113,15 @@ const UserInfo = styled.div`
 `;
 
 const Container = styled.div`
-    background-color: rgb(244 245 247);
+    background-color: ${(props) => (props.darkTheme ? '#161b22' : '#F4F5F7')};
     height: 32px;
     font-size: 12px;
     font-family: CircularStdBold;
     color: #172B4D;
+    color: ${(props) => (props.darkTheme ? 'white' : '#172B4D')};
     cursor: pointer;
     width: 169px;
 
     &:hover {
-        background-color: rgb(235, 236, 240);
+      background-color: ${(props) => (props.darkTheme ? '#21262d' : '#ebecf0')};
 `;

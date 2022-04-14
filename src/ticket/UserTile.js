@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
 import useComponentVisible from '../common/customHooks/useComponentVisible';
+import { ThemeContext } from '../nav/Project';
 
 const UserTile = (props) => {
+  const darkTheme = useContext(ThemeContext);
   const [isExpanded, setIsExpanded] = useState(false);
   const value = props.user;
 
@@ -18,6 +20,7 @@ const UserTile = (props) => {
           setIsExpanded(!isExpanded);
         }}
         style={{ border: '1px solid #dfe1e6' }}
+        darkTheme={darkTheme}
       >
         <UserInfo>
           {value.length > 1 && (
@@ -40,6 +43,7 @@ const UserTile = (props) => {
 
 const DropDown = (props) => {
   const { ref, isComponentVisible } = useComponentVisible(true);
+  const darkTheme = useContext(ThemeContext);
   return (
     <DropDownComponent ref={ref}>
       {isComponentVisible &&
@@ -52,6 +56,7 @@ const DropDown = (props) => {
                   props.onClick(user[0]);
                 }}
                 style={{ border: '1px solid #F4F5F7' }}
+                darkTheme={darkTheme}
               >
                 <UserInfo>
                   <UserAvatar
@@ -89,16 +94,16 @@ const UserInfo = styled.div`
 `;
 
 const Container = styled.div`
-    background-color: rgb(244 245 247);
+    background-color: ${(props) => (props.darkTheme ? '#161b22' : '#F4F5F7')};
     height: 32px;
     font-size: 12px;
     font-family: CircularStdBold;
-    color: #172B4D;
+    color: ${(props) => (props.darkTheme ? 'white' : '#172B4D')};
     cursor: pointer;
     width: 169px;
 
     &:hover {
-        background-color: rgb(235, 236, 240);
+      background-color: ${(props) => (props.darkTheme ? '#21262d' : '#ebecf0')};
 `;
 
 const UserAvatar = styled.div`
