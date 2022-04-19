@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
-
 import QueryStatsOutlinedIcon from '@mui/icons-material/QueryStatsOutlined';
 import AssessmentOutlinedIcon from '@mui/icons-material/AssessmentOutlined';
 import DynamicFeedOutlinedIcon from '@mui/icons-material/DynamicFeedOutlined';
+import { ThemeContext } from '../nav/Project';
 
 const tabsInDevelopment = [
   {
@@ -25,21 +24,25 @@ const tabsInDevelopment = [
 ];
 
 const BoardMenuOption = (props) => {
+  const darkTheme = useContext(ThemeContext);
   return (
     <Link
       to={props.url}
       style={{ textDecoration: 'none', color: 'inherit' }}
       onClick={() => props.onClick(props.title)}
     >
-      <Tab active={props.isActive}>
+      <Tab active={props.isActive} darkTheme={darkTheme}>
         <ProjectIcon>{renderIcon(props.icon, props.isActive)}</ProjectIcon>
-        <Title active={props.isActive}>{props.title}</Title>
+        <Title active={props.isActive} darkTheme={darkTheme}>
+          {props.title}
+        </Title>
       </Tab>
     </Link>
   );
 };
 
 const BoardMenuOptionDev = (props) => {
+  const darkTheme = useContext(ThemeContext);
   const [isHovered, setIsHovered] = useState(false);
 
   const onMouseEnter = () => {
@@ -51,22 +54,23 @@ const BoardMenuOptionDev = (props) => {
   };
 
   return (
-    <TabDev onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+    <TabDev
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      darkTheme={darkTheme}
+    >
       <ProjectIcon>{renderIcon(props.icon, props.isActive)}</ProjectIcon>
       {isHovered ? (
         <TitleNotImplemented>IN DEVELOPMENT</TitleNotImplemented>
       ) : (
-        <Title>{props.title}</Title>
+        <Title darkTheme={darkTheme}>{props.title}</Title>
       )}
     </TabDev>
   );
 };
 
-const tabsDev = tabsInDevelopment.map((tab, i) => {
-  return <BoardMenuOptionDev key={i} title={tab.title} icon={tab.icon} />;
-});
-
 const SideMenu = (props) => {
+  const darkTheme = useContext(ThemeContext);
   const tabs = props.tabs.map((option, i) => {
     return (
       <BoardMenuOption
@@ -79,8 +83,11 @@ const SideMenu = (props) => {
       />
     );
   });
+  const tabsDev = tabsInDevelopment.map((tab, i) => {
+    return <BoardMenuOptionDev key={i} title={tab.title} icon={tab.icon} />;
+  });
   return (
-    <BoardMenu>
+    <BoardMenu darkTheme={darkTheme}>
       <BoardAvatar>
         <img
           src="https://i.ibb.co/S686zGM/rocket3.png"
@@ -92,7 +99,7 @@ const SideMenu = (props) => {
             borderRadius: '3px',
           }}
         ></img>
-        <BoardTextPanel>
+        <BoardTextPanel darkTheme={darkTheme}>
           {props.projectName}
           <ProjectType>{props.projectType}</ProjectType>
         </BoardTextPanel>
@@ -125,10 +132,10 @@ const renderIcon = (title, status) => {
 };
 
 const BoardMenu = styled.div`
-  background-color: rgb(244 245 247);
+  background-color: ${(props) => (props.darkTheme ? '#0d1117' : '#f4f5f7')};
   width: 230px;
   margin-left: 64px;
-  border-right: 1px solid rgb(223, 225, 230);
+  border-right: ${(props) => (props.darkTheme ? '#0d1117' : '#dfe1e6')};
   flex-shrink: 0;
 `;
 
@@ -141,6 +148,7 @@ const BoardAvatar = styled.div`
 `;
 
 const BoardTextPanel = styled.div`
+  color: ${(props) => (props.darkTheme ? 'white' : 'black')};
   margin: auto;
   margin-left: 10px;
 `;
@@ -175,18 +183,20 @@ const Tab = styled.div`
   border-radius: 3px;
   overflow: hidden;
   font-family: CircularStdBook;
-  background-color: rgb(244 245 247);
+  background-color: ${(props) => (props.darkTheme ? '#0d1117' : '#f4f5f7')};
+  color: ${(props) => (props.darkTheme ? 'white' : 'black')};
   transition: background 0.1s ease 0s;
 
   ${({ active }) =>
     active &&
     `
-        color: rgb(23, 43, 77);
-        background-color: rgb(235, 236, 240);
+        color: #172b4d;
+        background-color: ${(props) =>
+          props.darkTheme ? '#0d1117' : '#ebecf0'};
     `}
 
   &:hover {
-    background-color: rgb(235, 236, 240);
+    background-color: ${(props) => (props.darkTheme ? '#21262d' : '#ebecf0')};
   }
 `;
 
@@ -200,7 +210,8 @@ const TabDev = styled.div`
   border-radius: 3px;
   overflow: hidden;
   font-family: CircularStdBook;
-  background-color: rgb(244 245 247);
+  background-color: ${(props) => (props.darkTheme ? '#0d1117' : '#f4f5f7')};
+  color: ${(props) => (props.darkTheme ? 'white' : 'black')};
   transition: background 0.1s ease 0s;
 
   &:hover {
@@ -208,7 +219,7 @@ const TabDev = styled.div`
   }
 `;
 const Title = styled.div`
-  color: black;
+  color: ${(props) => (props.darkTheme ? 'white' : 'black')};
   font-size: 14.7px;
 
   ${({ active }) =>

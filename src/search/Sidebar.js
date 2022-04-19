@@ -115,7 +115,7 @@ const NavOptions = styled.div`
 `;
 
 const Tab = styled.div`
-  width: 100%;
+  width: auto;
   height: 40px;
   display: flex;
   justify-content: center;

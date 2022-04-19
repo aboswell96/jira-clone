@@ -235,7 +235,7 @@ const TicketModal = (props) => {
             >
               <Tooltip title="Delete Ticket" placement="bottom">
                 <DeleteOutlineOutlinedIcon
-                  color="action"
+                  color={darkTheme ? 'primary' : 'action'}
                   sx={{ fontSize: 30, mr: 0 }}
                 />
               </Tooltip>
@@ -245,7 +245,10 @@ const TicketModal = (props) => {
               onClick={props.handleClose}
             >
               <Tooltip title="Close" placement="bottom">
-                <CloseIcon color="action" sx={{ fontSize: 30, mr: 0 }} />
+                <CloseIcon
+                  color={darkTheme ? 'primary' : 'action'}
+                  sx={{ fontSize: 30, mr: 0 }}
+                />
               </Tooltip>
             </div>
           </div>
