@@ -196,8 +196,13 @@ const Swimlanes = (props) => {
     }
   };
 
-  const onDrop = (e) => {
-    const ticketObj = Object.entries(dbTickets).filter(
+  const onDrop = async (e) => {
+    let newTickets;
+    await readFromDB('tickets', (snapshot) => {
+      newTickets = snapshot;
+      setDbTickets(snapshot);
+    });
+    const ticketObj = Object.entries(newTickets).filter(
       (ticket) => ticket[0] === e.dragData.ticketId
     )[0];
     const ticketLane = TicketStatusKeyToUserString.filter(
