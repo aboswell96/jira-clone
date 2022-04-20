@@ -196,10 +196,29 @@ const Swimlanes = (props) => {
     }
   };
 
-  const onDrop = (e) => {
-    const ticketObj = Object.entries(dbTickets).filter(
+  const onDrop = async (e) => {
+    let ticketObj;
+    ticketObj = Object.entries(dbTickets).filter(
       (ticket) => ticket[0] === e.dragData.ticketId
     )[0];
+
+    //read the tickets from the DB if we can't find the ticket
+    if (!ticketObj) {
+      let newTickets;
+      await readFromDB('tickets', (snapshot) => {
+        newTickets = snapshot;
+        setDbTickets(snapshot);
+      });
+      ticketObj = Object.entries(newTickets).filter(
+        (ticket) => ticket[0] === e.dragData.ticketId
+      )[0];
+    }
+
+    if (!ticketObj) {
+      console.log('Unable to look up ticket ' + e.dragData.ticketId);
+      return;
+    }
+
     const ticketLane = TicketStatusKeyToUserString.filter(
       (lane) => lane.key === ticketObj[1].lane
     )[0];
