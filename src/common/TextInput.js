@@ -5,7 +5,8 @@ const TextInputComponent = styled.input`
   width: ${(props) => props.width};
   min-width: ${(props) => props.minWidth};
   height: ${(props) => props.height};
-  background-color: rgb(244 245 247);
+  background-color: ${(props) => (props.darkTheme ? '#161b22' : '#f4f5f7')};
+  color: ${(props) => (props.darkTheme ? 'white' : 'black')};
   border: 1px solid rgb(223, 225, 230);
   border-radius: 4px;
   outline: none;
@@ -15,11 +16,11 @@ const TextInputComponent = styled.input`
   margin-top: ${(props) => props.mt};
 
   &:hover {
-    background-color: #ebecf0;
+    background-color: ${(props) => (props.darkTheme ? '#21262d' : '#ebecf0')};
   }
 
   &:focus {
-    background-color: white;
+    background-color: ${(props) => (props.darkTheme ? '#21262d' : 'white')};
     border: 2px solid #4c9aff;
     padding-top: 0;
     padding-left: 1px;
@@ -41,6 +42,7 @@ const TextInput = (props) => {
       fontSize={props.fontSize}
       mt={props.mt}
       data-testid="text-input"
+      darkTheme={props.darkTheme}
     />
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { readFromDB, writeToDB } from '../firebase/firebase';
@@ -13,24 +13,10 @@ import PriorityTile from './PriorityTile';
 import TitleInput from './TitleInput';
 import Button from '../common/Button';
 import IssueTypeTile from './IssueTypeTile';
-
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  pt: 25 / 8,
-  pr: 35 / 8,
-  pb: 60 / 8,
-  pl: 35 / 8,
-  width: '55%',
-  minWidth: 550,
-  bgcolor: 'background.paper',
-  boxShadow: 24,
-  verticalAlign: 'top',
-  transform: 'translate(-50%, -50%)',
-};
+import { ThemeContext } from '../nav/Project';
 
 const CreateTicket = (props) => {
+  const darkTheme = useContext(ThemeContext);
   const [users, setUsers] = useState([[]]);
   const UNASSIGNED = [
     '-1',
@@ -101,6 +87,23 @@ const CreateTicket = (props) => {
     writeToDB('tickets/' + Math.floor(1000 + Math.random() * 9000), newTicket);
   };
 
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    pt: 25 / 8,
+    pr: 35 / 8,
+    pb: 60 / 8,
+    pl: 35 / 8,
+    width: '55%',
+    minWidth: 550,
+    bgcolor: darkTheme ? '#010409' : 'background.paper',
+    boxShadow: 24,
+    verticalAlign: 'top',
+    transform: 'translate(-50%, -50%)',
+    border: darkTheme ? '2px solid white' : '',
+  };
+
   return (
     <Modal
       open={props.open}
@@ -115,12 +118,17 @@ const CreateTicket = (props) => {
                                 {RenderTicketTypeIcon("story")}
                                 {"STORY" + "-" + Math.floor(1000 + Math.random() * 9000)}
                             </TicketType> */}
-            <Title value={title} onChange={onTitleChange} onWrite={onWrite} />
+            <Title
+              value={title}
+              onChange={onTitleChange}
+              onWrite={onWrite}
+              darkTheme={darkTheme}
+            />
             <span
               style={{
                 display: 'block',
                 paddingTop: '25px',
-                color: '#172B4D',
+                color: darkTheme ? 'white' : '#172B4D',
                 fontFamily: 'CircularStdMedium',
                 marginLeft: '3px',
               }}
@@ -131,6 +139,7 @@ const CreateTicket = (props) => {
               value={description}
               onWrite={onWrite}
               onChange={onDescriptionChange}
+              darkTheme={darkTheme}
             />
           </TicketMainPanel>
           <TicketSidePanel>
@@ -138,7 +147,7 @@ const CreateTicket = (props) => {
               style={{
                 display: 'block',
                 paddingTop: '25px',
-                color: '#5e6c84',
+                color: darkTheme ? 'white' : '#5e6c84',
                 fontSize: '12.5px',
                 fontFamily: 'CircularStdBold',
               }}
@@ -150,7 +159,7 @@ const CreateTicket = (props) => {
               style={{
                 display: 'block',
                 paddingTop: '25px',
-                color: '#5e6c84',
+                color: darkTheme ? 'white' : '#5e6c84',
                 fontSize: '12.5px',
                 fontFamily: 'CircularStdBold',
               }}
@@ -162,7 +171,7 @@ const CreateTicket = (props) => {
               style={{
                 display: 'block',
                 paddingTop: '25px',
-                color: '#5e6c84',
+                color: darkTheme ? 'white' : '#5e6c84',
                 fontSize: '12.5px',
                 fontFamily: 'CircularStdBold',
               }}
@@ -179,7 +188,7 @@ const CreateTicket = (props) => {
               style={{
                 display: 'block',
                 paddingTop: '25px',
-                color: '#5e6c84',
+                color: darkTheme ? 'white' : '#5e6c84',
                 fontSize: '12.5px',
                 fontFamily: 'CircularStdBold',
               }}
@@ -196,7 +205,7 @@ const CreateTicket = (props) => {
               style={{
                 display: 'block',
                 paddingTop: '25px',
-                color: '#5e6c84',
+                color: darkTheme ? 'white' : '#5e6c84',
                 fontSize: '12.5px',
                 fontFamily: 'CircularStdBold',
               }}
@@ -235,6 +244,7 @@ const Description = (props) => {
       fontSize="15px"
       mt="1px"
       placeholder={'Enter a description here...'}
+      darkTheme={props.darkTheme}
     ></TitleInput>
   );
 };
@@ -248,6 +258,7 @@ const Title = (props) => {
       width="100%"
       fontSize="24px"
       mt="35px"
+      darkTheme={props.darkTheme}
     ></TitleInput>
   );
 };

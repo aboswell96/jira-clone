@@ -5,10 +5,11 @@ import { Link } from 'react-router-dom';
 
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
 import SearchIssuesModal from './SearchIssues';
 import CreateTicket from '../ticket/CreateTicket';
 
-const Sidebar = () => {
+const Sidebar = (props) => {
   const [sidebarWidth, SetSideBarWidth] = useState('64px');
   const [isExpanded, setIsExpanded] = useState(false);
   const [isCreateTicketExpanded, setIsCreateTicketExpanded] = useState(false);
@@ -70,6 +71,12 @@ const Sidebar = () => {
           </ProjectIcon>
           <Title>{isExpanded && 'Create Issue'}</Title>
         </Tab>
+        <Tab expanded={isExpanded} onClick={props.toggleTheme}>
+          <ProjectIcon expanded={isExpanded}>
+            <DarkModeIcon sx={{ color: 'white', fontSize: 30 }} />
+          </ProjectIcon>
+          <Title>{isExpanded && 'Dark Theme'}</Title>
+        </Tab>
       </NavOptions>
       <SearchIssuesModal handleClose={handleCloseSearch} open={open} />
       <CreateTicket
@@ -108,7 +115,7 @@ const NavOptions = styled.div`
 `;
 
 const Tab = styled.div`
-  width: 100%;
+  width: auto;
   height: 40px;
   display: flex;
   justify-content: center;

@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ProjectURL from '../common/ProjectURL';
 import TextInput from '../common/TextInput';
 import Button from '../common/Button';
 import { readFromDB } from '../firebase/firebase';
+import { ThemeContext } from '../nav/Project';
 
 const Container = styled.div`
   margin-left: 40px;
@@ -12,9 +13,10 @@ const Container = styled.div`
 
 const Title = styled.div`
   white-space: nowrap;
-  margin-top: 15px;
+  margin-top: 10px;
   font-size: 24px;
   font-family: CircularStdMedium;
+  color: ${(props) => (props.darkTheme ? 'white' : 'black')};
 `;
 
 const Text = styled.div`
@@ -25,6 +27,7 @@ const Text = styled.div`
 `;
 
 const Settings = (props) => {
+  const darkTheme = useContext(ThemeContext);
   useEffect(() => {
     readFromDB('projectDescription', setDescription);
     readFromDB('title', setValue);
@@ -44,8 +47,8 @@ const Settings = (props) => {
   return (
     <Container>
       <ProjectURL projectName={props.projectName} pageName="Project Details" />
-      <Title>Project Details</Title>
-      <Text marginTop="50px">Project Name</Text>
+      <Title darkTheme={darkTheme}>Project Details</Title>
+      <Text marginTop="30px">Project Name</Text>
       <TextInput
         value={name}
         onChange={onChange}
@@ -54,6 +57,7 @@ const Settings = (props) => {
         height="30px"
         pt="1px"
         mt="10px"
+        darkTheme={darkTheme}
       />
       <Text marginTop="30px">Project Description</Text>
       <TextInput
@@ -64,6 +68,7 @@ const Settings = (props) => {
         height="30px"
         pt="1px"
         mt="10px"
+        darkTheme={darkTheme}
       />
       <br />
       <Button

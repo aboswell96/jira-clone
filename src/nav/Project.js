@@ -1,12 +1,12 @@
 import { Outlet } from 'react-router-dom';
-import { useState } from 'react';
+import { createContext, useState } from 'react';
 import styled from 'styled-components';
 import '../style.css';
-
 import Sidebar from '../search/Sidebar';
 import SideMenu from './SideMenu';
-
 import useWindowDimensions from '../common/customHooks/useWindowDimensions';
+
+export const ThemeContext = createContext();
 
 const projectType = 'Software project';
 
@@ -34,6 +34,7 @@ const Container = styled.div`
 
 const Board = styled.div`
   width: 100%;
+  background-color: ${(props) => (props.darkTheme ? '#010409' : 'white')};
 
   ${({ isMinimized }) =>
     isMinimized &&
@@ -44,31 +45,36 @@ const Board = styled.div`
 
 const Project = (props) => {
   const { height, width } = useWindowDimensions();
+  const [darkTheme, setDarkTheme] = useState(false);
+  const toggleTheme = () => {
+    setDarkTheme(!darkTheme);
+  };
+  const [selectedMenuOption, setSelectedMenuOption] = useState(
+    options[0].title
+  );
 
   const OnClickBoardMenuOption = (newMenuOptionClicked) => {
     setSelectedMenuOption(newMenuOptionClicked);
   };
 
-  const [selectedMenuOption, setSelectedMenuOption] = useState(
-    options[0].title
-  );
-
   return (
-    <Container>
-      <Sidebar />
-      {width > 1000 && (
-        <SideMenu
-          current={selectedMenuOption}
-          onClick={OnClickBoardMenuOption}
-          tabs={options}
-          projectName={props.projectName}
-          projectType={projectType}
-        />
-      )}
-      <Board isMinimized={width <= 1000}>
-        <Outlet />
-      </Board>
-    </Container>
+    <ThemeContext.Provider value={darkTheme}>
+      <Container>
+        <Sidebar toggleTheme={toggleTheme} />
+        {width > 1000 && (
+          <SideMenu
+            current={selectedMenuOption}
+            onClick={OnClickBoardMenuOption}
+            tabs={options}
+            projectName={props.projectName}
+            projectType={projectType}
+          />
+        )}
+        <Board isMinimized={width <= 1000} darkTheme={darkTheme}>
+          <Outlet />
+        </Board>
+      </Container>
+    </ThemeContext.Provider>
   );
 };
 
