@@ -29,6 +29,7 @@ const Container = styled.div`
   justify-content: flex-start;
   height: 100vh;
   width: 100%;
+  min-width: 760px;
   gap: 0;
 `;
 

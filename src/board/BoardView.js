@@ -46,12 +46,11 @@ const BoardView = () => {
   const [isRecentlyUpdatedFilterSelected, setIsRecentlyUpdatedFilterSelected] =
     useState(false);
   const [loading, setLoading] = useState(true);
+  const [dbUsers, setDbUsers] = useState([{}, {}, {}]);
 
   const onChange = (e) => {
     setSearchInput(e.target.value);
   };
-
-  const [dbUsers, setDbUsers] = useState([{}, {}, {}]);
 
   useEffect(() => {
     readFromDB('users', setDbUsers);
@@ -197,20 +196,15 @@ const Swimlanes = (props) => {
 
   //these fire on mount and update so it must have a condition to prevent infinite renders!
   const OnDragEnter = (e, i) => {
-    if (i !== currentLaneHovered) {
-      setCurrentLaneHovered(i);
-    }
+    if (i !== currentLaneHovered) setCurrentLaneHovered(i);
   };
 
   const OnDragLeave = (e, i) => {
-    if (i !== -1) {
-      setCurrentLaneHovered(-1);
-    }
+    if (i !== -1) setCurrentLaneHovered(-1);
   };
 
   const onDrop = async (e) => {
-    let ticketObj;
-    ticketObj = Object.entries(dbTickets).filter(
+    let ticketObj = Object.entries(dbTickets).filter(
       (ticket) => ticket[0] === e.dragData.ticketId
     )[0];
 
